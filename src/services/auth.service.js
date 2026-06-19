@@ -1,3 +1,4 @@
+import prisma from '../utils/prisma.js'
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -6,18 +7,18 @@ const jwt = require('jsonwebtoken');
  * Reemplazar con consulta real a Prisma u ORM cuando esté disponible.
  */
 const findUserByEmail = async (email) => {
-  // TODO: reemplazar con: return prisma.user.findUnique({ where: { email } });
-  // Datos de prueba en memoria:
-  const users = [
-    {
-      id: 1,
-      email: 'admin@amplix.me',
-      name: 'Admin Amplix',
-      // bcrypt hash de "password123"
-      password: '$2b$10$PEIHD.nckAvkaLoH.tfD7O1inGUx5AfXLH3JFMDvKB9Tj.2/b5EmC',
-    },
-  ];
-  return users.find((u) => u.email === email) || null;
+  return prisma.user.findUnique({ where: { email } });
+  // // Datos de prueba en memoria:
+  // const users = [
+  //   {
+  //     id: 1,
+  //     email: 'admin@amplix.me',
+  //     name: 'Admin Amplix',
+  //     // bcrypt hash de "password123"
+  //     password: '$2b$10$PEIHD.nckAvkaLoH.tfD7O1inGUx5AfXLH3JFMDvKB9Tj.2/b5EmC',
+  //   },
+  // ];
+  // return users.find((u) => u.email === email) || null;
 };
 
 /**
