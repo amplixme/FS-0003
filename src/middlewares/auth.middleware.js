@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-in-production';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const authMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -12,6 +12,12 @@ const authMiddleware = (req, res, next) => {
   }
 
   const token = authHeader.split(' ')[1];
+
+  if (!JWT_SECRET) {
+    return res.status(500).json({
+      error: { message: 'JWT_SECRET no configurado' }
+    });
+  }
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);

@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const prisma = require('../lib/prisma');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-in-production';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const buildTokenPayload = (user) => ({
   userId: user.id,
@@ -19,6 +19,12 @@ const sanitizeUser = (user) => ({
 });
 
 const registerUser = async ({ email, password, name }) => {
+  if (!JWT_SECRET) {
+    const err = new Error('JWT_SECRET no configurado');
+    err.status = 500;
+    throw err;
+  }
+
   const existingUser = await prisma.user.findUnique({ where: { email } });
 
   if (existingUser) {
@@ -45,6 +51,12 @@ const registerUser = async ({ email, password, name }) => {
 };
 
 const loginUser = async (email, password) => {
+  if (!JWT_SECRET) {
+    const err = new Error('JWT_SECRET no configurado');
+    err.status = 500;
+    throw err;
+  }
+
   const user = await prisma.user.findUnique({ where: { email } });
   const dummyHash = '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy';
   const hashToCompare = user ? user.password : dummyHash;
