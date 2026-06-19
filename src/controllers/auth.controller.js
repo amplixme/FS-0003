@@ -1,4 +1,4 @@
-const { loginUser } = require('../services/auth.service');
+const { loginUser, registerUser } = require('../services/auth.service');
 const { success } = require('../utils/response');
 
 /**
@@ -21,4 +21,16 @@ const login = async (req, res, next) => {
   }
 };
 
-module.exports = { login };
+/**
+ * POST /api/auth/register
+ */
+const register = async (req, res, next) => {
+  try {
+    const result = await registerUser(req.body);
+    return res.status(201).json(result);
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { login, register };
