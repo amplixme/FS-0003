@@ -18,11 +18,11 @@
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "prisma": "^6.9.0",
-    "@prisma/client": "^6.9.0",
-    "dotenv": "^17.4.2"
+    "@prisma/client": "^7.8.0"
   },
   "devDependencies": {
+    "prisma": "^6.19.3",
+    "dotenv": "^17.4.2",
     "nodemon": "^3.1.14",
     "joi": "^18.2.1"
   }
