@@ -51,4 +51,33 @@ const loginUser = async (email, password) => {
   };
 };
 
-module.exports = { loginUser };
+/**
+ * Registra un nuevo usuario con contraseña hasheada.
+ * @param {{ email: string, password: string, name: string }} credentials
+ * @returns {{ message: string }}
+ */
+const registerUser = async ({ email, password, name }) => {
+  // Verificar si el email ya existe
+  const existingUser = await prisma.user.findUnique({ where: { email } });
+  if (existingUser) {
+    const err = new Error('El email ya está registrado');
+    err.status = 409;
+    throw err;
+  }
+
+  // Hashear contraseña con bcrypt (10 salt rounds)
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  // Crear usuario en la base de datos
+  await prisma.user.create({
+    data: {
+      email,
+      password: hashedPassword,
+      name,
+    },
+  });
+
+  return { message: 'Usuario registrado exitosamente' };
+};
+
+module.exports = { loginUser, registerUser };
