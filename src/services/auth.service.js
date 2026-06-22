@@ -8,22 +8,26 @@ const buildTokenPayload = (user) => ({
   userId: user.id,
   email: user.email,
   name: user.name,
-  role: user.role
+  role: user.role,
 });
 
 const sanitizeUser = (user) => ({
   id: user.id,
   email: user.email,
   name: user.name,
-  role: user.role
+  role: user.role,
 });
 
-const registerUser = async ({ email, password, name }) => {
+const ensureJwtSecret = () => {
   if (!JWT_SECRET) {
     const err = new Error('JWT_SECRET no configurado');
     err.status = 500;
     throw err;
   }
+};
+
+const registerUser = async ({ email, password, name }) => {
+  ensureJwtSecret();
 
   const existingUser = await prisma.user.findUnique({ where: { email } });
 
@@ -40,30 +44,32 @@ const registerUser = async ({ email, password, name }) => {
       email,
       password: hashedPassword,
       name,
-      role: 'USER'
-    }
+      role: 'USER',
+    },
   });
 
   const payload = buildTokenPayload(user);
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '24h' });
 
-  return { token, user: sanitizeUser(user) };
+  return {
+    token,
+    user: sanitizeUser(user),
+  };
 };
 
 const loginUser = async (email, password) => {
-  if (!JWT_SECRET) {
-    const err = new Error('JWT_SECRET no configurado');
-    err.status = 500;
-    throw err;
-  }
+  ensureJwtSecret();
 
   const user = await prisma.user.findUnique({ where: { email } });
-  const dummyHash = '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy';
+
+  const dummyHash =
+    '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy';
+
   const hashToCompare = user ? user.password : dummyHash;
   const isValid = await bcrypt.compare(password, hashToCompare);
 
   if (!user || !isValid) {
-    const err = new Error('Credenciales invalidas');
+    const err = new Error('Credenciales inválidas');
     err.status = 401;
     throw err;
   }
@@ -71,7 +77,13 @@ const loginUser = async (email, password) => {
   const payload = buildTokenPayload(user);
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '24h' });
 
-  return { token, user: sanitizeUser(user) };
+  return {
+    token,
+    user: sanitizeUser(user),
+  };
 };
 
-module.exports = { registerUser, loginUser };
+module.exports = {
+  registerUser,
+  loginUser,
+};
