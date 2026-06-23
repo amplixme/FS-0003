@@ -27,4 +27,15 @@ const postSchema = Joi.object({
   })
 });
 
-module.exports = { registerSchema, postSchema };
+const updatePostSchema = Joi.object({
+  title: Joi.string().messages({
+    'string.empty': 'Title cannot be empty'
+  }),
+  content: Joi.string().messages({
+    'string.empty': 'Content cannot be empty'
+  })
+}).min(1).messages({
+  'object.min': 'At least one field (title or content) must be provided'
+});
+
+module.exports = { registerSchema, postSchema, updatePostSchema };
