@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import api from "../services/api";
+import apiClient from "../../services/apiClient";
 
 const validateForm = ({ name, email, password, confirmPassword }) => {
   const errors = {};
@@ -30,7 +30,7 @@ const validateForm = ({ name, email, password, confirmPassword }) => {
   return errors;
 };
 
-const Register = () => {
+const RegisterPage = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -64,7 +64,7 @@ const Register = () => {
     setLoading(true);
 
     try {
-      await api.post("/auth/register", {
+      await apiClient.post("/api/auth/register", {
         name: formData.name,
         email: formData.email,
         password: formData.password,
@@ -72,10 +72,7 @@ const Register = () => {
 
       navigate("/login", { state: { success: "Registro exitoso. Ahora puedes iniciar sesión." } });
     } catch (err) {
-      const message =
-        err.response?.data?.error?.message ||
-        err.response?.data?.message ||
-        "Error del servidor. Intenta nuevamente.";
+      const message = err.message || "Error del servidor. Intenta nuevamente.";
       setServerError(message);
     } finally {
       setLoading(false);
@@ -169,4 +166,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default RegisterPage;
