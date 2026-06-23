@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-function Header() {
+const Header = () => {
+  const { user, isAuthenticated, logout } = useAuth();
   const [open, setOpen] = useState(false);
 
   return (
@@ -9,16 +11,26 @@ function Header() {
       <Link className="logo" to="/">FS-0003</Link>
 
       <button className="menu" onClick={() => setOpen(!open)}>
-        Menu
+        ☰
       </button>
 
       <nav className={open ? "nav navOpen" : "nav"}>
-        <Link to="/">Inicio</Link>
-        <Link to="/login">Login</Link>
-        <Link to="/register">Register</Link>
+        <Link to="/" onClick={() => setOpen(false)}>Inicio</Link>
+
+        {isAuthenticated ? (
+          <>
+            <span className="userName">{user?.name}</span>
+            <button className="logoutBtn" onClick={logout}>Cerrar sesión</button>
+          </>
+        ) : (
+          <>
+            <Link to="/login" onClick={() => setOpen(false)}>Login</Link>
+            <Link to="/register" onClick={() => setOpen(false)}>Register</Link>
+          </>
+        )}
       </nav>
     </header>
   );
-}
+};
 
 export default Header;

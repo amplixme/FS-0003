@@ -17,11 +17,13 @@
   color: white;
   font-weight: bold;
   text-decoration: none;
+  font-size: 18px;
 }
 
 .nav {
   display: flex;
   gap: 16px;
+  align-items: center;
 }
 
 .nav a {
@@ -35,6 +37,21 @@
   border: 0;
   color: white;
   font-size: 28px;
+  padding: 0;
+}
+
+.userName {
+  color: #93c5fd;
+  font-weight: 600;
+}
+
+.logoutBtn {
+  background: none;
+  border: 1px solid white;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .main {

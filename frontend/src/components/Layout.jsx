@@ -1,7 +1,7 @@
 import Header from "./Header";
 import Footer from "./Footer";
 
-function Layout({ children }) {
+const Layout = ({ children }) => {
   return (
     <div className="layout">
       <Header />
@@ -9,6 +9,6 @@ function Layout({ children }) {
       <Footer />
     </div>
   );
-}
+};
 
 export default Layout;
