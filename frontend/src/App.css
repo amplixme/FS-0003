@@ -59,6 +59,12 @@
   padding: 24px;
 }
 
+.footer {
+  padding: 16px 24px;
+  background: #f3f4f6;
+  text-align: center;
+}
+
 @media (max-width: 600px) {
   .header {
     align-items: flex-start;
