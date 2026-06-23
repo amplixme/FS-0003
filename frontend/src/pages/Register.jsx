@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import apiClient from "../services/apiClient";
+import api from "../services/api";
 
 const validateForm = ({ name, email, password, confirmPassword }) => {
   const errors = {};
@@ -64,7 +64,7 @@ const Register = () => {
     setLoading(true);
 
     try {
-      await apiClient.post("/auth/register", {
+      await api.post("/auth/register", {
         name: formData.name,
         email: formData.email,
         password: formData.password,
@@ -72,13 +72,11 @@ const Register = () => {
 
       navigate("/login", { state: { success: "Registro exitoso. Ahora puedes iniciar sesión." } });
     } catch (err) {
-      if (err.data?.error?.message) {
-        setServerError(err.data.error.message);
-      } else if (err.data?.message) {
-        setServerError(err.data.message);
-      } else {
-        setServerError("Error del servidor. Intenta nuevamente.");
-      }
+      const message =
+        err.response?.data?.error?.message ||
+        err.response?.data?.message ||
+        "Error del servidor. Intenta nuevamente.";
+      setServerError(message);
     } finally {
       setLoading(false);
     }
