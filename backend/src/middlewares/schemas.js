@@ -16,4 +16,15 @@ const registerSchema = Joi.object({
   })
 });
 
-module.exports = { registerSchema };
+const postSchema = Joi.object({
+  title: Joi.string().required().messages({
+    'any.required': 'Title is required',
+    'string.empty': 'Title cannot be empty'
+  }),
+  content: Joi.string().required().messages({
+    'any.required': 'Content is required',
+    'string.empty': 'Content cannot be empty'
+  })
+});
+
+module.exports = { registerSchema, postSchema };
