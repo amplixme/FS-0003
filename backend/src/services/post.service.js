@@ -49,30 +49,4 @@ const getPostById = async (id) => {
   return post;
 };
 
-/**
- * Obtiene una lista de posts relacionados (excluyendo el actual).
- * @param {number} excludeId - ID del post a excluir
- * @param {number} [limit=3] - Cantidad máxima de resultados
- * @returns {Array} Lista de posts
- */
-const getRelatedPosts = async (excludeId, limit = 3) => {
-  const posts = await prisma.post.findMany({
-    where: {
-      id: { not: excludeId },
-    },
-    orderBy: { createdAt: 'desc' },
-    take: limit,
-    include: {
-      author: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
-    },
-  });
-
-  return posts;
-};
-
-module.exports = { createPost, getPostById, getRelatedPosts };
+module.exports = { createPost, getPostById };

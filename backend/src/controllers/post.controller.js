@@ -1,4 +1,4 @@
-const { createPost, getPostById, getRelatedPosts } = require('../services/post.service');
+const { createPost, getPostById } = require('../services/post.service');
 const { success } = require('../utils/response');
 const AppError = require('../utils/AppError');
 
@@ -38,18 +38,4 @@ const getById = async (req, res, next) => {
   }
 };
 
-/**
- * GET /api/posts/:id/related
- * Obtiene posts relacionados (excluye el actual).
- */
-const getRelated = async (req, res, next) => {
-  try {
-    const id = Number(req.params.id);
-    const posts = await getRelatedPosts(id);
-    return success(res, posts, 200);
-  } catch (err) {
-    next(err);
-  }
-};
-
-module.exports = { create, getById, getRelated };
+module.exports = { create, getById };
