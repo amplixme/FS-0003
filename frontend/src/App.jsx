@@ -4,6 +4,7 @@ import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
+import PostDetailPage from "./pages/PostDetailPage/PostDetailPage";
 import "./App.css";
 
 const Home = () => <h1>Inicio</h1>;
@@ -19,6 +20,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/posts/:id" element={<PostDetailPage />} />
             <Route path="/crear" element={<ProtectedRoute><CreatePost /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
