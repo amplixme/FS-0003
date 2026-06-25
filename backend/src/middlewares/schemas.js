@@ -17,17 +17,36 @@ const registerSchema = Joi.object({
 });
 
 const postSchema = Joi.object({
-  title: Joi.string().required().messages({
+  title: Joi.string().min(1).max(200).required().messages({
     'any.required': 'Title is required',
-    'string.empty': 'Title cannot be empty'
+    'string.empty': 'Title cannot be empty',
+    'string.min': 'Title must be at least 1 character',
+    'string.max': 'Title cannot exceed 200 characters'
   }),
-  content: Joi.string().required().messages({
+  content: Joi.string().min(1).max(10000).required().messages({
     'any.required': 'Content is required',
-    'string.empty': 'Content cannot be empty'
+    'string.empty': 'Content cannot be empty',
+    'string.min': 'Content must be at least 1 character',
+    'string.max': 'Content cannot exceed 10000 characters'
   }),
   published: Joi.boolean().optional().messages({
     'boolean.base': 'Published must be a boolean value'
   })
+}).unknown(false);
+
+const updatePostSchema = Joi.object({
+  title: Joi.string().min(1).max(200).messages({
+    'string.empty': 'Title cannot be empty',
+    'string.min': 'Title must be at least 1 character',
+    'string.max': 'Title cannot exceed 200 characters'
+  }),
+  content: Joi.string().min(1).max(10000).messages({
+    'string.empty': 'Content cannot be empty',
+    'string.min': 'Content must be at least 1 character',
+    'string.max': 'Content cannot exceed 10000 characters'
+  })
+}).min(1).unknown(false).messages({
+  'object.min': 'At least one field (title or content) must be provided'
 });
 
-module.exports = { registerSchema, postSchema };
+module.exports = { registerSchema, postSchema, updatePostSchema };
