@@ -24,6 +24,9 @@ const postSchema = Joi.object({
   content: Joi.string().required().messages({
     'any.required': 'Content is required',
     'string.empty': 'Content cannot be empty'
+  }),
+  published: Joi.boolean().optional().messages({
+    'boolean.base': 'Published must be a boolean value'
   })
 });
 
