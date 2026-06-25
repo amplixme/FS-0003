@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { getPostById } from "../../services/post.service";
+import api from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
 import "./PostDetailPage.css";
 
@@ -12,6 +13,7 @@ export default function PostDetailPage() {
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [relatedPosts, setRelatedPosts] = useState([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -22,7 +24,6 @@ export default function PostDetailPage() {
       try {
         const data = await getPostById(id);
         if (!cancelled) {
-          // La API devuelve { data: { ...post } } o directamente el post
           setPost(data.data || data);
         }
       } catch (err) {
@@ -36,11 +37,42 @@ export default function PostDetailPage() {
       }
     };
 
+    const fetchRelated = async () => {
+      try {
+        const res = await api.get(`/posts/${id}/related`);
+        // La respuesta puede venir como { data: [...] } o directamente un array
+        const raw = res.data?.data ?? res.data;
+        const posts = Array.isArray(raw) ? raw : [];
+        if (!cancelled) setRelatedPosts(posts);
+      } catch {
+        // Silencioso — no bloquear la página si fallan los relacionados
+      }
+    };
+
     fetchPost();
+    fetchRelated();
     return () => { cancelled = true; };
   }, [id]);
 
   const isAuthor = user && post && user.id === post.authorId;
+
+  // Extraer headings del contenido para la tabla de contenidos
+  const headings = useMemo(() => {
+    if (!post?.content) return [];
+    const lines = post.content.split("\n");
+    return lines
+      .map((line) => {
+        const trimmed = line.trim();
+        if (trimmed.startsWith("## ")) {
+          return { level: 2, text: trimmed.replace("## ", ""), id: trimmed.replace("## ", "").toLowerCase().replace(/\s+/g, "-") };
+        }
+        if (trimmed.startsWith("### ")) {
+          return { level: 3, text: trimmed.replace("### ", ""), id: trimmed.replace("### ", "").toLowerCase().replace(/\s+/g, "-") };
+        }
+        return null;
+      })
+      .filter(Boolean);
+  }, [post]);
 
   const formatDate = (dateString) => {
     if (!dateString) return "";
@@ -165,10 +197,14 @@ export default function PostDetailPage() {
 
                 // Detect basic markdown-ish elements
                 if (trimmed.startsWith("## ")) {
-                  return <h2 key={i}>{trimmed.replace("## ", "")}</h2>;
+                  const text = trimmed.replace("## ", "");
+                  const id = text.toLowerCase().replace(/\s+/g, "-");
+                  return <h2 key={i} id={id}>{text}</h2>;
                 }
                 if (trimmed.startsWith("### ")) {
-                  return <h3 key={i}>{trimmed.replace("### ", "")}</h3>;
+                  const text = trimmed.replace("### ", "");
+                  const id = text.toLowerCase().replace(/\s+/g, "-");
+                  return <h3 key={i} id={id}>{text}</h3>;
                 }
                 if (trimmed.startsWith("> ")) {
                   return <blockquote key={i}>{trimmed.replace("> ", "")}</blockquote>;
@@ -217,37 +253,51 @@ export default function PostDetailPage() {
           {/* Sidebar (desktop only) */}
           <aside className="post-sidebar">
             <div className="sidebar-sticky">
-              <div className="sidebar-card">
-                <div className="sidebar-card-header">
-                  <span className="material-symbols-outlined sidebar-card-icon">
-                    menu_book
-                  </span>
-                  <h4 className="sidebar-card-title">Sobre el artículo</h4>
-                </div>
-                <div className="sidebar-card-body">
-                  <div className="sidebar-info-row">
-                    <span className="sidebar-info-label">Autor</span>
-                    <span className="sidebar-info-value">
-                      {post.author?.name || "Usuario"}
-                    </span>
+              {/* Tabla de contenidos */}
+              {headings.length > 0 && (
+                <div className="sidebar-card">
+                  <div className="sidebar-card-header">
+                    <span className="material-symbols-outlined sidebar-card-icon">list_alt</span>
+                    <h4 className="sidebar-card-title">Tabla de contenidos</h4>
                   </div>
-                  <div className="sidebar-info-row">
-                    <span className="sidebar-info-label">Publicado</span>
-                    <span className="sidebar-info-value">
-                      {formatDate(post.createdAt)}
-                    </span>
-                  </div>
-                  {post.updatedAt && post.updatedAt !== post.createdAt && (
-                    <div className="sidebar-info-row">
-                      <span className="sidebar-info-label">Actualizado</span>
-                      <span className="sidebar-info-value">
-                        {formatDate(post.updatedAt)}
-                      </span>
-                    </div>
-                  )}
+                  <nav className="sidebar-toc">
+                    {headings.map((h, i) => (
+                      <a
+                        key={i}
+                        href={`#${h.id}`}
+                        className={`sidebar-toc-link ${h.level === 3 ? "sidebar-toc-sublink" : ""}`}
+                      >
+                        <span className={`sidebar-toc-bullet ${h.level === 3 ? "sidebar-toc-bullet-sub" : ""}`} />
+                        {h.text}
+                      </a>
+                    ))}
+                  </nav>
                 </div>
-              </div>
+              )}
 
+              {/* Artículos relacionados */}
+              {relatedPosts.length > 0 && (
+                <div className="sidebar-section">
+                  <h4 className="sidebar-section-title">Artículos relacionados</h4>
+                  <div className="sidebar-related-list">
+                    {relatedPosts.map((rp) => (
+                      <Link key={rp.id} to={`/posts/${rp.id}`} className="sidebar-related-card">
+                        <div className="sidebar-related-avatar">
+                          {rp.title?.charAt(0)?.toUpperCase() || "A"}
+                        </div>
+                        <div className="sidebar-related-info">
+                          <h5 className="sidebar-related-title">{rp.title}</h5>
+                          <span className="sidebar-related-author">
+                            {rp.author?.name || "Usuario"}
+                          </span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* CTA Newsletter */}
               <div className="sidebar-cta">
                 <h4 className="sidebar-cta-title">¿Te gustó el artículo?</h4>
                 <p className="sidebar-cta-text">
