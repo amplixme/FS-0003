@@ -3,6 +3,7 @@ import { AuthProvider } from "./context/AuthContext";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import CreatePostPage from "./pages/CreatePostPage/CreatePostPage";
+import EditPostPage from "./pages/EditPostPage/EditPostPage";
 import HomePage from "./pages/HomePage/HomePage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
@@ -20,6 +21,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/crear" element={<ProtectedRoute><CreatePostPage /></ProtectedRoute>} />
+            <Route path="/posts/:id/editar" element={<ProtectedRoute><EditPostPage /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
