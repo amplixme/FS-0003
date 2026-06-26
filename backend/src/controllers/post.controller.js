@@ -3,10 +3,10 @@ const { success } = require('../utils/response');
 
 const create = async (req, res, next) => {
   try {
-    const { title, content } = req.body;
+    const { title, content, published } = req.body;
     const authorId = req.user.id;
 
-    const post = await createPost({ title, content }, authorId);
+    const post = await createPost({ title, content, published }, authorId);
     return success(res, post, 201);
   } catch (err) {
     next(err);

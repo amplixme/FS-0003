@@ -28,6 +28,9 @@ const postSchema = Joi.object({
     'string.empty': 'Content cannot be empty',
     'string.min': 'Content must be at least 1 character',
     'string.max': 'Content cannot exceed 10000 characters'
+  }),
+  published: Joi.boolean().optional().messages({
+    'boolean.base': 'Published must be a boolean value'
   })
 }).unknown(false);
 

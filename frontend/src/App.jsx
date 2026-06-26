@@ -2,12 +2,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
+import CreatePostPage from "./pages/CreatePostPage/CreatePostPage";
+import HomePage from "./pages/HomePage/HomePage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import "./App.css";
 
-const Home = () => <h1>Inicio</h1>;
-const CreatePost = () => <h1>Crear Post</h1>;
 const NotFound = () => <h1>404 - Página no encontrada</h1>;
 
 function App() {
@@ -16,10 +16,10 @@ function App() {
       <AuthProvider>
         <Layout>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path="/crear" element={<ProtectedRoute><CreatePost /></ProtectedRoute>} />
+            <Route path="/crear" element={<ProtectedRoute><CreatePostPage /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
