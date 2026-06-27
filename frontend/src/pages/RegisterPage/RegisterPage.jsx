@@ -64,7 +64,7 @@ const RegisterPage = () => {
     setLoading(true);
 
     try {
-      await apiClient.post("/api/auth/register", {
+      await apiClient.post("/auth/register", {
         name: formData.name,
         email: formData.email,
         password: formData.password,
