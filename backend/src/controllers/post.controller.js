@@ -1,16 +1,37 @@
-const { createPost } = require('../services/post.service');
+const { createPost, updatePost, deletePost, getAllPosts, getPostById } = require('../services/post.service');
 const { success } = require('../utils/response');
 
-/**
- * POST /api/posts
- * Crea un nuevo post vinculado al usuario autenticado.
- * El authorId se toma de req.user.id (NUNCA del body).
- */
+
+//Controlador para obtener todos los posts 
+const getAll = async (req, res, next) =>{
+  try {
+    const posts = await getAllPosts();
+    return success(res, post, 200);
+  } catch (err) {
+    next(err)
+  }
+}
+//Controlador para obtener un post por id
+const getOne = async (req, res, next) =>{
+  const { id } = req.params;
+  try {
+    const post = await getPostById(id)
+    if (!post){
+      return res.status(404).json({
+        message:`El post con ID ${id} no existe`
+      })
+    }
+    return success(res, post, 200);
+  } catch (err) {
+    next(err)
+  }
+}
+
 const create = async (req, res, next) => {
   try {
     const { title, content } = req.body;
     const authorId = req.user.id;
-
+    
     const post = await createPost({ title, content }, authorId);
     return success(res, post, 201);
   } catch (err) {
@@ -18,4 +39,24 @@ const create = async (req, res, next) => {
   }
 };
 
-module.exports = { create };
+const update = async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    const post = await updatePost(id, req.body, req.user);
+    return success(res, post, 200);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const remove = async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    await deletePost(id, req.user);
+    return success(res, { message: 'Post eliminado exitosamente' }, 200);
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { create, update, remove, getAll, getOne };
