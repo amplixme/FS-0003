@@ -1,12 +1,45 @@
 const prisma = require('../utils/prisma');
 const AppError = require('../utils/AppError');
 
-/**
- * Crea un nuevo post vinculado al usuario autenticado.
- * @param {{ title: string, content: string, published?: boolean }} data
- * @param {number} authorId - ID del usuario (req.user.id)
- * @returns {object} Post creado con datos del autor
- */
+const getAllPosts = async () => {
+  const posts = await prisma.post.findMany({
+    where: { published: true },
+    include: {
+      author: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+
+  return posts;
+};
+
+const getPostById = async (id) => {
+  const post = await prisma.post.findUnique({
+    where: {
+      id: Number(id),
+    },
+    include: {
+      author: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return post;
+};
+
 const createPost = async ({ title, content, published }, authorId) => {
   const post = await prisma.post.create({
     data: {
@@ -71,4 +104,4 @@ const deletePost = async (id, user) => {
   await prisma.post.delete({ where: { id } });
 };
 
-module.exports = { createPost, updatePost, deletePost };
+module.exports = { createPost, updatePost, deletePost, getAllPosts, getPostById };
