@@ -1,5 +1,29 @@
-const { createPost, updatePost, deletePost } = require('../services/post.service');
+const { createPost, updatePost, deletePost, getAllPosts, getPostById } = require('../services/post.service');
 const { success } = require('../utils/response');
+
+
+const getAll = async (req, res, next) => {
+  try {
+    const posts = await getAllPosts();
+    return success(res, posts, 200);
+  } catch (err) {
+    next(err);
+  }
+}
+const getOne = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const post = await getPostById(id);
+    if (!post) {
+      return res.status(404).json({
+        message: `El post con ID ${id} no existe`
+      });
+    }
+    return success(res, post, 200);
+  } catch (err) {
+    next(err);
+  }
+}
 
 const create = async (req, res, next) => {
   try {
@@ -33,4 +57,4 @@ const remove = async (req, res, next) => {
   }
 };
 
-module.exports = { create, update, remove };
+module.exports = { create, update, remove, getAll, getOne };
