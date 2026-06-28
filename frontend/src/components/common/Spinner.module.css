@@ -1,0 +1,43 @@
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  width: 100%;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.circle {
+  display: inline-block;
+  border-radius: 50%;
+  border-style: solid;
+  border-color: #d1d9e0 #d1d9e0 #d1d9e0 #2563eb;
+  animation: spin 0.75s linear infinite;
+  flex-shrink: 0;
+}
+
+/* Sizes */
+.sm { width: 20px; height: 20px; border-width: 2px; }
+.md { width: 36px; height: 36px; border-width: 3px; }
+.lg { width: 56px; height: 56px; border-width: 4px; }
+
+/* Accessibility */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .circle { animation-duration: 1.5s; }
+}
