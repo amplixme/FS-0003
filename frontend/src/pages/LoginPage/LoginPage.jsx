@@ -53,7 +53,7 @@ export default function LoginPage() {
     setServerError("");
 
     try {
-      const data = await apiClient.post("/api/auth/login", {
+      const data = await apiClient.post("/auth/login", {
         email: formData.email,
         password: formData.password,
       });
