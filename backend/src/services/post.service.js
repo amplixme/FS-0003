@@ -1,12 +1,52 @@
 const prisma = require('../utils/prisma');
 const AppError = require('../utils/AppError');
 
-const createPost = async ({ title, content }, authorId) => {
+const getAllPosts = async () => {
+  const posts = await prisma.post.findMany({
+    where: { published: true },
+    include: {
+      author: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+
+  return posts;
+};
+
+const getPostById = async (id) => {
+  const post = await prisma.post.findUnique({
+    where: {
+      id: Number(id),
+    },
+    include: {
+      author: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return post;
+};
+
+const createPost = async ({ title, content, published }, authorId) => {
   const post = await prisma.post.create({
     data: {
       title,
       content,
       authorId,
+      ...(typeof published === 'boolean' ? { published } : {}),
     },
     include: {
       author: {
@@ -86,4 +126,4 @@ const deletePost = async (id, user) => {
   await prisma.post.delete({ where: { id } });
 };
 
-module.exports = { createPost, getPostById, updatePost, deletePost };
+module.exports = { createPost, updatePost, deletePost, getAllPosts, getPostById };
