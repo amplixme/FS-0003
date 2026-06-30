@@ -1,57 +1,8 @@
+/* ── LAYOUT ── */
 .layout {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 24px;
-  background: #111827;
-  color: white;
-}
-
-.logo {
-  color: white;
-  font-weight: bold;
-  text-decoration: none;
-  font-size: 18px;
-}
-
-.nav {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-}
-
-.nav a {
-  color: white;
-  text-decoration: none;
-}
-
-.menu {
-  display: none;
-  background: none;
-  border: 0;
-  color: white;
-  font-size: 28px;
-  padding: 0;
-}
-
-.userName {
-  color: #93c5fd;
-  font-weight: 600;
-}
-
-.logoutBtn {
-  background: none;
-  border: 1px solid white;
-  color: white;
-  padding: 4px 12px;
-  border-radius: 4px;
-  cursor: pointer;
 }
 
 .main {
@@ -65,24 +16,358 @@
   text-align: center;
 }
 
-@media (max-width: 600px) {
-  .header {
-    align-items: flex-start;
-    flex-wrap: wrap;
-  }
+/* ── DESKTOP HEADER ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 60px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
 
-  .menu {
-    display: block;
-  }
+.logo {
+  color: #111827;
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 17px;
+  letter-spacing: -0.3px;
+  flex-shrink: 0;
+}
 
-  .nav {
+/* Nav desktop */
+.desktopNav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.desktopNavLink {
+  color: #374151;
+  text-decoration: none;
+  font-size: 15px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.desktopNavLink:hover {
+  color: #111827;
+}
+
+.desktopNavLinkActive {
+  color: #2563eb;
+  font-weight: 600;
+  border-bottom-color: #2563eb;
+}
+
+/* Acciones del header */
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.loginLink {
+  color: #2563eb;
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.loginLink:hover {
+  color: #1d4ed8;
+}
+
+.subscribeBtn {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: background 0.15s;
+}
+
+.subscribeBtn:hover {
+  background: #1d4ed8;
+}
+
+/* Avatar botón */
+.avatarBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatarImg {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatarFallback {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #6b7280;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* ── MOBILE OVERLAY ── */
+.mobileOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 200;
+}
+
+/* ── MOBILE SIDEBAR ── */
+.mobileSidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100dvh;
+  width: 300px;
+  background: #f9fafb;
+  z-index: 201;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto;
+}
+
+.mobileSidebarOpen {
+  transform: translateX(0);
+}
+
+/* Perfil */
+.sidebarProfile {
+  padding: 32px 24px 24px;
+  background: #f3f4f6;
+}
+
+.sidebarAvatarWrap {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 12px;
+}
+
+.sidebarAvatarImg {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.sidebarAvatarFallback {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #6b7280;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.onlineDot {
+  position: absolute;
+  bottom: 4px;
+  right: 2px;
+  width: 14px;
+  height: 14px;
+  background: #22c55e;
+  border-radius: 50%;
+  border: 2px solid #f3f4f6;
+}
+
+.sidebarName {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 2px;
+}
+
+.sidebarEmail {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.sidebarDivider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 0;
+}
+
+/* Nav del sidebar */
+.sidebarNav {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+}
+
+.sidebarNavLink {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 24px;
+  font-size: 16px;
+  color: #374151;
+  text-decoration: none;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+
+.sidebarNavLink:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.sidebarNavLinkActive {
+  background: #eff6ff;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.sidebarNavIcon {
+  font-size: 18px;
+  width: 24px;
+  text-align: center;
+}
+
+/* Sección Categorías */
+.sidebarSection {
+  padding: 16px 0 8px;
+}
+
+.sidebarSectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px 8px;
+}
+
+.sidebarSectionTitle {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+  text-transform: uppercase;
+}
+
+.sidebarSectionIcon {
+  font-size: 16px;
+  color: #9ca3af;
+}
+
+.sidebarCategories {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebarCategoryLink {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  font-size: 15px;
+  color: #374151;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.sidebarCategoryLink:hover {
+  background: #f3f4f6;
+}
+
+.sidebarCategoryCount {
+  background: #e5e7eb;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 9999px;
+  min-width: 28px;
+  text-align: center;
+}
+
+/* Footer del sidebar */
+.sidebarFooter {
+  margin-top: auto;
+  padding: 16px 24px 28px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.sidebarLogoutBtn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  color: #dc2626;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 16px;
+  transition: opacity 0.15s;
+}
+
+.sidebarLogoutBtn:hover {
+  opacity: 0.75;
+}
+
+.sidebarVersion {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #d1d5db;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* ── RESPONSIVE: ocultar desktopNav en móvil ── */
+@media (max-width: 768px) {
+  .desktopNav {
     display: none;
-    width: 100%;
-    flex-direction: column;
-    margin-top: 16px;
   }
 
-  .navOpen {
-    display: flex;
+  .header {
+    padding: 0 16px;
+  }
+
+  .loginLink {
+    display: none;
   }
 }
