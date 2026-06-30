@@ -53,12 +53,12 @@ export default function LoginPage() {
     setServerError("");
 
     try {
-      const data = await apiClient.post("/auth/login", {
+      const response = await apiClient.post("/auth/login", {
         email: formData.email,
         password: formData.password,
       });
 
-      login(data.token, data.user);
+      login(response.data.token, response.data.user);
       navigate("/");
     } catch (err) {
       setServerError(err.message || "Credenciales inválidas. Intenta de nuevo.");
