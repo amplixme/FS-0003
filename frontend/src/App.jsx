@@ -21,6 +21,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/crear" element={<ProtectedRoute><CreatePostPage /></ProtectedRoute>} />
+            <Route path="/posts/:id" element={<PostDetailPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>

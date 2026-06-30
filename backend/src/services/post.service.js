@@ -62,28 +62,6 @@ const createPost = async ({ title, content, published }, authorId) => {
   return post;
 };
 
-/**
- * Obtiene un post por su ID con datos del autor.
- * @param {number} id
- * @returns {object|null} Post con autor o null si no existe
- */
-const getPostById = async (id) => {
-  const post = await prisma.post.findUnique({
-    where: { id },
-    include: {
-      author: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-        },
-      },
-    },
-  });
-
-  return post;
-};
-
 const findPostOrThrow = async (id) => {
   const post = await prisma.post.findUnique({ where: { id } });
   if (!post) {

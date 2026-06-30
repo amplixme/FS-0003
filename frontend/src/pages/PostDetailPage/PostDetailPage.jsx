@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { getPostById } from "../../services/post.service";
-import api from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
 import "./PostDetailPage.css";
 
@@ -13,7 +12,6 @@ export default function PostDetailPage() {
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [relatedPosts, setRelatedPosts] = useState([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -37,20 +35,7 @@ export default function PostDetailPage() {
       }
     };
 
-    const fetchRelated = async () => {
-      try {
-        const res = await api.get(`/posts/${id}/related`);
-        // La respuesta puede venir como { data: [...] } o directamente un array
-        const raw = res.data?.data ?? res.data;
-        const posts = Array.isArray(raw) ? raw : [];
-        if (!cancelled) setRelatedPosts(posts);
-      } catch {
-        // Silencioso — no bloquear la página si fallan los relacionados
-      }
-    };
-
     fetchPost();
-    fetchRelated();
     return () => { cancelled = true; };
   }, [id]);
 
@@ -272,28 +257,6 @@ export default function PostDetailPage() {
                       </a>
                     ))}
                   </nav>
-                </div>
-              )}
-
-              {/* Artículos relacionados */}
-              {relatedPosts.length > 0 && (
-                <div className="sidebar-section">
-                  <h4 className="sidebar-section-title">Artículos relacionados</h4>
-                  <div className="sidebar-related-list">
-                    {relatedPosts.map((rp) => (
-                      <Link key={rp.id} to={`/posts/${rp.id}`} className="sidebar-related-card">
-                        <div className="sidebar-related-avatar">
-                          {rp.title?.charAt(0)?.toUpperCase() || "A"}
-                        </div>
-                        <div className="sidebar-related-info">
-                          <h5 className="sidebar-related-title">{rp.title}</h5>
-                          <span className="sidebar-related-author">
-                            {rp.author?.name || "Usuario"}
-                          </span>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
                 </div>
               )}
 

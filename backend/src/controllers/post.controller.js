@@ -10,39 +10,9 @@ const getAll = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-}
-const getOne = async (req, res, next) => {
-  const { id } = req.params;
-  try {
-    const post = await getPostById(id);
-    if (!post) {
-      return res.status(404).json({
-        message: `El post con ID ${id} no existe`
-      });
-    }
-    return success(res, post, 200);
-  } catch (err) {
-    next(err);
-  }
-}
-
-const create = async (req, res, next) => {
-  try {
-    const { title, content, published } = req.body;
-    const authorId = req.user.id;
-
-    const post = await createPost({ title, content, published }, authorId);
-    return success(res, post, 201);
-  } catch (err) {
-    next(err);
-  }
 };
 
-/**
- * GET /api/posts/:id
- * Obtiene un post por su ID.
- */
-const getById = async (req, res, next) => {
+const getOne = async (req, res, next) => {
   try {
     const id = Number(req.params.id);
     const post = await getPostById(id);
@@ -52,6 +22,18 @@ const getById = async (req, res, next) => {
     }
 
     return success(res, post, 200);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const create = async (req, res, next) => {
+  try {
+    const { title, content, published } = req.body;
+    const authorId = req.user.id;
+
+    const post = await createPost({ title, content, published }, authorId);
+    return success(res, post, 201);
   } catch (err) {
     next(err);
   }
