@@ -18,13 +18,21 @@ model User {
   posts     Post[]
 }
 
+model Category {
+  id    String     @id @default(uuid())
+  name  String     @unique
+  slug  String     @unique
+  posts Post[]     @relation("PostCategories")
+}
+
 model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String
-  published Boolean  @default(false)
-  authorId  Int
-  author    User     @relation(fields: [authorId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int        @id @default(autoincrement())
+  title      String
+  content    String
+  published  Boolean    @default(false)
+  authorId   Int
+  author     User       @relation(fields: [authorId], references: [id])
+  categories Category[] @relation("PostCategories")
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 }
