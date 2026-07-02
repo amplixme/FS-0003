@@ -49,4 +49,34 @@ const updatePostSchema = Joi.object({
   'object.min': 'At least one field (title or content) must be provided'
 });
 
-module.exports = { registerSchema, postSchema, updatePostSchema };
+const createCategorySchema = Joi.object({
+  name: Joi.string().min(1).max(100).required().messages({
+    'any.required': 'Name is required',
+    'string.empty': 'Name cannot be empty',
+    'string.min': 'Name must be at least 1 character',
+    'string.max': 'Name cannot exceed 100 characters',
+  }),
+  slug: Joi.string().min(1).max(100).required().messages({
+    'any.required': 'Slug is required',
+    'string.empty': 'Slug cannot be empty',
+    'string.min': 'Slug must be at least 1 character',
+    'string.max': 'Slug cannot exceed 100 characters',
+  }),
+}).unknown(false);
+
+const updateCategorySchema = Joi.object({
+  name: Joi.string().min(1).max(100).messages({
+    'string.empty': 'Name cannot be empty',
+    'string.min': 'Name must be at least 1 character',
+    'string.max': 'Name cannot exceed 100 characters',
+  }),
+  slug: Joi.string().min(1).max(100).messages({
+    'string.empty': 'Slug cannot be empty',
+    'string.min': 'Slug must be at least 1 character',
+    'string.max': 'Slug cannot exceed 100 characters',
+  }),
+}).min(1).unknown(false).messages({
+  'object.min': 'At least one field (name or slug) must be provided',
+});
+
+module.exports = { registerSchema, postSchema, updatePostSchema, createCategorySchema, updateCategorySchema };
