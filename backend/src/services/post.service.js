@@ -1,9 +1,19 @@
 const prisma = require('../utils/prisma');
 const AppError = require('../utils/AppError');
 
-const getAllPosts = async () => {
+const getAllPosts = async ({ categorySlug } = {}) => {
   const posts = await prisma.post.findMany({
-    where: { published: true },
+    where: {
+      published: true,
+      
+      ...(categorySlug && {
+        categories: {
+          some: {
+            slug: categorySlug,
+          },
+        },
+      }),
+    },
     include: {
       author: {
         select: {
