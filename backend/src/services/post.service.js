@@ -40,11 +40,12 @@ const getPostById = async (id) => {
   return post;
 };
 
-const createPost = async ({ title, content, published }, authorId) => {
+const createPost = async ({ title, content, published, coverImage }, authorId) => {
   const post = await prisma.post.create({
     data: {
       title,
       content,
+      coverImage: coverImage || null,
       authorId,
       ...(typeof published === 'boolean' ? { published } : {}),
     },
