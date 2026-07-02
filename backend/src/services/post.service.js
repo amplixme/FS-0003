@@ -1,9 +1,15 @@
 const prisma = require('../utils/prisma');
 const AppError = require('../utils/AppError');
 
-const getAllPosts = async () => {
+const getAllPosts = async (categorySlug) => {
+  const where = { published: true };
+
+  if (categorySlug) {
+    where.categories = { some: { slug: categorySlug } };
+  }
+
   const posts = await prisma.post.findMany({
-    where: { published: true },
+    where,
     include: {
       author: {
         select: {
@@ -12,6 +18,7 @@ const getAllPosts = async () => {
           email: true,
         },
       },
+      categories: true,
     },
     orderBy: {
       createdAt: 'desc',
@@ -34,6 +41,7 @@ const getPostById = async (id) => {
           email: true,
         },
       },
+      categories: true,
     },
   });
 
