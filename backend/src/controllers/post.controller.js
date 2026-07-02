@@ -29,10 +29,10 @@ const getOne = async (req, res, next) => {
 
 const create = async (req, res, next) => {
   try {
-    const { title, content, published } = req.body;
+    const { title, content, published, coverImage } = req.body;
     const authorId = req.user.id;
 
-    const post = await createPost({ title, content, published }, authorId);
+    const post = await createPost({ title, content, published, coverImage }, authorId);
     return success(res, post, 201);
   } catch (err) {
     next(err);

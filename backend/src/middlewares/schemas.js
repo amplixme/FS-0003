@@ -31,6 +31,9 @@ const postSchema = Joi.object({
   }),
   published: Joi.boolean().optional().messages({
     'boolean.base': 'Published must be a boolean value'
+  }),
+  coverImage: Joi.string().uri().allow('').optional().messages({
+    'string.uri': 'coverImage must be a valid URL'
   })
 }).unknown(false);
 
@@ -44,6 +47,9 @@ const updatePostSchema = Joi.object({
     'string.empty': 'Content cannot be empty',
     'string.min': 'Content must be at least 1 character',
     'string.max': 'Content cannot exceed 10000 characters'
+  }),
+  coverImage: Joi.string().uri().allow('').optional().messages({
+    'string.uri': 'coverImage must be a valid URL'
   })
 }).min(1).unknown(false).messages({
   'object.min': 'At least one field (title or content) must be provided'
