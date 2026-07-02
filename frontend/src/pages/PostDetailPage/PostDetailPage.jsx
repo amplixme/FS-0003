@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { getPostById } from "../../services/post.service";
+import { getPostById, deletePost } from "../../services/post.service";
 import { useAuth } from "../../context/AuthContext";
+import { ConfirmModal, Spinner, ErrorMessage, EmptyState } from "../../components/common";
 import "./PostDetailPage.css";
 
 export default function PostDetailPage() {
@@ -12,48 +13,57 @@ export default function PostDetailPage() {
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  const showToast = (message, type = "success") => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3500);
+  };
 
   useEffect(() => {
     let cancelled = false;
-
     const fetchPost = async () => {
       setLoading(true);
       setError(null);
       try {
         const data = await getPostById(id);
-        if (!cancelled) {
-          setPost(data.data || data);
-        }
+        if (!cancelled) setPost(data.data || data);
       } catch (err) {
-        if (!cancelled) {
-          setError(err.message || "No se pudo cargar el artículo");
-        }
+        if (!cancelled) setError(err.message || "No se pudo cargar el artículo");
       } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
+        if (!cancelled) setLoading(false);
       }
     };
-
     fetchPost();
     return () => { cancelled = true; };
   }, [id]);
 
   const isAuthor = user && post && user.id === post.authorId;
 
-  // Extraer headings del contenido para la tabla de contenidos
+  const handleDeleteConfirm = async () => {
+    setIsDeleting(true);
+    try {
+      await deletePost(post.id);
+      setShowDeleteModal(false);
+      showToast("Artículo eliminado correctamente", "success");
+      setTimeout(() => navigate("/"), 1200);
+    } catch (err) {
+      setIsDeleting(false);
+      setShowDeleteModal(false);
+      showToast(err.message || "Error al eliminar el artículo", "error");
+    }
+  };
+
   const headings = useMemo(() => {
     if (!post?.content) return [];
-    const lines = post.content.split("\n");
-    return lines
+    return post.content
+      .split("\n")
       .map((line) => {
-        const trimmed = line.trim();
-        if (trimmed.startsWith("## ")) {
-          return { level: 2, text: trimmed.replace("## ", ""), id: trimmed.replace("## ", "").toLowerCase().replace(/\s+/g, "-") };
-        }
-        if (trimmed.startsWith("### ")) {
-          return { level: 3, text: trimmed.replace("### ", ""), id: trimmed.replace("### ", "").toLowerCase().replace(/\s+/g, "-") };
-        }
+        const t = line.trim();
+        if (t.startsWith("## "))  return { level: 2, text: t.slice(3), id: t.slice(3).toLowerCase().replace(/\s+/g, "-") };
+        if (t.startsWith("### ")) return { level: 3, text: t.slice(4), id: t.slice(4).toLowerCase().replace(/\s+/g, "-") };
         return null;
       })
       .filter(Boolean);
@@ -61,11 +71,8 @@ export default function PostDetailPage() {
 
   const formatDate = (dateString) => {
     if (!dateString) return "";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("es-ES", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+    return new Date(dateString).toLocaleDateString("es-ES", {
+      year: "numeric", month: "long", day: "numeric",
     });
   };
 
@@ -74,13 +81,7 @@ export default function PostDetailPage() {
     return (
       <div className="post-detail-page">
         <div className="post-detail-container">
-          <div className="skeleton breadcrumb-skeleton" />
-          <div className="skeleton hero-skeleton" />
-          <div className="skeleton title-skeleton" />
-          <div className="skeleton author-skeleton" />
-          <div className="skeleton content-skeleton" />
-          <div className="skeleton content-skeleton short" />
-          <div className="skeleton content-skeleton" />
+          <Spinner size="lg" label="Cargando artículo…" />
         </div>
       </div>
     );
@@ -91,38 +92,27 @@ export default function PostDetailPage() {
     return (
       <div className="post-detail-page">
         <div className="post-detail-container">
-          <div className="error-state">
-            <span className="error-state-icon material-symbols-outlined">error_outline</span>
-            <h2 className="error-state-title">Algo salió mal</h2>
-            <p className="error-state-message">{error}</p>
-            <div className="error-state-actions">
-              <Link to="/" className="btn btn-primary">Volver al inicio</Link>
-              <button
-                className="btn btn-outline"
-                onClick={() => window.location.reload()}
-              >
-                Intentar de nuevo
-              </button>
-            </div>
-          </div>
+          <ErrorMessage
+            message={error}
+            onRetry={() => window.location.reload()}
+            retryLabel="Intentar de nuevo"
+          />
         </div>
       </div>
     );
   }
 
-  // --- Empty State (post not found handled by API as 404) ---
+  // --- Empty State ---
   if (!post) {
     return (
       <div className="post-detail-page">
         <div className="post-detail-container">
-          <div className="error-state">
-            <span className="error-state-icon material-symbols-outlined">search_off</span>
-            <h2 className="error-state-title">Artículo no encontrado</h2>
-            <p className="error-state-message">
-              El artículo que buscas no existe o ha sido eliminado.
-            </p>
-            <Link to="/" className="btn btn-primary">Volver al inicio</Link>
-          </div>
+          <EmptyState
+            icon="search_off"
+            message="El artículo que buscas no existe o ha sido eliminado."
+            actionLabel="Volver al inicio"
+            onAction={() => navigate("/")}
+          />
         </div>
       </div>
     );
@@ -130,155 +120,152 @@ export default function PostDetailPage() {
 
   // --- Success State ---
   return (
-    <div className="post-detail-page">
-      <div className="post-detail-container">
-        {/* Breadcrumb */}
-        <nav className="breadcrumb">
-          <Link to="/" className="breadcrumb-link">Inicio</Link>
-          <span className="breadcrumb-separator material-symbols-outlined">chevron_right</span>
-          <span className="breadcrumb-current">{post.title}</span>
-        </nav>
+    <>
+      <div className="post-detail-page">
+        <div className="post-detail-container">
+          {/* Breadcrumb */}
+          <nav className="breadcrumb">
+            <Link to="/" className="breadcrumb-link">Inicio</Link>
+            <span className="breadcrumb-separator material-symbols-outlined">chevron_right</span>
+            <span className="breadcrumb-current">{post.title}</span>
+          </nav>
 
-        <div className="post-detail-layout">
-          {/* Article */}
-          <article className="post-article">
-            {/* Hero */}
-            <div className="post-hero">
-              <div className="post-hero-image">
-                <div className="post-hero-placeholder">
-                  <span className="material-symbols-outlined post-hero-icon">article</span>
-                </div>
-              </div>
-              {post.category && (
-                <span className="post-category-badge">{post.category}</span>
-              )}
-            </div>
-
-            {/* Header */}
-            <header className="post-header">
-              <h1 className="post-title">{post.title}</h1>
-              <div className="post-meta">
-                <div className="post-author">
-                  <div className="post-author-avatar">
-                    {post.author?.name?.charAt(0)?.toUpperCase() || "U"}
-                  </div>
-                  <div className="post-author-info">
-                    <span className="post-author-name">
-                      {post.author?.name || "Usuario"}
-                    </span>
-                    <span className="post-date">
-                      {formatDate(post.createdAt)}
-                    </span>
+          <div className="post-detail-layout">
+            {/* Article */}
+            <article className="post-article">
+              {/* Hero */}
+              <div className="post-hero">
+                <div className="post-hero-image">
+                  <div className="post-hero-placeholder">
+                    <span className="material-symbols-outlined post-hero-icon">article</span>
                   </div>
                 </div>
+                {post.category && (
+                  <span className="post-category-badge">{post.category}</span>
+                )}
               </div>
-            </header>
 
-            {/* Content */}
-            <div className="post-content prose">
-              {post.content?.split("\n").map((paragraph, i) => {
-                const trimmed = paragraph.trim();
-                if (!trimmed) return null;
-
-                // Detect basic markdown-ish elements
-                if (trimmed.startsWith("## ")) {
-                  const text = trimmed.replace("## ", "");
-                  const id = text.toLowerCase().replace(/\s+/g, "-");
-                  return <h2 key={i} id={id}>{text}</h2>;
-                }
-                if (trimmed.startsWith("### ")) {
-                  const text = trimmed.replace("### ", "");
-                  const id = text.toLowerCase().replace(/\s+/g, "-");
-                  return <h3 key={i} id={id}>{text}</h3>;
-                }
-                if (trimmed.startsWith("> ")) {
-                  return <blockquote key={i}>{trimmed.replace("> ", "")}</blockquote>;
-                }
-                if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
-                  return <li key={i}>{trimmed.replace(/^[-*]\s/, "")}</li>;
-                }
-
-                return <p key={i}>{trimmed}</p>;
-              })}
-            </div>
-
-            {/* Author Actions (only visible to the author) */}
-            {isAuthor && (
-              <div className="post-author-actions">
-                <button
-                  className="btn btn-outline btn-icon"
-                  onClick={() => navigate(`/posts/${post.id}/editar`)}
-                >
-                  <span className="material-symbols-outlined">edit</span>
-                  Editar
-                </button>
-                <button
-                  className="btn btn-outline btn-danger btn-icon"
-                  onClick={() => {
-                    if (window.confirm("¿Estás seguro de que querés eliminar este artículo?")) {
-                      // TODO: conectar con deletePost cuando esté disponible en frontend
-                    }
-                  }}
-                >
-                  <span className="material-symbols-outlined">delete</span>
-                  Eliminar
-                </button>
-              </div>
-            )}
-
-            {/* Volver al inicio */}
-            <div className="post-back">
-              <Link to="/" className="btn btn-text btn-icon">
-                <span className="material-symbols-outlined">arrow_back</span>
-                Volver al inicio
-              </Link>
-            </div>
-          </article>
-
-          {/* Sidebar (desktop only) */}
-          <aside className="post-sidebar">
-            <div className="sidebar-sticky">
-              {/* Tabla de contenidos */}
-              {headings.length > 0 && (
-                <div className="sidebar-card">
-                  <div className="sidebar-card-header">
-                    <span className="material-symbols-outlined sidebar-card-icon">list_alt</span>
-                    <h4 className="sidebar-card-title">Tabla de contenidos</h4>
+              {/* Header */}
+              <header className="post-header">
+                <h1 className="post-title">{post.title}</h1>
+                <div className="post-meta">
+                  <div className="post-author">
+                    <div className="post-author-avatar">
+                      {post.author?.name?.charAt(0)?.toUpperCase() || "U"}
+                    </div>
+                    <div className="post-author-info">
+                      <span className="post-author-name">
+                        {post.author?.name || "Usuario"}
+                      </span>
+                      <span className="post-date">{formatDate(post.createdAt)}</span>
+                    </div>
                   </div>
-                  <nav className="sidebar-toc">
-                    {headings.map((h, i) => (
-                      <a
-                        key={i}
-                        href={`#${h.id}`}
-                        className={`sidebar-toc-link ${h.level === 3 ? "sidebar-toc-sublink" : ""}`}
-                      >
-                        <span className={`sidebar-toc-bullet ${h.level === 3 ? "sidebar-toc-bullet-sub" : ""}`} />
-                        {h.text}
-                      </a>
-                    ))}
-                  </nav>
+                </div>
+              </header>
+
+              {/* Content */}
+              <div className="post-content prose">
+                {post.content?.split("\n").map((paragraph, i) => {
+                  const trimmed = paragraph.trim();
+                  if (!trimmed) return null;
+                  if (trimmed.startsWith("## "))  { const t = trimmed.slice(3);  const anchorId = t.toLowerCase().replace(/\s+/g, "-"); return <h2 key={i} id={anchorId}>{t}</h2>; }
+                  if (trimmed.startsWith("### ")) { const t = trimmed.slice(4);  const anchorId = t.toLowerCase().replace(/\s+/g, "-"); return <h3 key={i} id={anchorId}>{t}</h3>; }
+                  if (trimmed.startsWith("> "))   return <blockquote key={i}>{trimmed.slice(2)}</blockquote>;
+                  if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) return <li key={i}>{trimmed.replace(/^[-*]\s/, "")}</li>;
+                  return <p key={i}>{trimmed}</p>;
+                })}
+              </div>
+
+              {/* Author Actions */}
+              {isAuthor && (
+                <div className="post-author-actions">
+                  <button
+                    className="btn btn-outline btn-icon"
+                    onClick={() => navigate(`/posts/${post.id}/editar`)}
+                  >
+                    <span className="material-symbols-outlined">edit</span>
+                    Editar
+                  </button>
+                  <button
+                    className="btn btn-outline btn-danger btn-icon"
+                    onClick={() => setShowDeleteModal(true)}
+                  >
+                    <span className="material-symbols-outlined">delete</span>
+                    Eliminar
+                  </button>
                 </div>
               )}
 
-              {/* CTA Newsletter */}
-              <div className="sidebar-cta">
-                <h4 className="sidebar-cta-title">¿Te gustó el artículo?</h4>
-                <p className="sidebar-cta-text">
-                  Recibí las mejores historias de diseño y tecnología cada semana.
-                </p>
-                <input
-                  className="sidebar-cta-input"
-                  type="email"
-                  placeholder="tu@email.com"
-                />
-                <button className="btn btn-primary sidebar-cta-btn">
-                  Suscribirse
-                </button>
+              {/* Volver al inicio */}
+              <div className="post-back">
+                <Link to="/" className="btn btn-text btn-icon">
+                  <span className="material-symbols-outlined">arrow_back</span>
+                  Volver al inicio
+                </Link>
               </div>
-            </div>
-          </aside>
+            </article>
+
+            {/* Sidebar */}
+            <aside className="post-sidebar">
+              <div className="sidebar-sticky">
+                {headings.length > 0 && (
+                  <div className="sidebar-card">
+                    <div className="sidebar-card-header">
+                      <span className="material-symbols-outlined sidebar-card-icon">list_alt</span>
+                      <h4 className="sidebar-card-title">Tabla de contenidos</h4>
+                    </div>
+                    <nav className="sidebar-toc">
+                      {headings.map((h, i) => (
+                        <a
+                          key={i}
+                          href={`#${h.id}`}
+                          className={`sidebar-toc-link ${h.level === 3 ? "sidebar-toc-sublink" : ""}`}
+                        >
+                          <span className={`sidebar-toc-bullet ${h.level === 3 ? "sidebar-toc-bullet-sub" : ""}`} />
+                          {h.text}
+                        </a>
+                      ))}
+                    </nav>
+                  </div>
+                )}
+
+                <div className="sidebar-cta">
+                  <h4 className="sidebar-cta-title">¿Te gustó el artículo?</h4>
+                  <p className="sidebar-cta-text">
+                    Recibí las mejores historias de diseño y tecnología cada semana.
+                  </p>
+                  <input className="sidebar-cta-input" type="email" placeholder="tu@email.com" />
+                  <button className="btn btn-primary sidebar-cta-btn">Suscribirse</button>
+                </div>
+              </div>
+            </aside>
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Modal de confirmación */}
+      <ConfirmModal
+        isOpen={showDeleteModal}
+        title="¿Eliminar este artículo?"
+        message="¿Estás seguro de que deseas eliminar este artículo? Esta acción no se puede deshacer."
+        confirmLabel="Eliminar"
+        cancelLabel="Cancelar"
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setShowDeleteModal(false)}
+        isLoading={isDeleting}
+        danger
+      />
+
+      {/* Toast */}
+      {toast && (
+        <div
+          role="status"
+          aria-live="polite"
+          className={`toast toast--${toast.type}`}
+        >
+          {toast.message}
+        </div>
+      )}
+    </>
   );
 }

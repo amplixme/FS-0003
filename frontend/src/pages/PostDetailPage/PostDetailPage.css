@@ -672,123 +672,69 @@
 }
 
 @keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
-.breadcrumb-skeleton {
-  height: 1.25rem;
-  width: 240px;
-  margin-bottom: 2rem;
-}
-
-.hero-skeleton {
-  height: 320px;
-  width: 100%;
-  border-radius: 0.75rem;
-  margin-bottom: 2.5rem;
-}
+.breadcrumb-skeleton { height: 1.25rem; width: 240px; margin-bottom: 2rem; }
+.hero-skeleton       { height: 320px; width: 100%; border-radius: 0.75rem; margin-bottom: 2.5rem; }
+.title-skeleton      { height: 2.5rem; width: 85%; margin-bottom: 1.5rem; }
+.author-skeleton     { height: 3.5rem; width: 200px; margin-bottom: 2.5rem; }
+.content-skeleton    { height: 1.25rem; width: 100%; margin-bottom: 1rem; }
+.content-skeleton.short { width: 65%; }
 
 @media (min-width: 768px) {
-  .hero-skeleton {
-    height: 420px;
-  }
+  .hero-skeleton { height: 420px; }
 }
 
-.title-skeleton {
-  height: 2.5rem;
-  width: 85%;
-  margin-bottom: 1.5rem;
+/* ============================================
+   Toast
+   ============================================ */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  z-index: 2000;
+  white-space: nowrap;
+  animation: toastIn 0.2s ease;
 }
 
-.author-skeleton {
-  height: 3.5rem;
-  width: 200px;
-  margin-bottom: 2.5rem;
-}
+.toast--success { background: #16a34a; }
+.toast--error   { background: var(--md-error); }
 
-.content-skeleton {
-  height: 1.25rem;
-  width: 100%;
-  margin-bottom: 1rem;
-}
-
-.content-skeleton.short {
-  width: 65%;
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
 /* ============================================
    Responsive (Mobile < 768px)
    ============================================ */
 @media (max-width: 767px) {
-  .post-detail-container {
-    padding: 1rem 0.75rem 5rem;
-  }
+  .post-detail-container { padding: 1rem 0.75rem 5rem; }
+  .breadcrumb            { font-size: 0.8125rem; margin-bottom: 1.25rem; }
+  .post-title            { font-size: 1.5rem; margin-bottom: 1rem; }
+  .post-meta             { padding: 1rem 0; }
+  .post-author-avatar    { width: 36px; height: 36px; font-size: 0.9375rem; }
+  .post-content.prose    { font-size: 1rem; }
+  .post-content.prose h2 { font-size: 1.25rem; }
+  .post-content.prose h3 { font-size: 1.125rem; }
 
-  .breadcrumb {
-    font-size: 0.8125rem;
-    margin-bottom: 1.25rem;
-  }
+  .post-author-actions          { flex-direction: column; }
+  .post-author-actions .btn     { width: 100%; }
 
-  .post-title {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .post-meta {
-    padding: 1rem 0;
-  }
-
-  .post-author-avatar {
-    width: 36px;
-    height: 36px;
-    font-size: 0.9375rem;
-  }
-
-  .post-content.prose {
-    font-size: 1rem;
-  }
-
-  .post-content.prose h2 {
-    font-size: 1.25rem;
-  }
-
-  .post-content.prose h3 {
-    font-size: 1.125rem;
-  }
-
-  .post-author-actions {
-    flex-direction: column;
-  }
-
-  .post-author-actions .btn {
-    width: 100%;
-  }
-
-  .error-state {
-    padding: 3rem 1rem;
-  }
-
-  .error-state-title {
-    font-size: 1.25rem;
-  }
-
-  .skeleton {
-    animation-duration: 2s;
-  }
-
-  .hero-skeleton {
-    height: 200px;
-  }
-
-  .title-skeleton {
-    height: 2rem;
-    width: 90%;
-  }
+  .error-state       { padding: 3rem 1rem; }
+  .error-state-title { font-size: 1.25rem; }
+  .skeleton          { animation-duration: 2s; }
+  .hero-skeleton     { height: 200px; }
+  .title-skeleton    { height: 2rem; width: 90%; }
 }
 
 /* ============================================
@@ -799,4 +745,5 @@
     animation: none;
     background: var(--md-surface-container-high);
   }
+  .toast { animation: none; }
 }

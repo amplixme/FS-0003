@@ -60,7 +60,8 @@ const EditPostPage = () => {
   }, [id, user, navigate]);
 
   const handleSubmit = async (formData) => {
-    await updatePost(id, formData);
+    const { published, ...allowedData } = formData;
+    await updatePost(id, allowedData);
     navigate(`/posts/${id}`);
   };
 
