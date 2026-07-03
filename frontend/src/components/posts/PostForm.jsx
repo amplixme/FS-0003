@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ErrorMessage } from "../common";
 import styles from "./PostForm.module.css";
+import { ImageUpload } from '../common';
 
 const validateForm = ({ title, content }) => {
   const errors = {};
@@ -63,6 +64,8 @@ const PostForm = ({ initialData = { title: "", content: "", published: false }, 
 
   const displayError = serverError || externalError;
 
+  const [imageUrl, setImageUrl] = useState('');
+
   return (
     <form className={styles.form} onSubmit={handleSubmit} noValidate>
       {displayError && <ErrorMessage message={displayError} />}
@@ -94,6 +97,13 @@ const PostForm = ({ initialData = { title: "", content: "", published: false }, 
         />
         {errors.content && <p className={styles.errorText}>{errors.content}</p>}
       </div>
+
+        <ImageUpload
+          label="Imagen de portada"
+          onUpload={(url) => setImageUrl(url)}   // ← recibe la URL de Cloudinary
+          onClear={() => setImageUrl('')}
+          initialUrl={imageUrl || null}           // ← útil en modo edición
+        />
 
       <label className={styles.toggle}>
         <input
