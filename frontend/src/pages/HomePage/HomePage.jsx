@@ -25,7 +25,6 @@ const HomePage = () => {
       setIsLoading(true);
       setError("");
       try {
-        const params = activeCategory ? { category: activeCategory } : {};
         const response = await getAll(activeCategory ? { category: activeCategory } : undefined);
         if (isActive) setPosts(getPostsFromResponse(response));
       } catch {
@@ -69,7 +68,7 @@ const HomePage = () => {
           {!isLoading && !error && posts.length > 0 && (
             <div className={styles.grid}>
               {posts.map((post) => (
-                <PostCard key={post.id} post={post} />
+                <PostCard key={post.id} post={post} onCategorySelect={setActiveCategory} />
               ))}
             </div>
           )}
