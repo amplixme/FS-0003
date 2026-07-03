@@ -31,6 +31,9 @@ const postSchema = Joi.object({
   }),
   published: Joi.boolean().optional().messages({
     'boolean.base': 'Published must be a boolean value'
+  }),
+  categoryIds: Joi.array().items(Joi.string()).optional().messages({
+    'array.base': 'Category IDs must be an array'
   })
 }).unknown(false);
 
@@ -44,9 +47,12 @@ const updatePostSchema = Joi.object({
     'string.empty': 'Content cannot be empty',
     'string.min': 'Content must be at least 1 character',
     'string.max': 'Content cannot exceed 10000 characters'
+  }),
+  categoryIds: Joi.array().items(Joi.string()).optional().messages({
+    'array.base': 'Category IDs must be an array'
   })
 }).min(1).unknown(false).messages({
-  'object.min': 'At least one field (title or content) must be provided'
+  'object.min': 'At least one field (title, content or categoryIds) must be provided'
 });
 
 const createCategorySchema = Joi.object({
