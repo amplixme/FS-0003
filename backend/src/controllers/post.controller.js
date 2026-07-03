@@ -6,7 +6,7 @@ const AppError = require('../utils/AppError');
 const getAll = async (req, res, next) => {
   try {
     const { category } = req.query;
-    const posts = await getAllPosts(category);
+    const posts = await getAllPosts({ categorySlug: category });
     return success(res, posts, 200);
   } catch (err) {
     next(err);
@@ -30,10 +30,10 @@ const getOne = async (req, res, next) => {
 
 const create = async (req, res, next) => {
   try {
-    const { title, content, published, coverImage } = req.body;
+    const { title, content, published, coverImage, categoryIds } = req.body;
     const authorId = req.user.id;
 
-    const post = await createPost({ title, content, published, coverImage }, authorId);
+    const post = await createPost({ title, content, published, coverImage, categoryIds }, authorId);
     return success(res, post, 201);
   } catch (err) {
     next(err);
