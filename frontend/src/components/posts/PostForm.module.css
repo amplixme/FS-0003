@@ -95,6 +95,30 @@
   font-size: 0.85rem;
 }
 
+.helpText {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.categoryList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+}
+
+.categoryOption {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 0.85rem;
+  color: #111827;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
 .actions {
   display: flex;
   justify-content: flex-end;

@@ -60,7 +60,12 @@ const EditPostPage = () => {
   }, [id, user, navigate]);
 
   const handleSubmit = async (formData) => {
-    const { published, ...allowedData } = formData;
+    const allowedData = {
+      title: formData.title,
+      content: formData.content,
+      categoryIds: formData.categoryIds,
+    };
+
     await updatePost(id, allowedData);
     navigate(`/posts/${id}`);
   };
@@ -102,7 +107,7 @@ const EditPostPage = () => {
       </div>
 
       <PostForm
-        initialData={{ title: post.title, content: post.content, published: post.published }}
+        initialData={{ title: post.title, content: post.content, published: post.published, categories: post.categories }}
         onSubmit={handleSubmit}
         submitLabel="Guardar cambios"
       />
