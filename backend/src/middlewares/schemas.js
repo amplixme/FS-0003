@@ -34,6 +34,9 @@ const postSchema = Joi.object({
   }),
   categoryIds: Joi.array().items(Joi.string()).optional().messages({
     'array.base': 'Category IDs must be an array'
+  }),
+  coverImage: Joi.string().uri().allow('').optional().messages({
+    'string.uri': 'coverImage must be a valid URL'
   })
 }).unknown(false);
 
@@ -50,9 +53,12 @@ const updatePostSchema = Joi.object({
   }),
   categoryIds: Joi.array().items(Joi.string()).optional().messages({
     'array.base': 'Category IDs must be an array'
+  }),
+  coverImage: Joi.string().uri().allow('').optional().messages({
+    'string.uri': 'coverImage must be a valid URL'
   })
 }).min(1).unknown(false).messages({
-  'object.min': 'At least one field (title, content or categoryIds) must be provided'
+  'object.min': 'At least one field (title, content, coverImage or categoryIds) must be provided'
 });
 
 const createCategorySchema = Joi.object({

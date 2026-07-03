@@ -52,11 +52,12 @@ const getPostById = async (id) => {
   return post;
 };
 
-const createPost = async ({ title, content, published, categoryIds }, authorId) => {
+const createPost = async ({ title, content, published, coverImage, categoryIds }, authorId) => {
   const post = await prisma.post.create({
     data: {
       title,
       content,
+      coverImage: coverImage || null,
       authorId,
       ...(typeof published === 'boolean' ? { published } : {}),
       ...(Array.isArray(categoryIds) ? { categories: { connect: categoryIds.map((id) => ({ id })) } } : {}),
