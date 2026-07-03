@@ -22,6 +22,13 @@ const getAllPosts = async ({ categorySlug } = {}) => {
           email: true,
         },
       },
+      categories: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+        },
+      },
     },
     orderBy: {
       createdAt: 'desc',
