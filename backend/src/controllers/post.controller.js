@@ -5,7 +5,7 @@ const AppError = require('../utils/AppError');
 
 const getAll = async (req, res, next) => {
   try {
-    const { category } = req.query; 
+    const { category } = req.query;
     const posts = await getAllPosts({ categorySlug: category });
     return success(res, posts, 200);
   } catch (err) {

@@ -5,7 +5,7 @@ const getAllPosts = async ({ categorySlug } = {}) => {
   const posts = await prisma.post.findMany({
     where: {
       published: true,
-      
+
       ...(categorySlug && {
         categories: {
           some: {
