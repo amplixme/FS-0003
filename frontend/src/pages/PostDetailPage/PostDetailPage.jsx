@@ -136,9 +136,17 @@ export default function PostDetailPage() {
               {/* Hero */}
               <div className="post-hero">
                 <div className="post-hero-image">
-                  <div className="post-hero-placeholder">
-                    <span className="material-symbols-outlined post-hero-icon">article</span>
-                  </div>
+                  {post.coverImage ? (
+                    <img
+                      className="post-hero-img"
+                      src={post.coverImage}
+                      alt={`Portada de ${post.title}`}
+                    />
+                  ) : (
+                    <div className="post-hero-placeholder">
+                      <span className="material-symbols-outlined post-hero-icon">article</span>
+                    </div>
+                  )}
                 </div>
                 {post.category && (
                   <span className="post-category-badge">{post.category}</span>

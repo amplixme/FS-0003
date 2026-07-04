@@ -58,6 +58,23 @@ const PostCard = ({ post, onCategorySelect }) => {
   return (
     <article className={styles.card}>
       <Link className={styles.cardLink} to={`/posts/${post.id}`} aria-label={`Leer ${post.title}`} />
+
+      {/* Cover image */}
+      <div className={styles.imageWrapper}>
+        {post.coverImage ? (
+          <img
+            className={styles.image}
+            src={post.coverImage}
+            alt=""
+            loading="lazy"
+          />
+        ) : (
+          <div className={styles.imagePlaceholder}>
+            <span className="material-symbols-outlined" aria-hidden="true">image</span>
+          </div>
+        )}
+      </div>
+
       <div className={styles.content}>
         <h2 className={styles.title}>{post.title}</h2>
         {visibleCategories.length > 0 && (
