@@ -1,4 +1,5 @@
 .card {
+  position: relative;
   display: block;
   height: 100%;
   color: inherit;
@@ -21,6 +22,22 @@
   outline-offset: 4px;
 }
 
+.card:focus-within {
+  border-color: #bfdbfe;
+}
+
+.cardLink {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.cardLink:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.35);
+  outline-offset: 4px;
+}
+
 .content {
   display: flex;
   flex-direction: column;
@@ -35,6 +52,57 @@
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.25;
+}
+
+.categories {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.categoryBadge,
+.moreBadge {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  min-height: 1.8rem;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--category-border, #dbeafe);
+  border-radius: 999px;
+  background: var(--category-bg, #eff6ff);
+  color: var(--category-color, #1d4ed8);
+  font-size: 0.75rem;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.categoryBadge {
+  cursor: pointer;
+  transition: filter 150ms ease, transform 150ms ease;
+}
+
+.categoryBadge:hover:not(:disabled) {
+  filter: saturate(1.2) brightness(0.97);
+  transform: translateY(-1px);
+}
+
+.categoryBadge:focus-visible {
+  outline: 2px solid rgba(37, 99, 235, 0.35);
+  outline-offset: 2px;
+}
+
+.categoryBadge:disabled {
+  cursor: default;
+  pointer-events: none;
+}
+
+.moreBadge {
+  border-color: #e5e7eb;
+  background: #f8fafc;
+  color: #475569;
 }
 
 .excerpt {

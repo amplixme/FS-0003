@@ -1,7 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ErrorMessage } from "../common";
+import { getAll as getCategories } from "../../services/category.service";
 import styles from "./PostForm.module.css";
 import { ImageUpload } from '../common';
+
+const defaultInitialData = { title: "", content: "", published: false, coverImage: null, categoryIds: [] };
+
+const getCategoryIds = (data) => {
+  if (Array.isArray(data.categoryIds)) {
+    return data.categoryIds.map(String);
+  }
+
+  if (Array.isArray(data.categories)) {
+    return data.categories
+      .map((category) => category?.id ?? category)
+      .filter((categoryId) => categoryId != null)
+      .map(String);
+  }
+
+  return [];
+};
+
+const getInitialFormData = (data = defaultInitialData) => ({
+  title: data.title ?? "",
+  content: data.content ?? "",
+  published: data.published ?? false,
+  categoryIds: getCategoryIds(data),
+});
 
 const validateForm = ({ title, content }) => {
   const errors = {};
@@ -17,12 +42,44 @@ const validateForm = ({ title, content }) => {
   return errors;
 };
 
-const PostForm = ({ initialData = { title: "", content: "", published: false, coverImage: null }, onSubmit, submitLabel = "Guardar", serverError: externalError }) => {
-  const [formData, setFormData] = useState(initialData);
+const PostForm = ({ initialData = defaultInitialData, onSubmit, submitLabel = "Guardar", serverError: externalError }) => {
+  const [formData, setFormData] = useState(() => getInitialFormData(initialData));
+  const [categories, setCategories] = useState([]);
+  const [categoriesError, setCategoriesError] = useState("");
+  const [isLoadingCategories, setIsLoadingCategories] = useState(false);
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageUrl, setImageUrl] = useState(initialData.coverImage || ""); // ← estado para la URL de la imagen
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchCategories = async () => {
+      setIsLoadingCategories(true);
+      setCategoriesError("");
+
+      try {
+        const data = await getCategories();
+
+        if (isMounted) {
+          setCategories(Array.isArray(data) ? data : []);
+        }
+      } catch (error) {
+        if (isMounted) {
+          setCategoriesError(error.message || "No pudimos cargar las categorías.");
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoadingCategories(false);
+        }
+      }
+    };
+
+    fetchCategories();
+
+    return () => { isMounted = false; };
+  }, []);
 
   const handleChange = (event) => {
     const { name, type, checked, value } = event.target;
@@ -35,6 +92,17 @@ const PostForm = ({ initialData = { title: "", content: "", published: false, co
     if (errors[name]) {
       setErrors((current) => ({ ...current, [name]: "" }));
     }
+  };
+
+  const handleCategoryChange = (event) => {
+    const { checked, value } = event.target;
+
+    setFormData((current) => ({
+      ...current,
+      categoryIds: checked
+        ? [...current.categoryIds, value]
+        : current.categoryIds.filter((categoryId) => categoryId !== value),
+    }));
   };
 
   const handleSubmit = async (event) => {
@@ -56,6 +124,7 @@ const PostForm = ({ initialData = { title: "", content: "", published: false, co
         content: formData.content.trim(),
         published: formData.published,
         coverImage: imageUrl || null, // ← incluye la URL de la imagen si existe
+        categoryIds: formData.categoryIds,
       });
     } catch (error) {
       setServerError(error.message || "Ocurrió un error. Intentá nuevamente.");
@@ -120,6 +189,36 @@ const PostForm = ({ initialData = { title: "", content: "", published: false, co
           <small>{formData.published ? "El post quedará visible al crearse." : "Podrás publicarlo más adelante."}</small>
         </span>
       </label>
+
+      <div className={styles.field}>
+        <span className={styles.label}>Categorías</span>
+        {categoriesError && <p className={styles.errorText}>{categoriesError}</p>}
+        {isLoadingCategories && <p className={styles.helpText}>Cargando categorías...</p>}
+        {!isLoadingCategories && !categoriesError && categories.length === 0 && (
+          <p className={styles.helpText}>No hay categorías disponibles.</p>
+        )}
+        {categories.length > 0 && (
+          <div className={styles.categoryList}>
+            {categories.map((category) => {
+              const categoryId = String(category.id);
+
+              return (
+                <label className={styles.categoryOption} key={category.id}>
+                  <input
+                    checked={formData.categoryIds.includes(categoryId)}
+                    className={styles.checkbox}
+                    name="categoryIds"
+                    onChange={handleCategoryChange}
+                    type="checkbox"
+                    value={categoryId}
+                  />
+                  <span>{category.name}</span>
+                </label>
+              );
+            })}
+          </div>
+        )}
+      </div>
 
       <div className={styles.actions}>
         <button className={styles.submitButton} disabled={isSubmitting} type="submit">

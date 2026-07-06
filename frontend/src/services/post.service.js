@@ -12,9 +12,9 @@ const getErrorMessage = (error, fallback) => {
 };
 
 
-export const getAll = async () => {
+export const getAll = async (params) => {
   try {
-    const response = await api.get('/posts');
+    const response = await api.get('/posts', { params });
     return response.data?.data ?? response.data;
   } catch (error) {
     throw new Error(getErrorMessage(error, 'Error al obtener posts'), { cause: error });

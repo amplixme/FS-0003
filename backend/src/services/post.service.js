@@ -1,15 +1,32 @@
 const prisma = require('../utils/prisma');
 const AppError = require('../utils/AppError');
 
-const getAllPosts = async () => {
+const getAllPosts = async ({ categorySlug } = {}) => {
   const posts = await prisma.post.findMany({
-    where: { published: true },
+    where: {
+      published: true,
+
+      ...(categorySlug && {
+        categories: {
+          some: {
+            slug: categorySlug,
+          },
+        },
+      }),
+    },
     include: {
       author: {
         select: {
           id: true,
           name: true,
           email: true,
+        },
+      },
+      categories: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
         },
       },
     },
@@ -34,13 +51,14 @@ const getPostById = async (id) => {
           email: true,
         },
       },
+      categories: true,
     },
   });
 
   return post;
 };
 
-const createPost = async ({ title, content, published, coverImage }, authorId) => {
+const createPost = async ({ title, content, published, coverImage, categoryIds }, authorId) => {
   const post = await prisma.post.create({
     data: {
       title,
@@ -48,6 +66,7 @@ const createPost = async ({ title, content, published, coverImage }, authorId) =
       coverImage: coverImage || null,
       authorId,
       ...(typeof published === 'boolean' ? { published } : {}),
+      ...(Array.isArray(categoryIds) ? { categories: { connect: categoryIds.map((id) => ({ id })) } } : {}),
     },
     include: {
       author: {
@@ -57,6 +76,7 @@ const createPost = async ({ title, content, published, coverImage }, authorId) =
           email: true,
         },
       },
+      categories: true,
     },
   });
 
@@ -80,10 +100,14 @@ const checkOwnership = (post, user) => {
 const updatePost = async (id, data, user) => {
   const post = await findPostOrThrow(id);
   checkOwnership(post, user);
+  const { categoryIds, ...postData } = data;
 
   const updated = await prisma.post.update({
     where: { id },
-    data,
+    data: {
+      ...postData,
+      ...(Array.isArray(categoryIds) ? { categories: { set: categoryIds.map((categoryId) => ({ id: categoryId })) } } : {}),
+    },
     include: {
       author: {
         select: {
@@ -92,6 +116,7 @@ const updatePost = async (id, data, user) => {
           email: true,
         },
       },
+      categories: true,
     },
   });
 
