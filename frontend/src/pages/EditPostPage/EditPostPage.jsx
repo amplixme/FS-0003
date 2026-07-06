@@ -102,7 +102,7 @@ const EditPostPage = () => {
       </div>
 
       <PostForm
-        initialData={{ title: post.title, content: post.content, published: post.published }}
+        initialData={{ title: post.title, content: post.content, published: post.published, coverImage: post.coverImage || '' }}
         onSubmit={handleSubmit}
         submitLabel="Guardar cambios"
       />

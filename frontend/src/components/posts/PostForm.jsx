@@ -17,11 +17,12 @@ const validateForm = ({ title, content }) => {
   return errors;
 };
 
-const PostForm = ({ initialData = { title: "", content: "", published: false }, onSubmit, submitLabel = "Guardar", serverError: externalError }) => {
+const PostForm = ({ initialData = { title: "", content: "", published: false, coverImage: null }, onSubmit, submitLabel = "Guardar", serverError: externalError }) => {
   const [formData, setFormData] = useState(initialData);
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imageUrl, setImageUrl] = useState(initialData.coverImage || ""); // ← estado para la URL de la imagen
 
   const handleChange = (event) => {
     const { name, type, checked, value } = event.target;
@@ -54,6 +55,7 @@ const PostForm = ({ initialData = { title: "", content: "", published: false }, 
         title: formData.title.trim(),
         content: formData.content.trim(),
         published: formData.published,
+        coverImage: imageUrl || null, // ← incluye la URL de la imagen si existe
       });
     } catch (error) {
       setServerError(error.message || "Ocurrió un error. Intentá nuevamente.");
@@ -64,7 +66,7 @@ const PostForm = ({ initialData = { title: "", content: "", published: false }, 
 
   const displayError = serverError || externalError;
 
-  const [imageUrl, setImageUrl] = useState('');
+  
 
   return (
     <form className={styles.form} onSubmit={handleSubmit} noValidate>
