@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { ErrorMessage } from "../common";
 import { getAll as getCategories } from "../../services/category.service";
 import styles from "./PostForm.module.css";
+import { ImageUpload } from '../common';
 
-const defaultInitialData = { title: "", content: "", published: false, categoryIds: [] };
+const defaultInitialData = { title: "", content: "", published: false, coverImage: null, categoryIds: [] };
 
 const getCategoryIds = (data) => {
   if (Array.isArray(data.categoryIds)) {
@@ -49,6 +50,7 @@ const PostForm = ({ initialData = defaultInitialData, onSubmit, submitLabel = "G
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imageUrl, setImageUrl] = useState(initialData.coverImage || ""); // ← estado para la URL de la imagen
 
   useEffect(() => {
     let isMounted = true;
@@ -121,6 +123,7 @@ const PostForm = ({ initialData = defaultInitialData, onSubmit, submitLabel = "G
         title: formData.title.trim(),
         content: formData.content.trim(),
         published: formData.published,
+        coverImage: imageUrl || null, // ← incluye la URL de la imagen si existe
         categoryIds: formData.categoryIds,
       });
     } catch (error) {
@@ -131,6 +134,8 @@ const PostForm = ({ initialData = defaultInitialData, onSubmit, submitLabel = "G
   };
 
   const displayError = serverError || externalError;
+
+  
 
   return (
     <form className={styles.form} onSubmit={handleSubmit} noValidate>
@@ -163,6 +168,13 @@ const PostForm = ({ initialData = defaultInitialData, onSubmit, submitLabel = "G
         />
         {errors.content && <p className={styles.errorText}>{errors.content}</p>}
       </div>
+
+        <ImageUpload
+          label="Imagen de portada"
+          onUpload={(url) => setImageUrl(url)}   // ← recibe la URL de Cloudinary
+          onClear={() => setImageUrl('')}
+          initialUrl={imageUrl || null}           // ← útil en modo edición
+        />
 
       <label className={styles.toggle}>
         <input

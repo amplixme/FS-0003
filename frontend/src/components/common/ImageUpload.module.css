@@ -1,0 +1,118 @@
+/* ─── Wrapper ─────────────────────────────────────────────────────────────── */
+.wrapper { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+.label   { font-size: 14px; font-weight: 600; color: #374151; }
+
+/* ─── Drop Zone ───────────────────────────────────────────────────────────── */
+.dropZone {
+  position: relative;
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  background: #f9fafb;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  outline: none;
+  overflow: hidden;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropZone:hover:not(.disabled):not(.uploading) {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+.dropZone:focus-visible {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+  border-color: #2563eb;
+}
+.dropZone.dragOver {
+  border-color: #2563eb;
+  background: #dbeafe;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+.dropZone.uploading  { cursor: wait; border-style: solid; border-color: #93c5fd; }
+.dropZone.hasPreview { border-style: solid; border-color: #d1d5db; background: #000; min-height: 220px; }
+.dropZone.disabled   { cursor: not-allowed; opacity: 0.55; }
+
+/* ─── Input oculto ────────────────────────────────────────────────────────── */
+.hiddenInput {
+  position: absolute; inset: 0;
+  width: 0; height: 0;
+  opacity: 0; pointer-events: none;
+}
+
+/* ─── Placeholder ─────────────────────────────────────────────────────────── */
+.placeholder {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 8px;
+  padding: 32px 24px; text-align: center;
+  pointer-events: none; user-select: none;
+}
+.uploadIcon { font-size: 40px; color: #9ca3af; transition: color 0.15s, transform 0.15s; }
+.dropZone:hover:not(.disabled) .uploadIcon,
+.dropZone.dragOver .uploadIcon { color: #2563eb; transform: scale(1.1); }
+.placeholderText { font-size: 14px; font-weight: 500; color: #6b7280; max-width: 220px; line-height: 1.4; }
+.placeholderHint { font-size: 12px; color: #9ca3af; }
+
+/* ─── Preview ─────────────────────────────────────────────────────────────── */
+.previewWrapper {
+  position: relative; width: 100%; height: 100%;
+  min-height: 220px; display: flex;
+  align-items: center; justify-content: center;
+}
+.previewImg { width: 100%; height: 220px; object-fit: cover; display: block; border-radius: 10px; }
+
+/* ─── Botón eliminar ──────────────────────────────────────────────────────── */
+.clearBtn {
+  position: absolute; top: 10px; right: 10px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(4px);
+  color: #ffffff; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, transform 0.1s;
+  z-index: 2;
+}
+.clearBtn:hover { background: rgba(220, 38, 38, 0.85); transform: scale(1.08); }
+.clearBtn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.clearBtn .material-symbols-outlined { font-size: 18px; line-height: 1; }
+
+/* ─── Progress overlay ────────────────────────────────────────────────────── */
+.progressOverlay {
+  position: absolute; inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 10px; border-radius: 10px; pointer-events: none;
+}
+.progressBarWrap {
+  width: 60%; height: 6px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 99px; overflow: hidden;
+}
+.progressBar {
+  height: 100%; background: #3b82f6;
+  border-radius: 99px; transition: width 0.12s ease;
+}
+.progressLabel { font-size: 13px; font-weight: 600; color: #ffffff; letter-spacing: 0.02em; }
+
+/* ─── Error ───────────────────────────────────────────────────────────────── */
+.errorMsg {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: #dc2626;
+  line-height: 1.4; animation: fadeIn 0.15s ease;
+}
+.errorMsg .material-symbols-outlined { font-size: 16px; flex-shrink: 0; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Accesibilidad ───────────────────────────────────────────────────────── */
+.srOnly {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border-width: 0;
+}
