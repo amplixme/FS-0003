@@ -91,4 +91,12 @@ const updateCategorySchema = Joi.object({
   'object.min': 'At least one field (name or slug) must be provided',
 });
 
-module.exports = { registerSchema, postSchema, updatePostSchema, createCategorySchema, updateCategorySchema };
+const createCommentSchema = Joi.object({
+  content: Joi.string().min(1).required().messages({
+    'any.required': 'Content is required',
+    'string.empty': 'Content cannot be empty',
+    'string.min': 'Content must be at least 1 character',
+  }),
+}).unknown(false);
+
+module.exports = { registerSchema, postSchema, updatePostSchema, createCategorySchema, updateCategorySchema, createCommentSchema };
