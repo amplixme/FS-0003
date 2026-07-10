@@ -20,6 +20,7 @@ router.use('/posts', postRoutes);
 
 // Comment routes
 router.use('/posts', commentRoutes);
+router.use('/comments', commentRoutes);
 
 // Upload routes
 router.use('/upload', uploadRoutes);

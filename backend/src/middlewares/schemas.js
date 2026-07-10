@@ -99,4 +99,12 @@ const createCommentSchema = Joi.object({
   }),
 }).unknown(false);
 
-module.exports = { registerSchema, postSchema, updatePostSchema, createCategorySchema, updateCategorySchema, createCommentSchema };
+const updateCommentSchema = Joi.object({
+  content: Joi.string().min(1).required().messages({
+    'any.required': 'Content is required',
+    'string.empty': 'Content cannot be empty',
+    'string.min': 'Content must be at least 1 character',
+  }),
+}).unknown(false);
+
+module.exports = { registerSchema, postSchema, updatePostSchema, createCategorySchema, updateCategorySchema, createCommentSchema, updateCommentSchema };
