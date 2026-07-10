@@ -4,6 +4,7 @@ import { getPostById, deletePost } from "../../services/post.service";
 import { useAuth } from "../../context/AuthContext";
 import { ConfirmModal, Spinner, ErrorMessage, EmptyState } from "../../components/common";
 import "./PostDetailPage.css";
+import CommentSection from "../../components/comments/CommentSection";
 
 export default function PostDetailPage() {
   const { id } = useParams();
@@ -203,6 +204,9 @@ export default function PostDetailPage() {
                   </button>
                 </div>
               )}
+
+              {/* Comments */}
++             <CommentSection postId={post.id} />
 
               {/* Volver al inicio */}
               <div className="post-back">
