@@ -29,13 +29,21 @@ const getAllPosts = async ({ categorySlug } = {}) => {
           slug: true,
         },
       },
+      _count: {                         
+        select: {
+          comments: true,
+        },
+      },
     },
     orderBy: {
       createdAt: 'desc',
     },
   });
 
-  return posts;
+  return posts.map(({ _count, ...post }) => ({
+    ...post,
+    commentCount: _count.comments,
+  }));
 };
 
 const getPostById = async (id) => {
