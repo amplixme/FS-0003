@@ -1,4 +1,4 @@
-const { createComment } = require('../services/comment.service');
+const { createComment, getCommentsByPost } = require('../services/comment.service');
 const { success } = require('../utils/response');
 
 const create = async (req, res, next) => {
@@ -14,4 +14,14 @@ const create = async (req, res, next) => {
   }
 };
 
-module.exports = { create };
+const getByPost = async (req, res, next) => {
+  try {
+    const postId = Number(req.params.postId);
+    const comments = await getCommentsByPost(postId);
+    return success(res, comments, 200);
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { create, getByPost };
