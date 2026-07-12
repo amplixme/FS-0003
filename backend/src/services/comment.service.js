@@ -68,4 +68,23 @@ const deleteComment = async (id, user) => {
   await prisma.comment.delete({ where: { id } });
 };
 
-module.exports = { createComment, updateComment, deleteComment };
+const getCommentsByPost = async (postId) => {
+  const comments = await prisma.comment.findMany({
+    where: { postId },
+    include: {
+      author: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+
+  return comments;
+};
+
+module.exports = { createComment, updateComment, deleteComment, getCommentsByPost };
