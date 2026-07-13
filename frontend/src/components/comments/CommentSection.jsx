@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { getByPostId } from '../../services/comment.service';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { create, getByPostId } from '../../services/comment.service';
 import { Spinner } from '../common';
 import styles from './CommentSection.module.css';
 
@@ -39,9 +41,13 @@ const CommentItem = ({ comment }) => (
 );
 
 export default function CommentSection({ postId }) {
+  const { isAuthenticated } = useAuth();
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [content, setContent] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
 
   useEffect(() => {
     if (!postId) return;
@@ -61,6 +67,26 @@ export default function CommentSection({ postId }) {
     fetchComments();
     return () => { cancelled = true; };
   }, [postId]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const trimmedContent = content.trim();
+    if (!trimmedContent || isSubmitting) return;
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+    try {
+      await create(postId, { content: trimmedContent });
+      setContent('');
+      const data = await getByPostId(postId);
+      setComments(Array.isArray(data) ? data : []);
+      setError(null);
+    } catch (err) {
+      setSubmitError(err.message || 'No se pudo enviar el comentario');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <section className={styles.section} aria-label="Comentarios">
@@ -100,6 +126,38 @@ export default function CommentSection({ postId }) {
             </li>
           ))}
         </ul>
+      )}
+
+      {isAuthenticated ? (
+        <form className={styles.commentForm} onSubmit={handleSubmit}>
+          <label className={styles.formLabel} htmlFor="comment-content">
+            Escribe un comentario
+          </label>
+          <textarea
+            id="comment-content"
+            className={styles.textarea}
+            value={content}
+            onChange={(event) => setContent(event.target.value)}
+            placeholder="Comparte tu opinión…"
+            rows={4}
+            disabled={isSubmitting}
+            required
+          />
+          {submitError && (
+            <p className={styles.submitError} role="alert">{submitError}</p>
+          )}
+          <button
+            className={styles.submitButton}
+            type="submit"
+            disabled={isSubmitting || !content.trim()}
+          >
+            {isSubmitting ? 'Comentando…' : 'Comentar'}
+          </button>
+        </form>
+      ) : (
+        <p className={styles.loginPrompt}>
+          <Link to="/login">Inicia sesión</Link> para comentar
+        </p>
       )}
     </section>
   );

@@ -206,7 +206,7 @@ export default function PostDetailPage() {
               )}
 
               {/* Comments */}
-+             <CommentSection postId={post.id} />
+              <CommentSection postId={post.id} />
 
               {/* Volver al inicio */}
               <div className="post-back">

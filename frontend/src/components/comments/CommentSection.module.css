@@ -123,3 +123,90 @@
   white-space: pre-wrap;
   word-break: break-word;
 }
+
+.commentForm,
+.loginPrompt {
+  margin-top: 1.5rem;
+}
+
+.commentForm {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border, #e5e7eb);
+}
+
+.formLabel {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-primary, #111827);
+}
+
+.textarea {
+  width: 100%;
+  min-height: 7rem;
+  padding: 0.875rem 1rem;
+  resize: vertical;
+  border: 1px solid var(--color-border, #d1d5db);
+  border-radius: 0.75rem;
+  background-color: #fff;
+  color: var(--color-text-primary, #111827);
+  font: inherit;
+  line-height: 1.5;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.textarea:focus {
+  border-color: var(--color-primary, #6366f1);
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(99 102 241 / 15%);
+}
+
+.textarea:disabled {
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+}
+
+.submitButton {
+  padding: 0.7rem 1.25rem;
+  border: 0;
+  border-radius: 0.625rem;
+  background-color: var(--color-primary, #6366f1);
+  color: #fff;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 150ms ease, background-color 150ms ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: #4f46e5;
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.submitError {
+  margin: 0;
+  color: #b91c1c;
+  font-size: 0.875rem;
+}
+
+.loginPrompt {
+  padding: 1rem;
+  border-radius: 0.625rem;
+  background-color: var(--color-surface, #f9fafb);
+  color: var(--color-text-secondary, #6b7280);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.loginPrompt a {
+  color: var(--color-primary, #6366f1);
+  font-weight: 600;
+}
