@@ -1,49 +1,69 @@
 const prisma = require('../utils/prisma');
 const AppError = require('../utils/AppError');
 
-const getAllPosts = async ({ categorySlug } = {}) => {
-  const posts = await prisma.post.findMany({
-    where: {
-      published: true,
+const getAllPosts = async ({ categorySlug, page = 1, limit = 10, sort = 'newest' } = {}) => {
+  const where = {
+    published: true,
 
-      ...(categorySlug && {
-        categories: {
-          some: {
-            slug: categorySlug,
+    ...(categorySlug && {
+      categories: {
+        some: {
+          slug: categorySlug,
+        },
+      },
+    }),
+  };
+
+  const orderByMap = {
+    newest: { createdAt: 'desc' },
+    oldest: { createdAt: 'asc' },
+    comments: { comments: { _count: 'desc' } },
+  };
+
+  const orderBy = orderByMap[sort] || orderByMap.newest;
+
+  const skip = (page - 1) * limit;
+
+  const [posts, total] = await Promise.all([
+    prisma.post.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy,
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
           },
         },
-      }),
-    },
-    include: {
-      author: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
+        categories: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        _count: {
+          select: {
+            comments: true,
+          },
         },
       },
-      categories: {
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-        },
-      },
-      _count: {                         
-        select: {
-          comments: true,
-        },
-      },
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
+    }),
+    prisma.post.count({ where }),
+  ]);
 
-  return posts.map(({ _count, ...post }) => ({
-    ...post,
-    commentCount: _count.comments,
-  }));
+  return {
+    data: posts.map(({ _count, ...post }) => ({
+      ...post,
+      commentCount: _count.comments,
+    })),
+    total,
+    page,
+    totalPages: Math.ceil(total / limit),
+  };
 };
 
 const getPostById = async (id) => {
