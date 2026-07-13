@@ -96,7 +96,12 @@ describe('CommentSection', () => {
     const form = view.querySelector('form');
 
     act(() => {
-      changeTextarea(textarea, '  Comentario nuevo  ');
+      const setTextareaValue = Object.getOwnPropertyDescriptor(
+        HTMLTextAreaElement.prototype,
+        'value',
+      ).set;
+      setTextareaValue.call(textarea, '  Comentario nuevo  ');
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
     });
 
     act(() => {
