@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import PostCard from "../../components/posts/PostCard";
-import { EmptyState, ErrorMessage, Spinner } from "../../components/common";
+import { EmptyState, ErrorMessage, Pagination, Spinner } from "../../components/common";
 import { CategoryFilter } from "../../components/categories";
 import { getAll } from "../../services/post.service";
 import styles from "./HomePage.module.css";
+
+const POSTS_PER_PAGE = 9;
 
 const getPostsFromResponse = (response) => {
   if (Array.isArray(response)) return response;
@@ -13,11 +16,29 @@ const getPostsFromResponse = (response) => {
 };
 
 const HomePage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [posts, setPosts] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [retryKey, setRetryKey] = useState(0);
   const [activeCategory, setActiveCategory] = useState(null);
+  const pageParam = Number.parseInt(searchParams.get("page"), 10);
+  const currentPage = Number.isInteger(pageParam) && pageParam > 0 ? pageParam : 1;
+
+  const changePage = (page) => {
+    setSearchParams((currentParams) => {
+      const nextParams = new URLSearchParams(currentParams);
+      if (page === 1) nextParams.delete("page");
+      else nextParams.set("page", String(page));
+      return nextParams;
+    });
+  };
+
+  const changeCategory = (category) => {
+    setActiveCategory(category);
+    changePage(1);
+  };
 
   useEffect(() => {
     let isActive = true;
@@ -25,8 +46,27 @@ const HomePage = () => {
       setIsLoading(true);
       setError("");
       try {
-        const response = await getAll(activeCategory ? { category: activeCategory } : undefined);
-        if (isActive) setPosts(getPostsFromResponse(response));
+        const response = await getAll({
+          page: currentPage,
+          limit: POSTS_PER_PAGE,
+          category: activeCategory || undefined,
+        });
+        if (isActive) {
+          const responseTotalPages = Math.max(Number(response?.totalPages) || 1, 1);
+
+          if (currentPage > responseTotalPages) {
+            setSearchParams((currentParams) => {
+              const nextParams = new URLSearchParams(currentParams);
+              if (responseTotalPages === 1) nextParams.delete("page");
+              else nextParams.set("page", String(responseTotalPages));
+              return nextParams;
+            });
+            return;
+          }
+
+          setPosts(getPostsFromResponse(response));
+          setTotalPages(responseTotalPages);
+        }
       } catch {
         if (isActive) setError("No pudimos cargar las publicaciones. Intentá nuevamente en unos minutos.");
       } finally {
@@ -35,7 +75,7 @@ const HomePage = () => {
     };
     loadPosts();
     return () => { isActive = false; };
-  }, [retryKey, activeCategory]);
+  }, [retryKey, activeCategory, currentPage, setSearchParams]);
 
   return (
     <section className={styles.homePage}>
@@ -47,7 +87,7 @@ const HomePage = () => {
 
       <div className={styles.body}>
         {/* Una sola instancia — el CSS interno decide sidebar vs chips */}
-        <CategoryFilter activeSlug={activeCategory} onChange={setActiveCategory} />
+        <CategoryFilter activeSlug={activeCategory} onChange={changeCategory} />
 
         <div className={styles.content}>
           {isLoading && (
@@ -68,8 +108,17 @@ const HomePage = () => {
           {!isLoading && !error && posts.length > 0 && (
             <div className={styles.grid}>
               {posts.map((post) => (
-                <PostCard key={post.id} post={post} onCategorySelect={setActiveCategory} />
+                <PostCard key={post.id} post={post} onCategorySelect={changeCategory} />
               ))}
+            </div>
+          )}
+          {!isLoading && !error && posts.length > 0 && (
+            <div className={styles.pagination}>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={changePage}
+              />
             </div>
           )}
         </div>
