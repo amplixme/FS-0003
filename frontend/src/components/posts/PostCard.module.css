@@ -152,6 +152,25 @@
   font-weight: 600;
 }
 
+.metaRight {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.commentCount {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+.commentCount .material-symbols-outlined {
+  font-size: 1rem;
+}
+
 .meta time {
   color: #6b7280;
   font-weight: 500;
