@@ -18,6 +18,8 @@ model User {
   email     String    @unique
   password  String
   name      String
+  bio       String?
+  avatarUrl String?
   role      Role      @default(USER)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

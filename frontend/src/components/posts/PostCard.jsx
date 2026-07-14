@@ -89,7 +89,13 @@ const PostCard = ({ post, onCategorySelect }) => {
         <p className={styles.excerpt}>{getExcerpt(post.content)}</p>
         <div className={styles.meta}>
           <span>{authorName}</span>
+          <div className={styles.metaRight}>
+            <span className={styles.commentCount}>
+              <span className="material-symbols-outlined" aria-hidden="true">comment</span>
+              {post.commentCount ?? 0}
+            </span>
             <time dateTime={publishedAt || undefined}>{formatRelativeTime(publishedAt)}</time>
+          </div>
         </div>
       </div>
     </article>
