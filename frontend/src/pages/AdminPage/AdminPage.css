@@ -1,0 +1,130 @@
+.adminPage {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.adminHeader { margin-bottom: 2rem; }
+.adminTitle { font-size: 1.75rem; font-weight: 700; }
+
+/* Stats */
+.adminStatsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.adminStatCard {
+  background: var(--color-surface, #f9f9f9);
+  border: 1px solid var(--color-border, #e5e5e5);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.adminStatIcon { font-size: 2rem; }
+.adminStatValue { font-size: 2rem; font-weight: 700; }
+.adminStatLabel { font-size: 0.85rem; color: #666; text-transform: uppercase; letter-spacing: .05em; }
+
+/* Section */
+.adminSection { margin-top: 2.5rem; }
+.adminSectionHead { display: flex; justify-content: space-between; align-items: center; }
+.adminSectionTitle { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; }
+
+/* Tabs */
+.adminTabs { display: flex; gap: 0.5rem; margin-top: 2rem; border-bottom: 2px solid #e5e5e5; }
+.adminTab {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #555;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+}
+.adminTabActive { color: #111; border-bottom-color: #111; font-weight: 600; }
+
+/* Table */
+.adminTableWrap { overflow-x: auto; margin-top: 1rem; }
+.adminTable { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.adminTable th, .adminTable td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e5e5;
+}
+.adminTable th { font-weight: 600; background: #f5f5f5; }
+.adminTable tr:hover td { background: #fafafa; }
+
+/* Role badge */
+.adminRoleBadge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.adminRoleBadge.admin { background: #fef3c7; color: #92400e; }
+.adminRoleBadge.user { background: #e0f2fe; color: #0369a1; }
+
+/* Actions */
+.adminActions { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+
+/* Buttons */
+.adminBtn {
+  padding: 0.45rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+.adminBtn:hover { opacity: 0.85; }
+.adminBtnPrimary { background: #111; color: #fff; }
+.adminBtnSm { padding: 0.3rem 0.7rem; font-size: 0.82rem; }
+.adminBtnDanger { background: #fee2e2; color: #b91c1c; }
+.adminBtnWarning { background: #fef9c3; color: #854d0e; }
+
+/* Modal */
+.adminModalOverlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+}
+.adminModal {
+  background: #fff;
+  border-radius: 12px;
+  width: 100%; max-width: 440px;
+  padding: 1.5rem;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+.adminModalHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+.adminModalHeader h3 { font-size: 1.1rem; font-weight: 600; margin: 0; }
+.adminModalClose { background: none; border: none; font-size: 1.1rem; cursor: pointer; color: #666; }
+
+/* Form */
+.adminForm { display: flex; flex-direction: column; gap: 1rem; }
+.adminForm label { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.88rem; font-weight: 500; }
+.adminForm input, .adminForm select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+.adminForm input:focus, .adminForm select:focus {
+  outline: none; border-color: #111;
+}
+.adminError { color: #b91c1c; font-size: 0.88rem; margin-bottom: 0.5rem; }
+
+/* Comments */
+.adminCommentList { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem; }
+.adminCommentItem { border: 1px solid #e5e5e5; border-radius: 8px; padding: 1rem; }
+.adminCommentMeta { font-size: 0.85rem; color: #555; margin-bottom: 0.4rem; }
+.adminCommentDate { margin-left: 1rem; }
+.adminCommentContent { margin: 0 0 0.75rem; }
