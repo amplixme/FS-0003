@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import formatRelativeTime from "../../utils/formatRelativeTime";
 import styles from "./PostCard.module.css";
 
 const EXCERPT_LENGTH = 150;
@@ -19,24 +20,6 @@ const getExcerpt = (content) => {
   }
 
   return `${normalizedContent.slice(0, EXCERPT_LENGTH).trim()}...`;
-};
-
-const formatDate = (date) => {
-  if (!date) {
-    return "Fecha no disponible";
-  }
-
-  const parsedDate = new Date(date);
-
-  if (Number.isNaN(parsedDate.getTime())) {
-    return "Fecha no disponible";
-  }
-
-  return new Intl.DateTimeFormat("es-AR", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  }).format(parsedDate);
 };
 
 const getCategoryColor = (category, index) => {
@@ -111,7 +94,7 @@ const PostCard = ({ post, onCategorySelect }) => {
               <span className="material-symbols-outlined" aria-hidden="true">comment</span>
               {post.commentCount ?? 0}
             </span>
-            <time dateTime={publishedAt || undefined}>{formatDate(publishedAt)}</time>
+            <time dateTime={publishedAt || undefined}>{formatRelativeTime(publishedAt)}</time>
           </div>
         </div>
       </div>
