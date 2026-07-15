@@ -39,10 +39,8 @@ const updateOwnProfile = async (id, data) => {
     select: {
       id: true,
       name: true,
-      email: true,
       bio: true,
       avatarUrl: true,
-      role: true,
     },
   });
 
