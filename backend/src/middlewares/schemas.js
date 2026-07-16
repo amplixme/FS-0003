@@ -107,4 +107,19 @@ const updateCommentSchema = Joi.object({
   }),
 }).unknown(false);
 
-module.exports = { registerSchema, postSchema, updatePostSchema, createCategorySchema, updateCategorySchema, createCommentSchema, updateCommentSchema };
+const updateProfileSchema = Joi.object({
+  name: Joi.string().min(2).max(50).messages({
+    'string.min': 'Name must be at least 2 characters',
+    'string.max': 'Name cannot exceed 50 characters',
+  }),
+  bio: Joi.string().max(500).allow('').messages({
+    'string.max': 'Bio cannot exceed 500 characters',
+  }),
+  avatarUrl: Joi.string().uri().allow('').messages({
+    'string.uri': 'avatarUrl must be a valid URL',
+  }),
+}).min(1).unknown(false).messages({
+  'object.min': 'At least one field must be provided',
+});
+
+module.exports = { registerSchema, postSchema, updatePostSchema, createCategorySchema, updateCategorySchema, createCommentSchema, updateCommentSchema, updateProfileSchema };
