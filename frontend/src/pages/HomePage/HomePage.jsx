@@ -7,6 +7,11 @@ import { getAll } from "../../services/post.service";
 import styles from "./HomePage.module.css";
 
 const POSTS_PER_PAGE = 9;
+const SORT_OPTIONS = [
+  { value: "newest", label: "Más recientes" },
+  { value: "oldest", label: "Más antiguos" },
+  { value: "comments", label: "Más comentados" },
+];
 
 const getPostsFromResponse = (response) => {
   if (Array.isArray(response)) return response;
@@ -25,6 +30,8 @@ const HomePage = () => {
   const [activeCategory, setActiveCategory] = useState(null);
   const pageParam = Number.parseInt(searchParams.get("page"), 10);
   const currentPage = Number.isInteger(pageParam) && pageParam > 0 ? pageParam : 1;
+  const sortParam = searchParams.get("sort");
+  const currentSort = SORT_OPTIONS.some((opt) => opt.value === sortParam) ? sortParam : "newest";
 
   const changePage = (page) => {
     setSearchParams((currentParams) => {
@@ -40,6 +47,16 @@ const HomePage = () => {
     changePage(1);
   };
 
+  const changeSort = (sort) => {
+    setSearchParams((currentParams) => {
+      const nextParams = new URLSearchParams(currentParams);
+      if (sort === "newest") nextParams.delete("sort");
+      else nextParams.set("sort", sort);
+      nextParams.delete("page");
+      return nextParams;
+    });
+  };
+
   useEffect(() => {
     let isActive = true;
     const loadPosts = async () => {
@@ -50,6 +67,7 @@ const HomePage = () => {
           page: currentPage,
           limit: POSTS_PER_PAGE,
           category: activeCategory || undefined,
+          sort: currentSort,
         });
         if (isActive) {
           const responseTotalPages = Math.max(Number(response?.totalPages) || 1, 1);
@@ -75,7 +93,7 @@ const HomePage = () => {
     };
     loadPosts();
     return () => { isActive = false; };
-  }, [retryKey, activeCategory, currentPage, setSearchParams]);
+  }, [retryKey, activeCategory, currentPage, currentSort, setSearchParams]);
 
   return (
     <section className={styles.homePage}>
@@ -90,6 +108,22 @@ const HomePage = () => {
         <CategoryFilter activeSlug={activeCategory} onChange={changeCategory} />
 
         <div className={styles.content}>
+          <div className={styles.toolbar}>
+            <div className={styles.sortGroup}>
+              <label className={styles.sortLabel} htmlFor="sort-select">Ordenar</label>
+              <select
+                id="sort-select"
+                className={styles.sortSelect}
+                value={currentSort}
+                onChange={(e) => changeSort(e.target.value)}
+              >
+                {SORT_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
           {isLoading && (
             <div className={styles.status}>
               <Spinner size="lg" label="Cargando publicaciones" />
