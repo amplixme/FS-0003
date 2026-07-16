@@ -13,7 +13,7 @@ const Header = () => {
     { to: "/", label: "Inicio" },
     { to: "/categorias", label: "Categorías" },
     { to: "/crear", label: "Escribir" },
-    ...(user?.role === "admin" ? [{ to: "/admin", label: "Admin" }] : []),
+    ...(user?.role === "ADMIN" ? [{ to: "/admin", label: "Admin" }] : []),
   ];
 
   // Categorías de ejemplo — reemplaza con datos reales desde contexto/API

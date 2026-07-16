@@ -1,12 +1,14 @@
 const API_BASE = "/api";
 
 const request = async (endpoint, options = {}) => {
+  const { headers: customHeaders, ...restOptions } = options;
+
   const config = {
+    ...restOptions,
     headers: {
       "Content-Type": "application/json",
-      ...options.headers,
+      ...customHeaders,
     },
-    ...options,
   };
 
   const response = await fetch(`${API_BASE}${endpoint}`, config);
@@ -23,18 +25,32 @@ const request = async (endpoint, options = {}) => {
 };
 
 const apiClient = {
-  get: (endpoint) => request(endpoint),
-  post: (endpoint, body) =>
+  get: (endpoint, options = {}) =>
+    request(endpoint, { ...options, method: "GET" }),
+
+  post: (endpoint, body, options = {}) =>
     request(endpoint, {
+      ...options,
       method: "POST",
       body: JSON.stringify(body),
     }),
-  put: (endpoint, body) =>
+
+  put: (endpoint, body, options = {}) =>
     request(endpoint, {
+      ...options,
       method: "PUT",
       body: JSON.stringify(body),
     }),
-  delete: (endpoint) => request(endpoint, { method: "DELETE" }),
+
+  patch: (endpoint, body, options = {}) =>
+    request(endpoint, {
+      ...options,
+      method: "PATCH",
+      body: JSON.stringify(body),
+    }),
+
+  delete: (endpoint, options = {}) =>
+    request(endpoint, { ...options, method: "DELETE" }),
 };
 
 export default apiClient;

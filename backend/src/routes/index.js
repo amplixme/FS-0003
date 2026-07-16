@@ -4,6 +4,7 @@ const postRoutes = require('./post.routes');
 const commentRoutes = require('./comment.routes');
 const uploadRoutes = require('./upload.routes');
 const categoryRoutes = require('./category.routes');
+const adminRoutes = require('./admin.routes');
 
 const router = Router();
 
@@ -27,5 +28,8 @@ router.use('/upload', uploadRoutes);
 
 // Category routes
 router.use('/categories', categoryRoutes);
+
+// Admin routes
+router.use('/admin', adminRoutes);
 
 module.exports = router;

@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
 import CreatePostPage from "./pages/CreatePostPage/CreatePostPage";
 import EditPostPage from "./pages/EditPostPage/EditPostPage";
 import HomePage from "./pages/HomePage/HomePage";
@@ -9,6 +10,7 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import PostDetailPage from "./pages/PostDetailPage/PostDetailPage";
 import CategoryManagePage from "./pages/CategoryManagePage/CategoryManagePage";
+import AdminPage from "./pages/AdminPage/AdminPage";
 import "./App.css";
 
 const NotFound = () => <h1>404 - Página no encontrada</h1>;
@@ -25,6 +27,7 @@ function App() {
             <Route path="/crear" element={<ProtectedRoute><CreatePostPage /></ProtectedRoute>} />
             <Route path="/posts/:id/editar" element={<ProtectedRoute><EditPostPage /></ProtectedRoute>} />
             <Route path="/categorias" element={<ProtectedRoute><CategoryManagePage /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedAdminRoute><AdminPage /></ProtectedAdminRoute>} />
             <Route path="/posts/:id" element={<PostDetailPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
