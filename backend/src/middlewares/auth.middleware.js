@@ -20,6 +20,8 @@ const authMiddleware = (req, res, next) => {
       email: decoded.email,
       name: decoded.name,
       role: decoded.role,
+      bio: decoded.bio,
+      avatarUrl: decoded.avatarUrl,
     };
     next();
   } catch (err) {

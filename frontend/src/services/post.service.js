@@ -12,10 +12,10 @@ const getErrorMessage = (error, fallback) => {
 };
 
 
-export const getAll = async ({ page, limit, category, sort, search } = {}) => {
+export const getAll = async ({ page, limit, category, sort, search, authorId } = {}) => {
   try {
     const response = await api.get('/posts', {
-      params: { page, limit, category, sort, search },
+      params: { page, limit, category, sort, search, authorId },
     });
     return response.data;
   } catch (error) {

@@ -38,6 +38,8 @@ const loginUser = async (email, password) => {
     email: user.email,
     name: user.name,
     role: user.role,
+    bio: user.bio,
+    avatarUrl: user.avatarUrl,
   };
 
   const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' });
@@ -49,6 +51,8 @@ const loginUser = async (email, password) => {
       email: user.email,
       name: user.name,
       role: user.role,
+      bio: user.bio,
+      avatarUrl: user.avatarUrl,
     },
   };
 };

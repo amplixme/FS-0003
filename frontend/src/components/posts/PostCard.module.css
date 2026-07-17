@@ -177,6 +177,18 @@
   white-space: nowrap;
 }
 
+.authorLink {
+  color: inherit;
+  text-decoration: none;
+  position: relative;
+  z-index: 2;
+}
+
+.authorLink:hover {
+  color: var(--md-primary, #024ce2);
+  text-decoration: underline;
+}
+
 @media (max-width: 520px) {
   .content {
     padding: 1rem;
