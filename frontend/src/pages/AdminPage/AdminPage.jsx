@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useAuth } from '../../context/AuthContext';
 import adminService from '../../services/admin.service';
 import './AdminPage.css';
 
@@ -319,17 +320,7 @@ const CommentsSection = () => {
 const AdminPage = () => {
   const [stats, setStats] = useState(null);
   const [tab, setTab] = useState('users');
-  const { user } = (() => {
-    try {
-      return JSON.parse(localStorage.getItem('user')) || {};
-    } catch {
-      return {};
-    }
-  })();
-
-  // Obtener user del contexto real — se inyecta via props o hook
-  // Aquí usamos localStorage directo; en el componente real usa useAuth()
-  const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+  const { user: currentUser } = useAuth();
 
   useEffect(() => {
     adminService.getStats().then(setStats).catch(console.error);

@@ -23,7 +23,6 @@ const createUser = async (req, res, next) => {
     const user = await adminService.createUser(req.body);
     res.status(201).json(user);
   } catch (err) {
-    if (err.status) return res.status(err.status).json({ error: { message: err.message } });
     next(err);
   }
 };
@@ -35,7 +34,6 @@ const changeUserRole = async (req, res, next) => {
     const updated = await adminService.changeUserRole(targetId, requesterId);
     res.json(updated);
   } catch (err) {
-    if (err.status) return res.status(err.status).json({ error: { message: err.message } });
     next(err);
   }
 };
@@ -46,7 +44,6 @@ const updateUser = async (req, res, next) => {
     const updated = await adminService.updateUser(targetId, req.body);
     res.json(updated);
   } catch (err) {
-    if (err.status) return res.status(err.status).json({ error: { message: err.message } });
     next(err);
   }
 };
@@ -58,7 +55,6 @@ const deleteUser = async (req, res, next) => {
     const result = await adminService.deleteUser(targetId, requesterId);
     res.json(result);
   } catch (err) {
-    if (err.status) return res.status(err.status).json({ error: { message: err.message } });
     next(err);
   }
 };
@@ -69,7 +65,6 @@ const deletePost = async (req, res, next) => {
     const result = await adminService.deletePost(postId);
     res.json(result);
   } catch (err) {
-    if (err.status) return res.status(err.status).json({ error: { message: err.message } });
     next(err);
   }
 };
@@ -80,7 +75,6 @@ const deleteComment = async (req, res, next) => {
     const result = await adminService.deleteComment(commentId);
     res.json(result);
   } catch (err) {
-    if (err.status) return res.status(err.status).json({ error: { message: err.message } });
     next(err);
   }
 };
