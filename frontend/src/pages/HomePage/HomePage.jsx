@@ -1,7 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import PostCard from "../../components/posts/PostCard";
-import { EmptyState, ErrorMessage, Pagination, Spinner } from "../../components/common";
+import {
+  EmptyState,
+  ErrorMessage,
+  Pagination,
+  SearchInput,
+  Spinner,
+} from "../../components/common";
 import { CategoryFilter } from "../../components/categories";
 import { getAll } from "../../services/post.service";
 import styles from "./HomePage.module.css";
@@ -21,12 +27,12 @@ const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [retryKey, setRetryKey] = useState(0);
-  const [activeCategory, setActiveCategory] = useState(null);
   const [totalPages, setTotalPages] = useState(0);
-  const pendingCategory = useRef(null);
   const pageParam = searchParams.get("page");
   const parsedPage = Number(pageParam);
   const currentPage = Number.isSafeInteger(parsedPage) && parsedPage > 0 ? parsedPage : 1;
+  const activeCategory = searchParams.get("category") || null;
+  const searchTerm = searchParams.get("search")?.trim() || "";
 
   useEffect(() => {
     if (pageParam === null) return;
@@ -41,12 +47,6 @@ const HomePage = () => {
   }, [currentPage, pageParam, setSearchParams]);
 
   useEffect(() => {
-    if (pendingCategory.current) {
-      const isCategoryReady = activeCategory === pendingCategory.current.value;
-      if (currentPage !== 1 || !isCategoryReady) return;
-      pendingCategory.current = null;
-    }
-
     let isActive = true;
     const loadPosts = async () => {
       setIsLoading(true);
@@ -56,6 +56,7 @@ const HomePage = () => {
           page: currentPage,
           limit: POSTS_PER_PAGE,
           category: activeCategory || undefined,
+          search: searchTerm || undefined,
         });
         if (isActive) {
           const responseTotalPages = Math.max(0, Number(response?.totalPages) || 0);
@@ -81,7 +82,7 @@ const HomePage = () => {
     };
     loadPosts();
     return () => { isActive = false; };
-  }, [retryKey, activeCategory, currentPage, setSearchParams]);
+  }, [retryKey, activeCategory, currentPage, searchTerm, setSearchParams]);
 
   const changePage = (page) => {
     setSearchParams((params) => {
@@ -95,9 +96,25 @@ const HomePage = () => {
   const changeCategory = (category) => {
     if (currentPage === 1 && category === activeCategory) return;
 
-    pendingCategory.current = { value: category };
-    setActiveCategory(category);
-    changePage(1);
+    setSearchParams((params) => {
+      const nextParams = new URLSearchParams(params);
+      nextParams.delete("page");
+      if (category) nextParams.set("category", category);
+      else nextParams.delete("category");
+      return nextParams;
+    });
+  };
+
+  const changeSearch = (search) => {
+    if (search === searchTerm) return;
+
+    setSearchParams((params) => {
+      const nextParams = new URLSearchParams(params);
+      nextParams.delete("page");
+      if (search) nextParams.set("search", search);
+      else nextParams.delete("search");
+      return nextParams;
+    });
   };
 
   return (
@@ -106,6 +123,7 @@ const HomePage = () => {
         <p className={styles.eyebrow}>Publicaciones</p>
         <h1 className={styles.title}>Últimos posts</h1>
         <p className={styles.description}>Explorá las publicaciones más recientes de la comunidad.</p>
+        <SearchInput key={searchTerm} value={searchTerm} onSearch={changeSearch} />
       </div>
 
       <div className={styles.body}>
@@ -125,7 +143,14 @@ const HomePage = () => {
           )}
           {!isLoading && !error && posts.length === 0 && (
             <div className={styles.status}>
-              <EmptyState message="No hay publicaciones en esta categoría" />
+              <EmptyState
+                icon={searchTerm ? "search_off" : "inbox"}
+                message={
+                  searchTerm
+                    ? `No encontramos publicaciones para "${searchTerm}"`
+                    : "No hay publicaciones en esta categoría"
+                }
+              />
             </div>
           )}
           {!isLoading && !error && posts.length > 0 && (
