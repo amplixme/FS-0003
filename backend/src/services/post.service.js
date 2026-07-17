@@ -1,9 +1,21 @@
 const prisma = require('../utils/prisma');
 const AppError = require('../utils/AppError');
 
-const getAllPosts = async ({ categorySlug, page = 1, limit = 10, sort = 'newest' } = {}) => {
+const getAllPosts = async ({ categorySlug, page = 1, limit = 10, sort = 'newest', search } = {}) => {
+  if (search !== undefined && typeof search !== 'string') {
+    throw new AppError('El parámetro search debe ser texto', 400);
+  }
+
+  const normalizedSearch = search?.trim();
   const where = {
     published: true,
+
+    ...(normalizedSearch && {
+      OR: [
+        { title: { contains: normalizedSearch, mode: 'insensitive' } },
+        { content: { contains: normalizedSearch, mode: 'insensitive' } },
+      ],
+    }),
 
     ...(categorySlug && {
       categories: {
