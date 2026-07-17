@@ -220,7 +220,29 @@
 .sidebarEmail {
   font-size: 14px;
   color: #6b7280;
-  margin: 0;
+  margin: 0 0 12px;
+}
+
+.sidebarEditLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(37, 99, 235, 0.08);
+  transition: background 0.15s;
+}
+
+.sidebarEditLink:hover {
+  background: rgba(37, 99, 235, 0.15);
+}
+
+.sidebarEditLink .material-symbols-outlined {
+  font-size: 16px;
 }
 
 .sidebarDivider {

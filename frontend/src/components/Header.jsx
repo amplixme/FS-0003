@@ -95,6 +95,14 @@ const Header = () => {
           </div>
           <p className="sidebarName">{user?.name ?? "Invitado"}</p>
           <p className="sidebarEmail">{user?.email ?? ""}</p>
+          <Link
+            to="/perfil/editar"
+            className="sidebarEditLink"
+            onClick={() => setMobileOpen(false)}
+          >
+            <span className="material-symbols-outlined" aria-hidden="true">edit</span>
+            Editar perfil
+          </Link>
         </div>
 
         <div className="sidebarDivider" />
