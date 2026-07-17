@@ -234,6 +234,16 @@
   color: var(--md-on-surface);
 }
 
+.post-author-link {
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.post-author-link:hover {
+  color: var(--md-primary);
+  text-decoration: underline;
+}
+
 .post-date {
   font-size: 0.8125rem;
   color: var(--md-on-surface-variant);

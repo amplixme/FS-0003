@@ -65,8 +65,8 @@ const Header = () => {
                 onClick={() => setMobileOpen(true)}
                 aria-label="Abrir menú de usuario"
               >
-                {user?.avatar ? (
-                  <img src={user.avatar} alt={user.name} className="avatarImg" />
+                {user?.avatarUrl ? (
+                  <img src={user.avatarUrl} alt={user.name} className="avatarImg" />
                 ) : (
                   <span className="avatarFallback">
                     {user?.name?.[0]?.toUpperCase() ?? "U"}
@@ -102,10 +102,7 @@ const Header = () => {
         />
       )}
 
-      <aside
-        className={`mobileSidebar${mobileOpen ? " mobileSidebarOpen" : ""}`}
-        aria-label="Menú de navegación"
-      >
+      <aside className={`mobileSidebar${mobileOpen ? " mobileSidebarOpen" : ""}`} aria-label="Menú de navegación">
         <div className="sidebarHeader">
           <span className="sidebarHeaderTitle">TuProyecto</span>
           <button
@@ -119,6 +116,42 @@ const Header = () => {
             </svg>
           </button>
         </div>
+        {/* Perfil */}
+        {isAuthenticated ? (
+          <Link
+            to={`/perfil/${user.id}`}
+            className="sidebarProfile"
+            onClick={() => setMobileOpen(false)}
+          >
+            <div className="sidebarAvatarWrap">
+              {user?.avatarUrl ? (
+                <img src={user.avatarUrl} alt={user.name} className="sidebarAvatarImg" />
+              ) : (
+                <span className="sidebarAvatarFallback">
+                  {user?.name?.[0]?.toUpperCase() ?? "U"}
+                </span>
+              )}
+              <span className="onlineDot" aria-hidden="true" />
+            </div>
+            <p className="sidebarName">{user?.name ?? "Invitado"}</p>
+            <p className="sidebarEmail">{user?.email ?? ""}</p>
+          </Link>
+        ) : (
+          <div className="sidebarProfile">
+            <div className="sidebarAvatarWrap">
+              {user?.avatarUrl ? (
+                <img src={user.avatarUrl} alt={user.name} className="sidebarAvatarImg" />
+              ) : (
+                <span className="sidebarAvatarFallback">
+                  {user?.name?.[0]?.toUpperCase() ?? "U"}
+                </span>
+              )}
+              <span className="onlineDot" aria-hidden="true" />
+            </div>
+            <p className="sidebarName">{user?.name ?? "Invitado"}</p>
+            <p className="sidebarEmail">{user?.email ?? ""}</p>
+          </div>
+        )}
 
         <div className="sidebarDivider" />
 

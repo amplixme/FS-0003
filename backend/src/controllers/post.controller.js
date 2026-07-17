@@ -5,12 +5,13 @@ const AppError = require('../utils/AppError');
 
 const getAll = async (req, res, next) => {
   try {
-    const { category, page, limit, sort } = req.query;
+    const { category, page, limit, sort, authorId } = req.query;
     const result = await getAllPosts({
       categorySlug: category,
       page: page ? Number(page) : undefined,
       limit: limit ? Number(limit) : undefined,
       sort,
+      authorId,
     });
     return res.status(200).json(result);
   } catch (err) {
