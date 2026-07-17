@@ -163,9 +163,15 @@ export default function PostDetailPage() {
                       {post.author?.name?.charAt(0)?.toUpperCase() || "U"}
                     </div>
                     <div className="post-author-info">
-                      <span className="post-author-name">
-                        {post.author?.name || "Usuario"}
-                      </span>
+                      {post.author?.id ? (
+                        <Link to={`/perfil/${post.author.id}`} className="post-author-name post-author-link">
+                          {post.author?.name || "Usuario"}
+                        </Link>
+                      ) : (
+                        <span className="post-author-name">
+                          {post.author?.name || "Usuario"}
+                        </span>
+                      )}
                       <span className="post-date">{formatDate(post.createdAt)}</span>
                     </div>
                   </div>

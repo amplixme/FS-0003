@@ -10,6 +10,7 @@ const getErrorMessage = (error, fallback) => {
     || fallback;
 };
 
+
 export const getProfile = async (id) => {
   try {
     const response = await api.get(`/users/${id}`);
@@ -18,6 +19,7 @@ export const getProfile = async (id) => {
     throw new Error(getErrorMessage(error, 'Error al obtener el perfil'), { cause: error });
   }
 };
+
 
 export const updateProfile = async (data) => {
   try {

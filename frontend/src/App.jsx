@@ -11,6 +11,8 @@ import HomePage from "./pages/HomePage/HomePage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import PostDetailPage from "./pages/PostDetailPage/PostDetailPage";
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
+import EditProfilePage from "./pages/EditProfilePage/EditProfilePage";
 import CategoryManagePage from "./pages/CategoryManagePage/CategoryManagePage";
 import AdminPage from "./pages/AdminPage/AdminPage";
 import NotFound from "./components/NotFound";
@@ -39,6 +41,8 @@ function App() {
                 }
               />
               <Route path="/posts/:id" element={<PostDetailPage />} />
+              <Route path="/perfil/editar" element={<ProtectedRoute><EditProfilePage /></ProtectedRoute>} />
+              <Route path="/perfil/:id" element={<ProfilePage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>
