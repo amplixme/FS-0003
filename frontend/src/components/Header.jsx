@@ -155,7 +155,7 @@ const Header = () => {
 
         <div className="sidebarDivider" />
 
-        {isAuthenticated && (
+        {/* {isAuthenticated && (
           <>
             <div className="sidebarProfile">
               <div className="sidebarAvatarWrap">
@@ -173,7 +173,7 @@ const Header = () => {
             </div>
             <div className="sidebarDivider" />
           </>
-        )}
+        )} */}
 
         <nav className="sidebarNav">
           {navLinks.map(({ to, label }) => (
