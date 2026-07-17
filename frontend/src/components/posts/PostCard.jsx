@@ -88,7 +88,17 @@ const PostCard = ({ post, onCategorySelect }) => {
         )}
         <p className={styles.excerpt}>{getExcerpt(post.content)}</p>
         <div className={styles.meta}>
-          <span>{authorName}</span>
+          {post.author?.id ? (
+            <Link
+              to={`/perfil/${post.author.id}`}
+              className={styles.authorLink}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {authorName}
+            </Link>
+          ) : (
+            <span>{authorName}</span>
+          )}
           <div className={styles.metaRight}>
             <span className={styles.commentCount}>
               <span className="material-symbols-outlined" aria-hidden="true">comment</span>
