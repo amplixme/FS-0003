@@ -1,7 +1,7 @@
 const prisma = require('../utils/prisma');
 const AppError = require('../utils/AppError');
 
-const getAllPosts = async ({ categorySlug, page = 1, limit = 10, sort = 'newest', authorId } = {}) => {
+const getAllPosts = async ({ categorySlug, page = 1, limit = 10, sort = 'newest', search } = {}) => {
   const where = {
     published: true,
 
@@ -13,7 +13,12 @@ const getAllPosts = async ({ categorySlug, page = 1, limit = 10, sort = 'newest'
       },
     }),
 
-    ...(authorId && { authorId: Number(authorId) }),
+    ...(search && {
+      OR: [
+        { title: { contains: search, mode: 'insensitive' } },
+        { content: { contains: search, mode: 'insensitive' } },
+      ],
+    }),
   };
 
   const orderByMap = {

@@ -1,7 +1,5 @@
-const { PrismaClient } = require('../generated/prisma');
 const bcrypt = require('bcrypt');
-
-const prisma = new PrismaClient();
+const prisma = require('../utils/prisma');
 
 const getStats = async () => {
   const [totalUsers, totalPosts, totalComments, postsByCategory] = await Promise.all([
