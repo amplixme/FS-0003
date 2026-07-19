@@ -27,11 +27,20 @@ const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [retryKey, setRetryKey] = useState(0);
-  const [activeCategory, setActiveCategory] = useState(null);
+
   const pageParam = Number.parseInt(searchParams.get("page"), 10);
   const currentPage = Number.isInteger(pageParam) && pageParam > 0 ? pageParam : 1;
   const sortParam = searchParams.get("sort");
   const currentSort = SORT_OPTIONS.some((opt) => opt.value === sortParam) ? sortParam : "newest";
+
+  // Categoría activa: viene de query param ?category= o es null
+  const categoryParam = searchParams.get("category") || null;
+  const [activeCategory, setActiveCategory] = useState(categoryParam);
+
+  // Sincronizar si el query param cambia (ej: navegación desde el sidebar)
+  useEffect(() => {
+    setActiveCategory(categoryParam);
+  }, [categoryParam]);
 
   const changePage = (page) => {
     setSearchParams((currentParams) => {
@@ -43,8 +52,13 @@ const HomePage = () => {
   };
 
   const changeCategory = (category) => {
-    setActiveCategory(category);
-    changePage(1);
+    setSearchParams((currentParams) => {
+      const nextParams = new URLSearchParams(currentParams);
+      if (category) nextParams.set("category", category);
+      else nextParams.delete("category");
+      nextParams.delete("page");
+      return nextParams;
+    });
   };
 
   const changeSort = (sort) => {
@@ -71,7 +85,6 @@ const HomePage = () => {
         });
         if (isActive) {
           const responseTotalPages = Math.max(Number(response?.totalPages) || 1, 1);
-
           if (currentPage > responseTotalPages) {
             setSearchParams((currentParams) => {
               const nextParams = new URLSearchParams(currentParams);
@@ -81,7 +94,6 @@ const HomePage = () => {
             });
             return;
           }
-
           setPosts(getPostsFromResponse(response));
           setTotalPages(responseTotalPages);
         }
@@ -104,7 +116,6 @@ const HomePage = () => {
       </div>
 
       <div className={styles.body}>
-        {/* Una sola instancia — el CSS interno decide sidebar vs chips */}
         <CategoryFilter activeSlug={activeCategory} onChange={changeCategory} />
 
         <div className={styles.content}>

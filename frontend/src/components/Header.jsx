@@ -1,11 +1,14 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import * as categoryService from "../services/category.service";
 
 const Header = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const isActive = (path) => location.pathname === path;
 
@@ -16,14 +19,23 @@ const Header = () => {
     ...(user?.role === "ADMIN" ? [{ to: "/admin", label: "Admin" }] : []),
   ];
 
-  // Categorías de ejemplo — reemplaza con datos reales desde contexto/API
-  const categories = [
-    { label: "Tecnología", count: 24 },
-    { label: "Diseño", count: 18 },
-    { label: "Programación", count: 42 },
-    { label: "DevOps", count: 12 },
-    { label: "Opinión", count: 7 },
-  ];
+  useEffect(() => {
+    categoryService.getAll()
+      .then((data) => {
+        const normalized = data.map((cat) => ({
+          label: cat.name,
+          slug: cat.slug,
+          count: cat._count?.posts ?? 0,
+        }));
+        setCategories(normalized);
+      })
+      .catch(() => setCategories([]));
+  }, []);
+
+  const handleCategoryClick = (slug) => {
+    setMobileOpen(false);
+    navigate(`/?category=${slug}`);
+  };
 
   return (
     <>
@@ -69,9 +81,19 @@ const Header = () => {
             </>
           )}
         </div>
+
+        <button
+          className="hamburgerBtn"
+          onClick={() => setMobileOpen(true)}
+          aria-label="Abrir menú de navegación"
+          aria-expanded={mobileOpen}
+        >
+          <span className="hamburgerBar" />
+          <span className="hamburgerBar" />
+          <span className="hamburgerBar" />
+        </button>
       </header>
 
-      {/* ── MOBILE SIDE PANEL ── */}
       {mobileOpen && (
         <div
           className="mobileOverlay"
@@ -80,7 +102,20 @@ const Header = () => {
         />
       )}
 
-      <aside className={`mobileSidebar${mobileOpen ? " mobileSidebarOpen" : ""}`}>
+      <aside className={`mobileSidebar${mobileOpen ? " mobileSidebarOpen" : ""}`} aria-label="Menú de navegación">
+        <div className="sidebarHeader">
+          <span className="sidebarHeaderTitle">TuProyecto</span>
+          <button
+            className="sidebarCloseBtn"
+            onClick={() => setMobileOpen(false)}
+            aria-label="Cerrar menú"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
         {/* Perfil */}
         {isAuthenticated ? (
           <Link
@@ -120,7 +155,26 @@ const Header = () => {
 
         <div className="sidebarDivider" />
 
-        {/* Nav links */}
+        {/* {isAuthenticated && (
+          <>
+            <div className="sidebarProfile">
+              <div className="sidebarAvatarWrap">
+                {user?.avatar ? (
+                  <img src={user.avatar} alt={user.name} className="sidebarAvatarImg" />
+                ) : (
+                  <span className="sidebarAvatarFallback">
+                    {user?.name?.[0]?.toUpperCase() ?? "U"}
+                  </span>
+                )}
+                <span className="onlineDot" aria-hidden="true" />
+              </div>
+              <p className="sidebarName">{user?.name ?? "Invitado"}</p>
+              <p className="sidebarEmail">{user?.email ?? ""}</p>
+            </div>
+            <div className="sidebarDivider" />
+          </>
+        )} */}
+
         <nav className="sidebarNav">
           {navLinks.map(({ to, label }) => (
             <Link
@@ -140,31 +194,30 @@ const Header = () => {
           ))}
         </nav>
 
-        {/* Categorías */}
-        <div className="sidebarSection">
-          <div className="sidebarSectionHeader">
-            <span className="sidebarSectionTitle">CATEGORÍAS</span>
-            <span className="sidebarSectionIcon" aria-hidden="true">📊</span>
+        {categories.length > 0 && (
+          <div className="sidebarSection">
+            <div className="sidebarSectionHeader">
+              <span className="sidebarSectionTitle">CATEGORÍAS</span>
+              <span className="sidebarSectionIcon" aria-hidden="true">📊</span>
+            </div>
+            <ul className="sidebarCategories" role="list">
+              {categories.map(({ label, slug, count }) => (
+                <li key={slug}>
+                  <button
+                    className="sidebarCategoryLink"
+                    onClick={() => handleCategoryClick(slug)}
+                  >
+                    <span>{label}</span>
+                    <span className="sidebarCategoryCount">{count}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
-          <ul className="sidebarCategories" role="list">
-            {categories.map(({ label, count }) => (
-              <li key={label}>
-                <Link
-                  to={`/categorias/${label.toLowerCase()}`}
-                  className="sidebarCategoryLink"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  <span>{label}</span>
-                  <span className="sidebarCategoryCount">{count}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+        )}
 
-        {/* Footer del panel */}
         <div className="sidebarFooter">
-          {isAuthenticated && (
+          {isAuthenticated ? (
             <button
               className="sidebarLogoutBtn"
               onClick={() => { logout(); setMobileOpen(false); }}
@@ -172,8 +225,17 @@ const Header = () => {
               <span aria-hidden="true">↪</span>
               Cerrar Sesión
             </button>
+          ) : (
+            <div className="sidebarAuthLinks">
+              <Link to="/login" className="sidebarAuthLink" onClick={() => setMobileOpen(false)}>
+                Iniciar sesión
+              </Link>
+              <Link to="/register" className="sidebarAuthLinkPrimary" onClick={() => setMobileOpen(false)}>
+                Registrarse
+              </Link>
+            </div>
           )}
-          <p className="sidebarVersion">TU PROYECTO EDITORIAL </p>
+          <p className="sidebarVersion">TU PROYECTO EDITORIAL</p>
         </div>
       </aside>
     </>
