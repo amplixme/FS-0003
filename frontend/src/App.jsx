@@ -6,6 +6,7 @@ import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
 import ErrorBoundary from "./components/ErrorBoundary";
 import CreatePostPage from "./pages/CreatePostPage/CreatePostPage";
 import EditPostPage from "./pages/EditPostPage/EditPostPage";
+import EditProfilePage from "./pages/EditProfilePage/EditProfilePage";
 import HomePage from "./pages/HomePage/HomePage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
@@ -29,6 +30,7 @@ function App() {
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/crear" element={<ProtectedRoute><CreatePostPage /></ProtectedRoute>} />
               <Route path="/posts/:id/editar" element={<ProtectedRoute><EditPostPage /></ProtectedRoute>} />
+              <Route path="/perfil/editar" element={<ProtectedRoute><EditProfilePage /></ProtectedRoute>} />
               <Route path="/categorias" element={<ProtectedRoute><CategoryManagePage /></ProtectedRoute>} />
               <Route
                 path="/admin"

@@ -46,10 +46,16 @@ export const AuthProvider = ({ children }) => {
     window.location.href = "/login";
   };
 
+  const updateUser = (userData) => {
+    const merged = { ...user, ...userData };
+    localStorage.setItem("user", JSON.stringify(merged));
+    setUser(merged);
+  };
+
   const isAuthenticated = !!token;
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isAuthenticated, loading }}>
+    <AuthContext.Provider value={{ user, token, login, logout, updateUser, isAuthenticated, loading }}>
       {children}
     </AuthContext.Provider>
   );
