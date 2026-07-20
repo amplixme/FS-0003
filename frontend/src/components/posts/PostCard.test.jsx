@@ -3,6 +3,7 @@ import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { render, screen } from "@testing-library/react";
 import PostCard from "./PostCard";
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
@@ -115,5 +116,33 @@ describe("PostCard", () => {
     const view = renderPostCard({ onCategorySelect: vi.fn() });
 
     expect(view.querySelector('a[href="/posts/42"]')).not.toBeNull();
+  });
+});
+
+describe("PostCard (RTL)", () => {
+  it("renderiza el titulo del post", () => {
+    render(<MemoryRouter><PostCard post={post} /></MemoryRouter>);
+    expect(screen.getByText("Post con categorías")).toBeInTheDocument();
+  });
+
+  it("renderiza el nombre del autor", () => {
+    render(<MemoryRouter><PostCard post={post} /></MemoryRouter>);
+    expect(screen.getByText("Ana")).toBeInTheDocument();
+  });
+
+  it("renderiza el extracto del contenido", () => {
+    render(<MemoryRouter><PostCard post={post} /></MemoryRouter>);
+    expect(screen.getByText("Contenido del post")).toBeInTheDocument();
+  });
+
+  it("muestra Autor desconocido cuando no hay autor", () => {
+    const postSinAutor = { ...post, author: null };
+    render(<MemoryRouter><PostCard post={postSinAutor} /></MemoryRouter>);
+    expect(screen.getByText("Autor desconocido")).toBeInTheDocument();
+  });
+
+  it("muestra placeholder de imagen cuando no hay coverImage", () => {
+    const { container } = render(<MemoryRouter><PostCard post={post} /></MemoryRouter>);
+    expect(container.querySelector(".material-symbols-outlined")).toBeInTheDocument();
   });
 });
