@@ -98,7 +98,7 @@ const ImageUpload = ({
             reject(new Error('Subida cancelada.'))
           );
 
-          xhr.open('POST', '/api/upload');
+          xhr.open('POST', `${import.meta.env.VITE_API_URL}/upload`);
           if (token) xhr.setRequestHeader('Authorization', `Bearer ${token}`);
           xhr.send(formData);
         });
