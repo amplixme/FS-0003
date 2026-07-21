@@ -9,7 +9,24 @@ const adminRoutes = require('./admin.routes');
 
 const router = Router();
 
-// Health check
+/**
+ * @openapi
+ * /health:
+ *   get:
+ *     tags: [Health]
+ *     summary: Verificar que el servidor está funcionando
+ *     responses:
+ *       200:
+ *         description: Servidor activo
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: ok
+ */
 router.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
