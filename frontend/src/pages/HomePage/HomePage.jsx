@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import PostCard from "../../components/posts/PostCard";
-import { EmptyState, ErrorMessage, Pagination, Spinner } from "../../components/common";
+import { EmptyState, ErrorMessage, Pagination, SearchInput, Spinner } from "../../components/common";
 import { CategoryFilter } from "../../components/categories";
 import { getAll } from "../../services/post.service";
 import styles from "./HomePage.module.css";
@@ -32,15 +32,9 @@ const HomePage = () => {
   const currentPage = Number.isInteger(pageParam) && pageParam > 0 ? pageParam : 1;
   const sortParam = searchParams.get("sort");
   const currentSort = SORT_OPTIONS.some((opt) => opt.value === sortParam) ? sortParam : "newest";
+  const searchTerm = searchParams.get("search")?.trim() || "";
 
-  // Categoría activa: viene de query param ?category= o es null
-  const categoryParam = searchParams.get("category") || null;
-  const [activeCategory, setActiveCategory] = useState(categoryParam);
-
-  // Sincronizar si el query param cambia (ej: navegación desde el sidebar)
-  useEffect(() => {
-    setActiveCategory(categoryParam);
-  }, [categoryParam]);
+  const activeCategory = searchParams.get("category") || null;
 
   const changePage = (page) => {
     setSearchParams((currentParams) => {
@@ -71,6 +65,18 @@ const HomePage = () => {
     });
   };
 
+  const changeSearch = (search) => {
+    if (search === searchTerm) return;
+
+    setSearchParams((currentParams) => {
+      const nextParams = new URLSearchParams(currentParams);
+      if (search) nextParams.set("search", search);
+      else nextParams.delete("search");
+      nextParams.delete("page");
+      return nextParams;
+    });
+  };
+
   useEffect(() => {
     let isActive = true;
     const loadPosts = async () => {
@@ -82,6 +88,7 @@ const HomePage = () => {
           limit: POSTS_PER_PAGE,
           category: activeCategory || undefined,
           sort: currentSort,
+          search: searchTerm || undefined,
         });
         if (isActive) {
           const responseTotalPages = Math.max(Number(response?.totalPages) || 1, 1);
@@ -105,7 +112,7 @@ const HomePage = () => {
     };
     loadPosts();
     return () => { isActive = false; };
-  }, [retryKey, activeCategory, currentPage, currentSort, setSearchParams]);
+  }, [retryKey, activeCategory, currentPage, currentSort, searchTerm, setSearchParams]);
 
   return (
     <section className={styles.homePage}>
@@ -113,6 +120,7 @@ const HomePage = () => {
         <p className={styles.eyebrow}>Publicaciones</p>
         <h1 className={styles.title}>Últimos posts</h1>
         <p className={styles.description}>Explorá las publicaciones más recientes de la comunidad.</p>
+        <SearchInput key={searchTerm} value={searchTerm} onSearch={changeSearch} />
       </div>
 
       <div className={styles.body}>
@@ -147,7 +155,14 @@ const HomePage = () => {
           )}
           {!isLoading && !error && posts.length === 0 && (
             <div className={styles.status}>
-              <EmptyState message="No hay publicaciones en esta categoría" />
+              <EmptyState
+                icon={searchTerm ? "search_off" : "inbox"}
+                message={
+                  searchTerm
+                    ? `No encontramos publicaciones para "${searchTerm}"`
+                    : "No hay publicaciones en esta categoría"
+                }
+              />
             </div>
           )}
           {!isLoading && !error && posts.length > 0 && (
