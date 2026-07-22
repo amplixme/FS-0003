@@ -30,7 +30,9 @@ const SearchInput = ({ value = "", onSearch, debounceMs = 300 }) => {
       <span className={`material-symbols-outlined ${styles.icon}`} aria-hidden="true">
         search
       </span>
+      <label className="visually-hidden" htmlFor="post-search">Buscar publicaciones</label>
       <input
+        id="post-search"
         type="search"
         className={styles.input}
         value={query}

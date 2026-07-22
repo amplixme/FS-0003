@@ -252,8 +252,13 @@ export default function PostDetailPage() {
                   <p className="sidebar-cta-text">
                     Recibí las mejores historias de diseño y tecnología cada semana.
                   </p>
-                  <input className="sidebar-cta-input" type="email" placeholder="tu@email.com" />
-                  <button className="btn btn-primary sidebar-cta-btn">Suscribirse</button>
+                  <form>
+                    <label className="visually-hidden" htmlFor="sidebar-subscription-email">
+                      Correo electrónico para suscribirse
+                    </label>
+                    <input id="sidebar-subscription-email" className="sidebar-cta-input" type="email" placeholder="tu@email.com" />
+                    <button type="submit" className="btn btn-primary sidebar-cta-btn">Suscribirse</button>
+                  </form>
                 </div>
               </div>
             </aside>

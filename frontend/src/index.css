@@ -36,6 +36,23 @@ button {
   font-family: inherit;
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+:focus-visible {
+  outline: 3px solid #024ce2;
+  outline-offset: 3px;
+}
+
 /* --- Material Symbols --- */
 .material-symbols-outlined {
   font-family: "Material Symbols Outlined";
