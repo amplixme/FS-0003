@@ -138,13 +138,17 @@ const CategoryManagePage = () => {
 
       <form className={styles.createForm} onSubmit={handleCreate}>
         <div className={styles.createRow}>
+          <label className={styles.srOnly} htmlFor="new-category-name">Nombre de la categoría</label>
           <input
+            id="new-category-name"
             className={styles.input}
             placeholder="Nombre de la categoría"
             value={newName}
             onChange={handleNewNameChange}
           />
+          <label className={styles.srOnly} htmlFor="new-category-slug">Slug de la categoría</label>
           <input
+            id="new-category-slug"
             className={styles.input}
             placeholder="slug"
             value={newSlug}
@@ -172,25 +176,30 @@ const CategoryManagePage = () => {
             <div key={category.id} className={styles.row}>
               {editingId === category.id ? (
                 <>
+                  <label className={styles.srOnly} htmlFor={`category-name-${category.id}`}>Nombre de la categoría</label>
                   <input
+                    id={`category-name-${category.id}`}
                     className={styles.editInput}
                     value={editName}
                     onChange={handleEditNameChange}
                   />
+                  <label className={styles.srOnly} htmlFor={`category-slug-${category.id}`}>Slug de la categoría</label>
                   <input
+                    id={`category-slug-${category.id}`}
                     className={styles.editInput}
                     value={editSlug}
                     onChange={(e) => setEditSlug(e.target.value)}
                   />
                   <div className={styles.rowActions}>
                     <button
+                      type="button"
                       className={styles.saveBtn}
                       disabled={isSavingEdit || !editName.trim()}
                       onClick={() => handleSaveEdit(category.id)}
                     >
                       {isSavingEdit ? "Guardando..." : "Guardar"}
                     </button>
-                    <button className={styles.cancelBtn} onClick={cancelEditing}>
+                    <button type="button" className={styles.cancelBtn} onClick={cancelEditing}>
                       Cancelar
                     </button>
                   </div>
@@ -204,12 +213,14 @@ const CategoryManagePage = () => {
                   </span>
                   <div className={styles.rowActions}>
                     <button
+                      type="button"
                       className={styles.editBtn}
                       onClick={() => startEditing(category)}
                     >
                       Editar
                     </button>
                     <button
+                      type="button"
                       className={styles.deleteBtn}
                       onClick={() => confirmDelete(category)}
                     >

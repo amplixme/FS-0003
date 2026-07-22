@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, useId } from 'react';
 import api from '../../services/api';
 import styles from './ImageUpload.module.css';
 
@@ -23,6 +23,7 @@ const ImageUpload = ({
   label = 'Imagen de portada',
 }) => {
   const inputRef = useRef(null);
+  const inputId = useId();
 
   const [preview, setPreview]     = useState(initialUrl);
   const [uploading, setUploading] = useState(false);
@@ -158,7 +159,7 @@ const ImageUpload = ({
 
   return (
     <div className={styles.wrapper}>
-      {label && <label className={styles.label}>{label}</label>}
+      {label && <label className={styles.label} htmlFor={inputId}>{label}</label>}
 
       <div
         className={zoneClass}
@@ -175,6 +176,7 @@ const ImageUpload = ({
       >
         {/* Input oculto */}
         <input
+          id={inputId}
           ref={inputRef}
           type="file"
           accept="image/jpeg,image/png,image/webp"
@@ -182,7 +184,6 @@ const ImageUpload = ({
           onChange={handleFileChange}
           disabled={disabled || uploading}
           tabIndex={-1}
-          aria-hidden="true"
         />
 
         {preview ? (

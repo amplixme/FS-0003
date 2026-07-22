@@ -1,20 +1,71 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useId, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import adminService from '../../services/admin.service';
 import './AdminPage.css';
 
 // ── Modal genérico ──────────────────────────────────────────────
-const Modal = ({ title, onClose, children }) => (
-  <div className="adminModalOverlay" onClick={onClose}>
-    <div className="adminModal" onClick={(e) => e.stopPropagation()}>
-      <div className="adminModalHeader">
-        <h3>{title}</h3>
-        <button className="adminModalClose" onClick={onClose}>✕</button>
+const Modal = ({ title, onClose, children }) => {
+  const modalRef = useRef(null);
+  const previouslyFocusedElement = useRef(null);
+  const titleId = useId();
+
+  useEffect(() => {
+    previouslyFocusedElement.current = document.activeElement;
+    modalRef.current?.focus();
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (event.key !== 'Tab') return;
+
+      const focusableElements = modalRef.current?.querySelectorAll(
+        'button:not(:disabled), [href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusableElements?.length) return;
+
+      const first = focusableElements[0];
+      const last = focusableElements[focusableElements.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      previouslyFocusedElement.current?.focus?.();
+    };
+  }, [onClose]);
+
+  return (
+    <div className="adminModalOverlay" onClick={(event) => {
+      if (event.target === event.currentTarget) onClose();
+    }}>
+      <div
+        ref={modalRef}
+        className="adminModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        tabIndex={-1}
+      >
+        <div className="adminModalHeader">
+          <h3 id={titleId}>{title}</h3>
+          <button type="button" className="adminModalClose" onClick={onClose} aria-label="Cerrar diálogo">✕</button>
+        </div>
+        <div className="adminModalBody">{children}</div>
       </div>
-      <div className="adminModalBody">{children}</div>
     </div>
-  </div>
-);
+  );
+};
 
 // ── Stats Cards ─────────────────────────────────────────────────
 const StatsSection = ({ stats }) => (
@@ -151,7 +202,7 @@ const UsersSection = ({ currentUserId }) => {
     <section className="adminSection">
       <div className="adminSectionHead">
         <h2 className="adminSectionTitle">Usuarios</h2>
-        <button className="adminBtn adminBtnPrimary" onClick={() => setModal('create')}>
+        <button type="button" className="adminBtn adminBtnPrimary" onClick={() => setModal('create')}>
           + Crear usuario
         </button>
       </div>
@@ -177,18 +228,21 @@ const UsersSection = ({ currentUserId }) => {
                 <td>{u.postCount}</td>
                 <td className="adminActions">
                   <button
+                    type="button"
                     className="adminBtn adminBtnSm"
                     onClick={() => setModal({ type: 'edit', user: u })}
                   >Editar</button>
                   {u.id !== currentUserId && (
                     <>
                       <button
+                        type="button"
                         className="adminBtn adminBtnSm adminBtnWarning"
                         onClick={() => handleRoleToggle(u)}
                       >
                         {u.role === 'ADMIN' ? '→ USER' : '→ ADMIN'}
                       </button>
                       <button
+                        type="button"
                         className="adminBtn adminBtnSm adminBtnDanger"
                         onClick={() => handleDelete(u)}
                       >Eliminar</button>
@@ -256,6 +310,7 @@ const PostsSection = () => {
                 <td>{new Date(p.createdAt).toLocaleDateString('es-PE')}</td>
                 <td>
                   <button
+                    type="button"
                     className="adminBtn adminBtnSm adminBtnDanger"
                     onClick={() => handleDelete(p)}
                   >Eliminar</button>
@@ -306,6 +361,7 @@ const CommentsSection = () => {
             </div>
             <p className="adminCommentContent">{c.content}</p>
             <button
+              type="button"
               className="adminBtn adminBtnSm adminBtnDanger"
               onClick={() => handleDelete(c)}
             >Eliminar</button>
@@ -337,6 +393,7 @@ const AdminPage = () => {
       <nav className="adminTabs">
         {['users', 'posts', 'comments'].map((t) => (
           <button
+            type="button"
             key={t}
             className={`adminTab${tab === t ? ' adminTabActive' : ''}`}
             onClick={() => setTab(t)}

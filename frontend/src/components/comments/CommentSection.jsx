@@ -35,7 +35,11 @@ const CommentItem = ({
       </div>
       {isEditing ? (
         <form className={styles.editForm} onSubmit={onSaveEdit}>
+          <label className="visually-hidden" htmlFor={`edit-comment-${comment.id}`}>
+            Editar comentario
+          </label>
           <textarea
+            id={`edit-comment-${comment.id}`}
             className={`${styles.textarea} ${styles.editTextarea}`}
             value={editContent}
             onChange={(event) => onEditContentChange(event.target.value)}

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useId, useRef } from "react";
 import styles from "./ConfirmModal.module.css";
 
 /**
@@ -26,11 +26,46 @@ const ConfirmModal = ({
   isLoading = false,
   danger = true,
 }) => {
+  const modalRef = useRef(null);
+  const previouslyFocusedElement = useRef(null);
+  const titleId = useId();
+  const messageId = useId();
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    previouslyFocusedElement.current = document.activeElement;
+    modalRef.current?.focus();
+
+    return () => previouslyFocusedElement.current?.focus?.();
+  }, [isOpen]);
+
   // Cerrar con Escape
   useEffect(() => {
     if (!isOpen) return;
     const handleKey = (e) => {
-      if (e.key === "Escape") onCancel?.();
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onCancel?.();
+        return;
+      }
+
+      if (e.key !== "Tab") return;
+
+      const focusableElements = modalRef.current?.querySelectorAll(
+        'button:not(:disabled), [href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusableElements?.length) return;
+
+      const first = focusableElements[0];
+      const last = focusableElements[focusableElements.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     document.addEventListener("keydown", handleKey);
     return () => document.removeEventListener("keydown", handleKey);
@@ -47,12 +82,17 @@ const ConfirmModal = ({
   return (
     <div
       className={styles.overlay}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="confirm-modal-title"
       onClick={(e) => { if (e.target === e.currentTarget) onCancel?.(); }}
     >
-      <div className={styles.modal}>
+      <div
+        ref={modalRef}
+        className={styles.modal}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        aria-describedby={message ? messageId : undefined}
+        tabIndex={-1}
+      >
         {/* Ícono de advertencia */}
         <div className={styles.iconWrap}>
           <span className="material-symbols-outlined" aria-hidden="true">
@@ -60,12 +100,12 @@ const ConfirmModal = ({
           </span>
         </div>
 
-        <h2 id="confirm-modal-title" className={styles.title}>
+        <h2 id={titleId} className={styles.title}>
           {title}
         </h2>
 
         {message && (
-          <p className={styles.message}>{message}</p>
+          <p id={messageId} className={styles.message}>{message}</p>
         )}
 
         <div className={styles.actions}>
