@@ -1,4 +1,9 @@
-const { createComment, getCommentsByPost, updateComment, deleteComment } = require('../services/comment.service');
+const {
+  createComment,
+  getCommentsByPost,
+  updateComment,
+  deleteComment,
+} = require('../services/comment.service');
 const { success } = require('../utils/response');
 
 const create = async (req, res, next) => {

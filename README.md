@@ -235,6 +235,7 @@ FS-0003/
 
 ---
 
+
 ## Variables de entorno
 
 ### Backend (`backend/.env`)
@@ -248,6 +249,6 @@ FS-0003/
 
 ### Frontend (`frontend/.env`)
 
-| Variable | Descripción |
-|----------|-------------|
+| Variable       | Descripción                |
+| -------------- | -------------------------- |
 | `VITE_API_URL` | URL base de la API backend |

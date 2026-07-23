@@ -1,21 +1,21 @@
-import { defineConfig } from "vitest/config";
-import react, { reactCompilerPreset } from "@vitejs/plugin-react";
-import babel from "@rolldown/plugin-babel";
+import { defineConfig } from 'vitest/config';
+import react, { reactCompilerPreset } from '@vitejs/plugin-react';
+import babel from '@rolldown/plugin-babel';
 
 export default defineConfig({
   plugins: [react(), babel({ presets: [reactCompilerPreset()] })],
   server: {
     port: 5173,
     proxy: {
-      "/api": {
-        target: "http://localhost:3000",
+      '/api': {
+        target: 'http://localhost:3000',
         changeOrigin: true,
       },
     },
   },
-  test:{
-    environment: "jsdom",
+  test: {
+    environment: 'jsdom',
     globals: true,
-    setupFiles: ["./src/test/setup.js"],
-  }
+    setupFiles: ['./src/test/setup.js'],
+  },
 });

@@ -6,7 +6,7 @@ const request = async (endpoint, options = {}) => {
   const config = {
     ...restOptions,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       ...customHeaders,
     },
   };
@@ -15,7 +15,7 @@ const request = async (endpoint, options = {}) => {
   const data = await response.json();
 
   if (!response.ok) {
-    const error = new Error(data.error?.message || "Error del servidor");
+    const error = new Error(data.error?.message || 'Error del servidor');
     error.status = response.status;
     error.data = data;
     throw error;
@@ -25,32 +25,30 @@ const request = async (endpoint, options = {}) => {
 };
 
 const apiClient = {
-  get: (endpoint, options = {}) =>
-    request(endpoint, { ...options, method: "GET" }),
+  get: (endpoint, options = {}) => request(endpoint, { ...options, method: 'GET' }),
 
   post: (endpoint, body, options = {}) =>
     request(endpoint, {
       ...options,
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify(body),
     }),
 
   put: (endpoint, body, options = {}) =>
     request(endpoint, {
       ...options,
-      method: "PUT",
+      method: 'PUT',
       body: JSON.stringify(body),
     }),
 
   patch: (endpoint, body, options = {}) =>
     request(endpoint, {
       ...options,
-      method: "PATCH",
+      method: 'PATCH',
       body: JSON.stringify(body),
     }),
 
-  delete: (endpoint, options = {}) =>
-    request(endpoint, { ...options, method: "DELETE" }),
+  delete: (endpoint, options = {}) => request(endpoint, { ...options, method: 'DELETE' }),
 };
 
 export default apiClient;

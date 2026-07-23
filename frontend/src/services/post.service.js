@@ -1,16 +1,16 @@
 import api from './api';
 
-
 const getErrorMessage = (error, fallback) => {
   const validationMessage = error.response?.data?.errors?.map((item) => item.message).join('. ');
 
-  return error.response?.data?.error?.message
-    || validationMessage
-    || error.response?.data?.message
-    || error.message
-    || fallback;
+  return (
+    error.response?.data?.error?.message ||
+    validationMessage ||
+    error.response?.data?.message ||
+    error.message ||
+    fallback
+  );
 };
-
 
 export const getAll = async ({ page, limit, category, sort, search, authorId } = {}) => {
   try {
@@ -23,9 +23,7 @@ export const getAll = async ({ page, limit, category, sort, search, authorId } =
   }
 };
 
-
 export const getPosts = getAll;
-
 
 export const getPostById = async (id) => {
   try {
@@ -36,7 +34,6 @@ export const getPostById = async (id) => {
   }
 };
 
-
 export const createPost = async (data) => {
   try {
     const response = await api.post('/posts', data);
@@ -46,9 +43,7 @@ export const createPost = async (data) => {
   }
 };
 
-
 export const create = createPost;
-
 
 export const updatePost = async (id, data) => {
   try {
@@ -58,7 +53,6 @@ export const updatePost = async (id, data) => {
     throw new Error(getErrorMessage(error, 'Error al actualizar el post'), { cause: error });
   }
 };
-
 
 export const deletePost = async (id) => {
   try {

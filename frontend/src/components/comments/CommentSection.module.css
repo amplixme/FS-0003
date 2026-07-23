@@ -44,8 +44,14 @@
   text-align: center;
 }
 
-.emptyState .material-symbols-outlined { font-size: 2.5rem; opacity: 0.5; }
-.emptyState p { margin: 0; font-size: 0.95rem; }
+.emptyState .material-symbols-outlined {
+  font-size: 2.5rem;
+  opacity: 0.5;
+}
+.emptyState p {
+  margin: 0;
+  font-size: 0.95rem;
+}
 
 .errorMsg {
   display: flex;
@@ -228,7 +234,9 @@
   color: var(--color-text-primary, #111827);
   font: inherit;
   line-height: 1.5;
-  transition: border-color 150ms ease, box-shadow 150ms ease;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
 }
 
 .textarea:focus {
@@ -252,7 +260,9 @@
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: opacity 150ms ease, background-color 150ms ease;
+  transition:
+    opacity 150ms ease,
+    background-color 150ms ease;
 }
 
 .submitButton:hover:not(:disabled) {

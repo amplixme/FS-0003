@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
-import { getProfile } from "../../services/user.service";
-import { getPosts } from "../../services/post.service";
-import { useAuth } from "../../context/AuthContext";
-import { Spinner, ErrorMessage, EmptyState } from "../../components/common";
-import PostCard from "../../components/posts/PostCard";
-import "./ProfilePage.css";
+import { useState, useEffect } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { getProfile } from '../../services/user.service';
+import { getPosts } from '../../services/post.service';
+import { useAuth } from '../../context/AuthContext';
+import { Spinner, ErrorMessage, EmptyState } from '../../components/common';
+import PostCard from '../../components/posts/PostCard';
+import './ProfilePage.css';
 
 const getPostsFromResponse = (response) => {
   if (Array.isArray(response)) return response;
@@ -15,11 +15,11 @@ const getPostsFromResponse = (response) => {
 };
 
 const formatDate = (dateString) => {
-  if (!dateString) return "";
-  return new Date(dateString).toLocaleDateString("es-ES", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
+  if (!dateString) return '';
+  return new Date(dateString).toLocaleDateString('es-ES', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
   });
 };
 
@@ -51,10 +51,13 @@ export default function ProfilePage() {
         }
       } catch (err) {
         if (!cancelled) {
-          if (err.message?.toLowerCase().includes("no encontrado") || err.message?.includes("404")) {
+          if (
+            err.message?.toLowerCase().includes('no encontrado') ||
+            err.message?.includes('404')
+          ) {
             setNotFound(true);
           } else {
-            setError(err.message || "No se pudo cargar el perfil");
+            setError(err.message || 'No se pudo cargar el perfil');
           }
         }
       } finally {
@@ -62,7 +65,9 @@ export default function ProfilePage() {
       }
     };
     fetchData();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   const isOwnProfile = authUser && profile && authUser.id === profile.id;
@@ -87,7 +92,7 @@ export default function ProfilePage() {
             icon="person_off"
             message="Usuario no encontrado"
             actionLabel="Volver al inicio"
-            onAction={() => navigate("/")}
+            onAction={() => navigate('/')}
           />
         </div>
       </div>
@@ -117,14 +122,10 @@ export default function ProfilePage() {
         <section className="profile-card">
           <div className="profile-avatar-section">
             {profile.avatarUrl ? (
-              <img
-                src={profile.avatarUrl}
-                alt={profile.name}
-                className="profile-avatar"
-              />
+              <img src={profile.avatarUrl} alt={profile.name} className="profile-avatar" />
             ) : (
               <div className="profile-avatar-fallback">
-                {profile.name?.[0]?.toUpperCase() || "U"}
+                {profile.name?.[0]?.toUpperCase() || 'U'}
               </div>
             )}
           </div>
@@ -136,14 +137,23 @@ export default function ProfilePage() {
 
             <div className="profile-stats">
               <span className="profile-stat">
-                <span className="material-symbols-outlined profile-stat-icon" aria-hidden="true">article</span>
+                <span className="material-symbols-outlined profile-stat-icon" aria-hidden="true">
+                  article
+                </span>
                 {profile.postCount ?? profile._count?.posts ?? 0} artículos publicados
               </span>
               {profile.createdAt && (
                 <>
-                  <span className="profile-stat-dot" aria-hidden="true">·</span>
+                  <span className="profile-stat-dot" aria-hidden="true">
+                    ·
+                  </span>
                   <span className="profile-stat">
-                    <span className="material-symbols-outlined profile-stat-icon" aria-hidden="true">calendar_today</span>
+                    <span
+                      className="material-symbols-outlined profile-stat-icon"
+                      aria-hidden="true"
+                    >
+                      calendar_today
+                    </span>
                     Miembro desde {formatDate(profile.createdAt)}
                   </span>
                 </>
@@ -152,7 +162,12 @@ export default function ProfilePage() {
 
             {isOwnProfile && (
               <Link to="/perfil/editar" className="profile-edit-btn">
-                <span className="material-symbols-outlined profile-edit-btn-icon" aria-hidden="true">edit</span>
+                <span
+                  className="material-symbols-outlined profile-edit-btn-icon"
+                  aria-hidden="true"
+                >
+                  edit
+                </span>
                 Editar perfil
               </Link>
             )}
@@ -162,7 +177,9 @@ export default function ProfilePage() {
         {/* Tabs */}
         <div className="profile-tabs">
           <button className="profile-tab profile-tab--active" type="button">
-            <span className="material-symbols-outlined profile-tab-icon" aria-hidden="true">article</span>
+            <span className="material-symbols-outlined profile-tab-icon" aria-hidden="true">
+              article
+            </span>
             Publicaciones
           </button>
         </div>
@@ -170,10 +187,7 @@ export default function ProfilePage() {
         {/* Posts */}
         <section className="profile-posts-section">
           {posts.length === 0 ? (
-            <EmptyState
-              icon="inbox"
-              message="Este usuario aún no ha publicado artículos"
-            />
+            <EmptyState icon="inbox" message="Este usuario aún no ha publicado artículos" />
           ) : (
             <div className="profile-posts-grid">
               {posts.map((post) => (

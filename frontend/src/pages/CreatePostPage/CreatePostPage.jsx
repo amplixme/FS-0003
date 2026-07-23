@@ -1,7 +1,7 @@
-import { useNavigate } from "react-router-dom";
-import PostForm from "../../components/posts/PostForm";
-import { create } from "../../services/post.service";
-import styles from "./CreatePostPage.module.css";
+import { useNavigate } from 'react-router-dom';
+import PostForm from '../../components/posts/PostForm';
+import { create } from '../../services/post.service';
+import styles from './CreatePostPage.module.css';
 
 const getCreatedPost = (response) => response?.data ?? response;
 
@@ -17,7 +17,7 @@ const CreatePostPage = () => {
       return;
     }
 
-    throw new Error("El post se creó, pero no pudimos abrir el detalle automáticamente.");
+    throw new Error('El post se creó, pero no pudimos abrir el detalle automáticamente.');
   };
 
   return (
@@ -25,7 +25,9 @@ const CreatePostPage = () => {
       <div className={styles.header}>
         <p className={styles.eyebrow}>Nuevo artículo</p>
         <h1 className={styles.title}>Crear post</h1>
-        <p className={styles.description}>Completá el título, el contenido y elegí si querés publicarlo ahora.</p>
+        <p className={styles.description}>
+          Completá el título, el contenido y elegí si querés publicarlo ahora.
+        </p>
       </div>
 
       <PostForm onSubmit={handleSubmit} submitLabel="Crear post" />

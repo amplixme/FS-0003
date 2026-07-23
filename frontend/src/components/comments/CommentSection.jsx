@@ -49,7 +49,9 @@ const CommentItem = ({
             required
           />
           {editError && (
-            <p className={styles.submitError} role="alert">{editError}</p>
+            <p className={styles.submitError} role="alert">
+              {editError}
+            </p>
           )}
           <div className={styles.editActions}>
             <button
@@ -124,7 +126,9 @@ export default function CommentSection({ postId }) {
       }
     };
     fetchComments();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [postId]);
 
   const handleSubmit = async (event) => {
@@ -169,11 +173,11 @@ export default function CommentSection({ postId }) {
     setEditError(null);
     try {
       await updateComment(editingCommentId, { content: trimmedContent });
-      setComments((currentComments) => currentComments.map((comment) => (
-        comment.id === editingCommentId
-          ? { ...comment, content: trimmedContent }
-          : comment
-      )));
+      setComments((currentComments) =>
+        currentComments.map((comment) =>
+          comment.id === editingCommentId ? { ...comment, content: trimmedContent } : comment,
+        ),
+      );
       handleCancelEdit();
     } catch (err) {
       setEditError(err.message || 'No se pudo actualizar el comentario');
@@ -208,11 +212,11 @@ export default function CommentSection({ postId }) {
   return (
     <section className={styles.section} aria-label="Comentarios">
       <h2 className={styles.title}>
-        <span className="material-symbols-outlined" aria-hidden="true">comment</span>
+        <span className="material-symbols-outlined" aria-hidden="true">
+          comment
+        </span>
         Comentarios
-        {!loading && !error && (
-          <span className={styles.count}>{comments.length}</span>
-        )}
+        {!loading && !error && <span className={styles.count}>{comments.length}</span>}
       </h2>
 
       {loading && (
@@ -223,14 +227,18 @@ export default function CommentSection({ postId }) {
 
       {!loading && error && (
         <p className={styles.errorMsg}>
-          <span className="material-symbols-outlined" aria-hidden="true">error_outline</span>
+          <span className="material-symbols-outlined" aria-hidden="true">
+            error_outline
+          </span>
           {error}
         </p>
       )}
 
       {!loading && !error && comments.length === 0 && (
         <div className={styles.emptyState}>
-          <span className="material-symbols-outlined" aria-hidden="true">chat_bubble_outline</span>
+          <span className="material-symbols-outlined" aria-hidden="true">
+            chat_bubble_outline
+          </span>
           <p>Aún no hay comentarios. ¡Sé el primero!</p>
         </div>
       )}
@@ -242,7 +250,9 @@ export default function CommentSection({ postId }) {
               <CommentItem
                 comment={comment}
                 isOwn={Boolean(user) && user.id === comment.authorId}
-                isEditing={Boolean(user) && user.id === comment.authorId && editingCommentId === comment.id}
+                isEditing={
+                  Boolean(user) && user.id === comment.authorId && editingCommentId === comment.id
+                }
                 editContent={editContent}
                 editError={editError}
                 isSaving={isSavingEdit}
@@ -261,7 +271,9 @@ export default function CommentSection({ postId }) {
       )}
 
       {actionError && (
-        <p className={styles.actionError} role="alert">{actionError}</p>
+        <p className={styles.actionError} role="alert">
+          {actionError}
+        </p>
       )}
 
       {isAuthenticated ? (
@@ -280,7 +292,9 @@ export default function CommentSection({ postId }) {
             required
           />
           {submitError && (
-            <p className={styles.submitError} role="alert">{submitError}</p>
+            <p className={styles.submitError} role="alert">
+              {submitError}
+            </p>
           )}
           <button
             className={styles.submitButton}

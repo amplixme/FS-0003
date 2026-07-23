@@ -8,7 +8,10 @@
   border: 1px solid #e5e7eb;
   border-radius: 16px;
   box-shadow: 0 12px 28px rgba(17, 24, 39, 0.06);
-  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
 }
 
 .card:hover {
@@ -109,7 +112,9 @@
 
 .categoryBadge {
   cursor: pointer;
-  transition: filter 150ms ease, transform 150ms ease;
+  transition:
+    filter 150ms ease,
+    transform 150ms ease;
 }
 
 .categoryBadge:hover:not(:disabled) {

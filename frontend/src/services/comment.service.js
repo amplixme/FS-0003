@@ -2,11 +2,13 @@ import api from './api';
 
 const getErrorMessage = (error, fallback) => {
   const validationMessage = error.response?.data?.errors?.map((item) => item.message).join('. ');
-  return error.response?.data?.error?.message
-    || validationMessage
-    || error.response?.data?.message
-    || error.message
-    || fallback;
+  return (
+    error.response?.data?.error?.message ||
+    validationMessage ||
+    error.response?.data?.message ||
+    error.message ||
+    fallback
+  );
 };
 
 export const getByPostId = async (postId) => {

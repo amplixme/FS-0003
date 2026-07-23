@@ -231,7 +231,9 @@
   font-family: inherit;
   color: var(--md-on-surface-variant, #434655);
   cursor: pointer;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
   white-space: nowrap;
 }
 

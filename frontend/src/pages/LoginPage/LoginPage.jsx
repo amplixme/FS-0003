@@ -1,17 +1,17 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import apiClient from "../../services/apiClient";
-import { useAuth } from "../../context/AuthContext";
-import "./LoginPage.css";
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import apiClient from '../../services/apiClient';
+import { useAuth } from '../../context/AuthContext';
+import './LoginPage.css';
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
-  const [serverError, setServerError] = useState("");
+  const [serverError, setServerError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   function handleChange(e) {
@@ -19,10 +19,10 @@ export default function LoginPage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
     // Limpiar error del campo al escribir
     if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
+      setErrors((prev) => ({ ...prev, [name]: '' }));
     }
     if (serverError) {
-      setServerError("");
+      setServerError('');
     }
   }
 
@@ -30,15 +30,15 @@ export default function LoginPage() {
     const newErrors = {};
 
     if (!formData.email.trim()) {
-      newErrors.email = "El correo es obligatorio";
+      newErrors.email = 'El correo es obligatorio';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Ingresa un correo válido";
+      newErrors.email = 'Ingresa un correo válido';
     }
 
     if (!formData.password) {
-      newErrors.password = "La contraseña es obligatoria";
+      newErrors.password = 'La contraseña es obligatoria';
     } else if (formData.password.length < 6) {
-      newErrors.password = "La contraseña debe tener al menos 6 caracteres";
+      newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
     }
 
     setErrors(newErrors);
@@ -50,18 +50,18 @@ export default function LoginPage() {
     if (!validate()) return;
 
     setIsLoading(true);
-    setServerError("");
+    setServerError('');
 
     try {
-      const response = await apiClient.post("/auth/login", {
+      const response = await apiClient.post('/auth/login', {
         email: formData.email,
         password: formData.password,
       });
 
       login(response.data.token, response.data.user);
-      navigate("/");
+      navigate('/');
     } catch (err) {
-      setServerError(err.message || "Credenciales inválidas. Intenta de nuevo.");
+      setServerError(err.message || 'Credenciales inválidas. Intenta de nuevo.');
     } finally {
       setIsLoading(false);
     }
@@ -83,9 +83,7 @@ export default function LoginPage() {
             {/* Header */}
             <header className="login-header">
               <h1 className="login-title">Iniciar sesión</h1>
-              <p className="login-subtitle">
-                Ingresa a tu cuenta para continuar
-              </p>
+              <p className="login-subtitle">Ingresa a tu cuenta para continuar</p>
             </header>
 
             {/* Formulario */}
@@ -103,7 +101,7 @@ export default function LoginPage() {
                 <label className="login-label" htmlFor="email">
                   Correo electrónico
                 </label>
-                <div className={`login-input-wrapper ${errors.email ? "has-error" : ""}`}>
+                <div className={`login-input-wrapper ${errors.email ? 'has-error' : ''}`}>
                   <span className="login-input-icon">mail</span>
                   <input
                     className="login-input"
@@ -116,9 +114,7 @@ export default function LoginPage() {
                     onChange={handleChange}
                   />
                 </div>
-                {errors.email && (
-                  <span className="login-field-error">{errors.email}</span>
-                )}
+                {errors.email && <span className="login-field-error">{errors.email}</span>}
               </div>
 
               {/* Campo Contraseña */}
@@ -131,13 +127,13 @@ export default function LoginPage() {
                     ¿Olvidaste tu contraseña?
                   </a>
                 </div>
-                <div className={`login-input-wrapper ${errors.password ? "has-error" : ""}`}>
+                <div className={`login-input-wrapper ${errors.password ? 'has-error' : ''}`}>
                   <span className="login-input-icon">lock</span>
                   <input
                     className="login-input login-input-password"
                     id="password"
                     name="password"
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword ? 'text' : 'password'}
                     placeholder="••••••••"
                     autoComplete="current-password"
                     value={formData.password}
@@ -147,25 +143,19 @@ export default function LoginPage() {
                     className="login-visibility-toggle"
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                    aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
                   >
                     <span className="login-input-icon">
-                      {showPassword ? "visibility_off" : "visibility"}
+                      {showPassword ? 'visibility_off' : 'visibility'}
                     </span>
                   </button>
                 </div>
-                {errors.password && (
-                  <span className="login-field-error">{errors.password}</span>
-                )}
+                {errors.password && <span className="login-field-error">{errors.password}</span>}
               </div>
 
               {/* Botón Submit */}
-              <button
-                className="login-submit-btn"
-                type="submit"
-                disabled={isLoading}
-              >
-                {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}
+              <button className="login-submit-btn" type="submit" disabled={isLoading}>
+                {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
               </button>
             </form>
 
@@ -185,7 +175,7 @@ export default function LoginPage() {
             {/* Footer - Link a registro */}
             <footer className="login-footer">
               <p className="login-register-text">
-                ¿No tienes cuenta?{" "}
+                ¿No tienes cuenta?{' '}
                 <Link className="login-register-link" to="/register">
                   Regístrate
                 </Link>

@@ -33,10 +33,14 @@
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 
-.item:hover { background: #f3f4f6; }
+.item:hover {
+  background: #f3f4f6;
+}
 
 .item.active {
   background: #2563eb;
@@ -59,11 +63,17 @@
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
   white-space: nowrap;
 }
 
-.chip:hover { border-color: #2563eb; color: #2563eb; }
+.chip:hover {
+  border-color: #2563eb;
+  color: #2563eb;
+}
 
 .chip.active {
   background: #2563eb;
@@ -74,7 +84,9 @@
 
 /* ---- Responsive ---- */
 @media (max-width: 768px) {
-  .sidebar { display: none; }
+  .sidebar {
+    display: none;
+  }
 
   .chips {
     display: flex;
@@ -85,5 +97,7 @@
     width: 100%;
   }
 
-  .chips::-webkit-scrollbar { display: none; }
+  .chips::-webkit-scrollbar {
+    display: none;
+  }
 }
