@@ -1,16 +1,22 @@
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import PostCard from "../../components/posts/PostCard";
-import { EmptyState, ErrorMessage, Pagination, SearchInput, Spinner } from "../../components/common";
-import { CategoryFilter } from "../../components/categories";
-import { getAll } from "../../services/post.service";
-import styles from "./HomePage.module.css";
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import PostCard from '../../components/posts/PostCard';
+import {
+  EmptyState,
+  ErrorMessage,
+  Pagination,
+  SearchInput,
+  Spinner,
+} from '../../components/common';
+import { CategoryFilter } from '../../components/categories';
+import { getAll } from '../../services/post.service';
+import styles from './HomePage.module.css';
 
 const POSTS_PER_PAGE = 9;
 const SORT_OPTIONS = [
-  { value: "newest", label: "Más recientes" },
-  { value: "oldest", label: "Más antiguos" },
-  { value: "comments", label: "Más comentados" },
+  { value: 'newest', label: 'Más recientes' },
+  { value: 'oldest', label: 'Más antiguos' },
+  { value: 'comments', label: 'Más comentados' },
 ];
 
 const getPostsFromResponse = (response) => {
@@ -25,22 +31,22 @@ const HomePage = () => {
   const [posts, setPosts] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [retryKey, setRetryKey] = useState(0);
 
-  const pageParam = Number.parseInt(searchParams.get("page"), 10);
+  const pageParam = Number.parseInt(searchParams.get('page'), 10);
   const currentPage = Number.isInteger(pageParam) && pageParam > 0 ? pageParam : 1;
-  const sortParam = searchParams.get("sort");
-  const currentSort = SORT_OPTIONS.some((opt) => opt.value === sortParam) ? sortParam : "newest";
-  const searchTerm = searchParams.get("search")?.trim() || "";
+  const sortParam = searchParams.get('sort');
+  const currentSort = SORT_OPTIONS.some((opt) => opt.value === sortParam) ? sortParam : 'newest';
+  const searchTerm = searchParams.get('search')?.trim() || '';
 
-  const activeCategory = searchParams.get("category") || null;
+  const activeCategory = searchParams.get('category') || null;
 
   const changePage = (page) => {
     setSearchParams((currentParams) => {
       const nextParams = new URLSearchParams(currentParams);
-      if (page === 1) nextParams.delete("page");
-      else nextParams.set("page", String(page));
+      if (page === 1) nextParams.delete('page');
+      else nextParams.set('page', String(page));
       return nextParams;
     });
   };
@@ -48,9 +54,9 @@ const HomePage = () => {
   const changeCategory = (category) => {
     setSearchParams((currentParams) => {
       const nextParams = new URLSearchParams(currentParams);
-      if (category) nextParams.set("category", category);
-      else nextParams.delete("category");
-      nextParams.delete("page");
+      if (category) nextParams.set('category', category);
+      else nextParams.delete('category');
+      nextParams.delete('page');
       return nextParams;
     });
   };
@@ -58,9 +64,9 @@ const HomePage = () => {
   const changeSort = (sort) => {
     setSearchParams((currentParams) => {
       const nextParams = new URLSearchParams(currentParams);
-      if (sort === "newest") nextParams.delete("sort");
-      else nextParams.set("sort", sort);
-      nextParams.delete("page");
+      if (sort === 'newest') nextParams.delete('sort');
+      else nextParams.set('sort', sort);
+      nextParams.delete('page');
       return nextParams;
     });
   };
@@ -70,9 +76,9 @@ const HomePage = () => {
 
     setSearchParams((currentParams) => {
       const nextParams = new URLSearchParams(currentParams);
-      if (search) nextParams.set("search", search);
-      else nextParams.delete("search");
-      nextParams.delete("page");
+      if (search) nextParams.set('search', search);
+      else nextParams.delete('search');
+      nextParams.delete('page');
       return nextParams;
     });
   };
@@ -81,7 +87,7 @@ const HomePage = () => {
     let isActive = true;
     const loadPosts = async () => {
       setIsLoading(true);
-      setError("");
+      setError('');
       try {
         const response = await getAll({
           page: currentPage,
@@ -95,8 +101,8 @@ const HomePage = () => {
           if (currentPage > responseTotalPages) {
             setSearchParams((currentParams) => {
               const nextParams = new URLSearchParams(currentParams);
-              if (responseTotalPages === 1) nextParams.delete("page");
-              else nextParams.set("page", String(responseTotalPages));
+              if (responseTotalPages === 1) nextParams.delete('page');
+              else nextParams.set('page', String(responseTotalPages));
               return nextParams;
             });
             return;
@@ -105,13 +111,16 @@ const HomePage = () => {
           setTotalPages(responseTotalPages);
         }
       } catch {
-        if (isActive) setError("No pudimos cargar las publicaciones. Intentá nuevamente en unos minutos.");
+        if (isActive)
+          setError('No pudimos cargar las publicaciones. Intentá nuevamente en unos minutos.');
       } finally {
         if (isActive) setIsLoading(false);
       }
     };
     loadPosts();
-    return () => { isActive = false; };
+    return () => {
+      isActive = false;
+    };
   }, [retryKey, activeCategory, currentPage, currentSort, searchTerm, setSearchParams]);
 
   return (
@@ -119,7 +128,9 @@ const HomePage = () => {
       <div className={styles.header}>
         <p className={styles.eyebrow}>Publicaciones</p>
         <h1 className={styles.title}>Últimos posts</h1>
-        <p className={styles.description}>Explorá las publicaciones más recientes de la comunidad.</p>
+        <p className={styles.description}>
+          Explorá las publicaciones más recientes de la comunidad.
+        </p>
         <SearchInput key={searchTerm} value={searchTerm} onSearch={changeSearch} />
       </div>
 
@@ -129,7 +140,9 @@ const HomePage = () => {
         <div className={styles.content}>
           <div className={styles.toolbar}>
             <div className={styles.sortGroup}>
-              <label className={styles.sortLabel} htmlFor="sort-select">Ordenar</label>
+              <label className={styles.sortLabel} htmlFor="sort-select">
+                Ordenar
+              </label>
               <select
                 id="sort-select"
                 className={styles.sortSelect}
@@ -137,7 +150,9 @@ const HomePage = () => {
                 onChange={(e) => changeSort(e.target.value)}
               >
                 {SORT_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
                 ))}
               </select>
             </div>
@@ -156,11 +171,11 @@ const HomePage = () => {
           {!isLoading && !error && posts.length === 0 && (
             <div className={styles.status}>
               <EmptyState
-                icon={searchTerm ? "search_off" : "inbox"}
+                icon={searchTerm ? 'search_off' : 'inbox'}
                 message={
                   searchTerm
                     ? `No encontramos publicaciones para "${searchTerm}"`
-                    : "No hay publicaciones en esta categoría"
+                    : 'No hay publicaciones en esta categoría'
                 }
               />
             </div>

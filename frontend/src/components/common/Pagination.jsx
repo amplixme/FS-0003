@@ -10,10 +10,22 @@ const getPageItems = (currentPage, totalPages) => {
   }
 
   if (currentPage >= totalPages - 3) {
-    return [1, 'start-ellipsis', ...Array.from({ length: 5 }, (_, index) => totalPages - 4 + index)];
+    return [
+      1,
+      'start-ellipsis',
+      ...Array.from({ length: 5 }, (_, index) => totalPages - 4 + index),
+    ];
   }
 
-  return [1, 'start-ellipsis', currentPage - 1, currentPage, currentPage + 1, 'end-ellipsis', totalPages];
+  return [
+    1,
+    'start-ellipsis',
+    currentPage - 1,
+    currentPage,
+    currentPage + 1,
+    'end-ellipsis',
+    totalPages,
+  ];
 };
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
@@ -34,7 +46,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       </button>
 
       <div className={styles.pages}>
-        {getPageItems(page, totalPages).map((item) => (
+        {getPageItems(page, totalPages).map((item) =>
           typeof item === 'number' ? (
             <button
               key={item}
@@ -47,9 +59,11 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
               {item}
             </button>
           ) : (
-            <span key={item} className={styles.ellipsis} aria-hidden="true">…</span>
-          )
-        ))}
+            <span key={item} className={styles.ellipsis} aria-hidden="true">
+              …
+            </span>
+          ),
+        )}
       </div>
 
       <button

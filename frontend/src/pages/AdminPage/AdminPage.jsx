@@ -23,7 +23,7 @@ const Modal = ({ title, onClose, children }) => {
       if (event.key !== 'Tab') return;
 
       const focusableElements = modalRef.current?.querySelectorAll(
-        'button:not(:disabled), [href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])'
+        'button:not(:disabled), [href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])',
       );
       if (!focusableElements?.length) return;
 
@@ -46,9 +46,12 @@ const Modal = ({ title, onClose, children }) => {
   }, [onClose]);
 
   return (
-    <div className="adminModalOverlay" onClick={(event) => {
-      if (event.target === event.currentTarget) onClose();
-    }}>
+    <div
+      className="adminModalOverlay"
+      onClick={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
+    >
       <div
         ref={modalRef}
         className="adminModal"
@@ -59,7 +62,14 @@ const Modal = ({ title, onClose, children }) => {
       >
         <div className="adminModalHeader">
           <h3 id={titleId}>{title}</h3>
-          <button type="button" className="adminModalClose" onClick={onClose} aria-label="Cerrar diálogo">✕</button>
+          <button
+            type="button"
+            className="adminModalClose"
+            onClick={onClose}
+            aria-label="Cerrar diálogo"
+          >
+            ✕
+          </button>
         </div>
         <div className="adminModalBody">{children}</div>
       </div>
@@ -111,18 +121,22 @@ const UserForm = ({ initial = {}, onSubmit, loading }) => {
 
   return (
     <form onSubmit={submit} className="adminForm">
-      <label>Nombre
+      <label>
+        Nombre
         <input name="name" value={form.name} onChange={handle} required />
       </label>
-      <label>Email
+      <label>
+        Email
         <input name="email" type="email" value={form.email} onChange={handle} required />
       </label>
       {!initial.id && (
-        <label>Contraseña
+        <label>
+          Contraseña
           <input name="password" type="password" value={form.password} onChange={handle} required />
         </label>
       )}
-      <label>Rol
+      <label>
+        Rol
         <select name="role" value={form.role} onChange={handle}>
           <option value="USER">USER</option>
           <option value="ADMIN">ADMIN</option>
@@ -147,7 +161,9 @@ const UsersSection = ({ currentUserId }) => {
     setUsers(data);
   }, []);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const handleCreate = async (data) => {
     setSaving(true);
@@ -202,7 +218,11 @@ const UsersSection = ({ currentUserId }) => {
     <section className="adminSection">
       <div className="adminSectionHead">
         <h2 className="adminSectionTitle">Usuarios</h2>
-        <button type="button" className="adminBtn adminBtnPrimary" onClick={() => setModal('create')}>
+        <button
+          type="button"
+          className="adminBtn adminBtnPrimary"
+          onClick={() => setModal('create')}
+        >
           + Crear usuario
         </button>
       </div>
@@ -211,7 +231,12 @@ const UsersSection = ({ currentUserId }) => {
         <table className="adminTable">
           <thead>
             <tr>
-              <th>Nombre</th><th>Email</th><th>Rol</th><th>Registro</th><th>Posts</th><th>Acciones</th>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Rol</th>
+              <th>Registro</th>
+              <th>Posts</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -231,7 +256,9 @@ const UsersSection = ({ currentUserId }) => {
                     type="button"
                     className="adminBtn adminBtnSm"
                     onClick={() => setModal({ type: 'edit', user: u })}
-                  >Editar</button>
+                  >
+                    Editar
+                  </button>
                   {u.id !== currentUserId && (
                     <>
                       <button
@@ -245,7 +272,9 @@ const UsersSection = ({ currentUserId }) => {
                         type="button"
                         className="adminBtn adminBtnSm adminBtnDanger"
                         onClick={() => handleDelete(u)}
-                      >Eliminar</button>
+                      >
+                        Eliminar
+                      </button>
                     </>
                   )}
                 </td>
@@ -256,14 +285,26 @@ const UsersSection = ({ currentUserId }) => {
       </div>
 
       {modal === 'create' && (
-        <Modal title="Crear usuario" onClose={() => { setModal(null); setError(''); }}>
+        <Modal
+          title="Crear usuario"
+          onClose={() => {
+            setModal(null);
+            setError('');
+          }}
+        >
           {error && <p className="adminError">{error}</p>}
           <UserForm onSubmit={handleCreate} loading={saving} />
         </Modal>
       )}
 
       {modal?.type === 'edit' && (
-        <Modal title="Editar usuario" onClose={() => { setModal(null); setError(''); }}>
+        <Modal
+          title="Editar usuario"
+          onClose={() => {
+            setModal(null);
+            setError('');
+          }}
+        >
           {error && <p className="adminError">{error}</p>}
           <UserForm initial={modal.user} onSubmit={handleEdit} loading={saving} />
         </Modal>
@@ -281,7 +322,9 @@ const PostsSection = () => {
     setPosts(data);
   }, []);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const handleDelete = async (post) => {
     if (!confirm(`¿Eliminar el post "${post.title}"?`)) return;
@@ -299,7 +342,13 @@ const PostsSection = () => {
       <div className="adminTableWrap">
         <table className="adminTable">
           <thead>
-            <tr><th>Título</th><th>Autor</th><th>Categorías</th><th>Fecha</th><th></th></tr>
+            <tr>
+              <th>Título</th>
+              <th>Autor</th>
+              <th>Categorías</th>
+              <th>Fecha</th>
+              <th></th>
+            </tr>
           </thead>
           <tbody>
             {posts.map((p) => (
@@ -313,7 +362,9 @@ const PostsSection = () => {
                     type="button"
                     className="adminBtn adminBtnSm adminBtnDanger"
                     onClick={() => handleDelete(p)}
-                  >Eliminar</button>
+                  >
+                    Eliminar
+                  </button>
                 </td>
               </tr>
             ))}
@@ -333,7 +384,9 @@ const CommentsSection = () => {
     setComments(data);
   }, []);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const handleDelete = async (c) => {
     if (!confirm('¿Eliminar este comentario?')) return;
@@ -364,7 +417,9 @@ const CommentsSection = () => {
               type="button"
               className="adminBtn adminBtnSm adminBtnDanger"
               onClick={() => handleDelete(c)}
-            >Eliminar</button>
+            >
+              Eliminar
+            </button>
           </li>
         ))}
       </ul>

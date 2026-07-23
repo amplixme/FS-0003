@@ -7,7 +7,7 @@ const authMiddleware = (req, res, next) => {
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({
-      error: { message: 'No autorizado' }
+      error: { message: 'No autorizado' },
     });
   }
 
@@ -27,11 +27,11 @@ const authMiddleware = (req, res, next) => {
   } catch (err) {
     if (err.name === 'TokenExpiredError') {
       return res.status(401).json({
-        error: { message: 'Token expirado' }
+        error: { message: 'Token expirado' },
       });
     }
     return res.status(401).json({
-      error: { message: 'No autorizado' }
+      error: { message: 'No autorizado' },
     });
   }
 };

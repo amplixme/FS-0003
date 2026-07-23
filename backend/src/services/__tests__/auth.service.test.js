@@ -112,9 +112,7 @@ describe('loginUser', () => {
     mockUserModel.findUnique.mockResolvedValue(mockUser);
     mockBcrypt.compare.mockResolvedValue(false);
 
-    await expect(
-      loginUser('user@test.com', 'wrong-password'),
-    ).rejects.toMatchObject({
+    await expect(loginUser('user@test.com', 'wrong-password')).rejects.toMatchObject({
       message: 'Credenciales inválidas',
       status: 401,
     });
@@ -124,9 +122,7 @@ describe('loginUser', () => {
     mockUserModel.findUnique.mockResolvedValue(null);
     mockBcrypt.compare.mockResolvedValue(false);
 
-    await expect(
-      loginUser('nonexistent@test.com', 'any-password'),
-    ).rejects.toMatchObject({
+    await expect(loginUser('nonexistent@test.com', 'any-password')).rejects.toMatchObject({
       message: 'Credenciales inválidas',
       status: 401,
     });

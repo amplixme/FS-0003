@@ -1,10 +1,16 @@
-import { useEffect, useState } from "react";
-import { ErrorMessage } from "../common";
-import { getAll as getCategories } from "../../services/category.service";
-import styles from "./PostForm.module.css";
+import { useEffect, useState } from 'react';
+import { ErrorMessage } from '../common';
+import { getAll as getCategories } from '../../services/category.service';
+import styles from './PostForm.module.css';
 import { ImageUpload } from '../common';
 
-const defaultInitialData = { title: "", content: "", published: false, coverImage: null, categoryIds: [] };
+const defaultInitialData = {
+  title: '',
+  content: '',
+  published: false,
+  coverImage: null,
+  categoryIds: [],
+};
 
 const getCategoryIds = (data) => {
   if (Array.isArray(data.categoryIds)) {
@@ -22,8 +28,8 @@ const getCategoryIds = (data) => {
 };
 
 const getInitialFormData = (data = defaultInitialData) => ({
-  title: data.title ?? "",
-  content: data.content ?? "",
+  title: data.title ?? '',
+  content: data.content ?? '',
   published: data.published ?? false,
   categoryIds: getCategoryIds(data),
 });
@@ -32,32 +38,37 @@ const validateForm = ({ title, content }) => {
   const errors = {};
 
   if (!title.trim()) {
-    errors.title = "El título es requerido";
+    errors.title = 'El título es requerido';
   }
 
   if (!content.trim()) {
-    errors.content = "El contenido es requerido";
+    errors.content = 'El contenido es requerido';
   }
 
   return errors;
 };
 
-const PostForm = ({ initialData = defaultInitialData, onSubmit, submitLabel = "Guardar", serverError: externalError }) => {
+const PostForm = ({
+  initialData = defaultInitialData,
+  onSubmit,
+  submitLabel = 'Guardar',
+  serverError: externalError,
+}) => {
   const [formData, setFormData] = useState(() => getInitialFormData(initialData));
   const [categories, setCategories] = useState([]);
-  const [categoriesError, setCategoriesError] = useState("");
+  const [categoriesError, setCategoriesError] = useState('');
   const [isLoadingCategories, setIsLoadingCategories] = useState(false);
   const [errors, setErrors] = useState({});
-  const [serverError, setServerError] = useState("");
+  const [serverError, setServerError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [imageUrl, setImageUrl] = useState(initialData.coverImage || ""); // ← estado para la URL de la imagen
+  const [imageUrl, setImageUrl] = useState(initialData.coverImage || ''); // ← estado para la URL de la imagen
 
   useEffect(() => {
     let isMounted = true;
 
     const fetchCategories = async () => {
       setIsLoadingCategories(true);
-      setCategoriesError("");
+      setCategoriesError('');
 
       try {
         const data = await getCategories();
@@ -67,7 +78,7 @@ const PostForm = ({ initialData = defaultInitialData, onSubmit, submitLabel = "G
         }
       } catch (error) {
         if (isMounted) {
-          setCategoriesError(error.message || "No pudimos cargar las categorías.");
+          setCategoriesError(error.message || 'No pudimos cargar las categorías.');
         }
       } finally {
         if (isMounted) {
@@ -78,7 +89,9 @@ const PostForm = ({ initialData = defaultInitialData, onSubmit, submitLabel = "G
 
     fetchCategories();
 
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const handleChange = (event) => {
@@ -86,11 +99,11 @@ const PostForm = ({ initialData = defaultInitialData, onSubmit, submitLabel = "G
 
     setFormData((current) => ({
       ...current,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
 
     if (errors[name]) {
-      setErrors((current) => ({ ...current, [name]: "" }));
+      setErrors((current) => ({ ...current, [name]: '' }));
     }
   };
 
@@ -107,7 +120,7 @@ const PostForm = ({ initialData = defaultInitialData, onSubmit, submitLabel = "G
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setServerError("");
+    setServerError('');
 
     const validationErrors = validateForm(formData);
     setErrors(validationErrors);
@@ -127,7 +140,7 @@ const PostForm = ({ initialData = defaultInitialData, onSubmit, submitLabel = "G
         categoryIds: formData.categoryIds,
       });
     } catch (error) {
-      setServerError(error.message || "Ocurrió un error. Intentá nuevamente.");
+      setServerError(error.message || 'Ocurrió un error. Intentá nuevamente.');
     } finally {
       setIsSubmitting(false);
     }
@@ -135,16 +148,16 @@ const PostForm = ({ initialData = defaultInitialData, onSubmit, submitLabel = "G
 
   const displayError = serverError || externalError;
 
-  
-
   return (
     <form className={styles.form} onSubmit={handleSubmit} noValidate>
       {displayError && <ErrorMessage message={displayError} />}
 
       <div className={styles.field}>
-        <label className={styles.label} htmlFor="title">Título</label>
+        <label className={styles.label} htmlFor="title">
+          Título
+        </label>
         <input
-          className={`${styles.input} ${errors.title ? styles.inputError : ""}`}
+          className={`${styles.input} ${errors.title ? styles.inputError : ''}`}
           id="title"
           name="title"
           onChange={handleChange}
@@ -156,9 +169,11 @@ const PostForm = ({ initialData = defaultInitialData, onSubmit, submitLabel = "G
       </div>
 
       <div className={styles.field}>
-        <label className={styles.label} htmlFor="content">Contenido</label>
+        <label className={styles.label} htmlFor="content">
+          Contenido
+        </label>
         <textarea
-          className={`${styles.textarea} ${errors.content ? styles.inputError : ""}`}
+          className={`${styles.textarea} ${errors.content ? styles.inputError : ''}`}
           id="content"
           name="content"
           onChange={handleChange}
@@ -169,12 +184,12 @@ const PostForm = ({ initialData = defaultInitialData, onSubmit, submitLabel = "G
         {errors.content && <p className={styles.errorText}>{errors.content}</p>}
       </div>
 
-        <ImageUpload
-          label="Imagen de portada"
-          onUpload={(url) => setImageUrl(url)}   // ← recibe la URL de Cloudinary
-          onClear={() => setImageUrl('')}
-          initialUrl={imageUrl || null}           // ← útil en modo edición
-        />
+      <ImageUpload
+        label="Imagen de portada"
+        onUpload={(url) => setImageUrl(url)} // ← recibe la URL de Cloudinary
+        onClear={() => setImageUrl('')}
+        initialUrl={imageUrl || null} // ← útil en modo edición
+      />
 
       <label className={styles.toggle}>
         <input
@@ -185,8 +200,12 @@ const PostForm = ({ initialData = defaultInitialData, onSubmit, submitLabel = "G
           type="checkbox"
         />
         <span>
-          <strong>{formData.published ? "Publicar ahora" : "Guardar como borrador"}</strong>
-          <small>{formData.published ? "El post quedará visible al crearse." : "Podrás publicarlo más adelante."}</small>
+          <strong>{formData.published ? 'Publicar ahora' : 'Guardar como borrador'}</strong>
+          <small>
+            {formData.published
+              ? 'El post quedará visible al crearse.'
+              : 'Podrás publicarlo más adelante.'}
+          </small>
         </span>
       </label>
 
@@ -222,7 +241,7 @@ const PostForm = ({ initialData = defaultInitialData, onSubmit, submitLabel = "G
 
       <div className={styles.actions}>
         <button className={styles.submitButton} disabled={isSubmitting} type="submit">
-          {isSubmitting ? "Guardando..." : submitLabel}
+          {isSubmitting ? 'Guardando...' : submitLabel}
         </button>
       </div>
     </form>

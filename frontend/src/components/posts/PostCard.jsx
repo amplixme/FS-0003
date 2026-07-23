@@ -1,19 +1,21 @@
-import { Link } from "react-router-dom";
-import formatRelativeTime from "../../utils/formatRelativeTime";
-import styles from "./PostCard.module.css";
+import { Link } from 'react-router-dom';
+import formatRelativeTime from '../../utils/formatRelativeTime';
+import styles from './PostCard.module.css';
 
 const EXCERPT_LENGTH = 150;
 const MAX_VISIBLE_CATEGORIES = 3;
 const CATEGORY_COLORS = [
-  { background: "#dbeafe", border: "#bfdbfe", color: "#1d4ed8" },
-  { background: "#dcfce7", border: "#bbf7d0", color: "#166534" },
-  { background: "#fef3c7", border: "#fde68a", color: "#92400e" },
-  { background: "#fce7f3", border: "#fbcfe8", color: "#be185d" },
-  { background: "#ede9fe", border: "#ddd6fe", color: "#6d28d9" },
+  { background: '#dbeafe', border: '#bfdbfe', color: '#1d4ed8' },
+  { background: '#dcfce7', border: '#bbf7d0', color: '#166534' },
+  { background: '#fef3c7', border: '#fde68a', color: '#92400e' },
+  { background: '#fce7f3', border: '#fbcfe8', color: '#be185d' },
+  { background: '#ede9fe', border: '#ddd6fe', color: '#6d28d9' },
 ];
 
 const getExcerpt = (content) => {
-  const normalizedContent = String(content || "").replace(/\s+/g, " ").trim();
+  const normalizedContent = String(content || '')
+    .replace(/\s+/g, ' ')
+    .trim();
 
   if (normalizedContent.length <= EXCERPT_LENGTH) {
     return normalizedContent;
@@ -30,7 +32,7 @@ const getCategoryColor = (category, index) => {
 };
 
 const PostCard = ({ post, onCategorySelect }) => {
-  const authorName = post.author?.name || post.authorName || "Autor desconocido";
+  const authorName = post.author?.name || post.authorName || 'Autor desconocido';
   const publishedAt = post.publishedAt || post.createdAt;
   const categories = Array.isArray(post.categories)
     ? post.categories.filter((category) => category?.name || category?.slug)
@@ -40,20 +42,21 @@ const PostCard = ({ post, onCategorySelect }) => {
 
   return (
     <article className={styles.card}>
-      <Link className={styles.cardLink} to={`/posts/${post.id}`} aria-label={`Leer ${post.title}`} />
+      <Link
+        className={styles.cardLink}
+        to={`/posts/${post.id}`}
+        aria-label={`Leer ${post.title}`}
+      />
 
       {/* Cover image */}
       <div className={styles.imageWrapper}>
         {post.coverImage ? (
-          <img
-            className={styles.image}
-            src={post.coverImage}
-            alt=""
-            loading="lazy"
-          />
+          <img className={styles.image} src={post.coverImage} alt="" loading="lazy" />
         ) : (
           <div className={styles.imagePlaceholder}>
-            <span className="material-symbols-outlined" aria-hidden="true">image</span>
+            <span className="material-symbols-outlined" aria-hidden="true">
+              image
+            </span>
           </div>
         )}
       </div>
@@ -72,9 +75,9 @@ const PostCard = ({ post, onCategorySelect }) => {
                   type="button"
                   className={styles.categoryBadge}
                   style={{
-                    "--category-bg": color.background,
-                    "--category-border": color.border,
-                    "--category-color": color.color,
+                    '--category-bg': color.background,
+                    '--category-border': color.border,
+                    '--category-color': color.color,
                   }}
                   onClick={() => category.slug && onCategorySelect?.(category.slug)}
                   disabled={!category.slug || !onCategorySelect}
@@ -101,7 +104,9 @@ const PostCard = ({ post, onCategorySelect }) => {
           )}
           <div className={styles.metaRight}>
             <span className={styles.commentCount}>
-              <span className="material-symbols-outlined" aria-hidden="true">comment</span>
+              <span className="material-symbols-outlined" aria-hidden="true">
+                comment
+              </span>
               {post.commentCount ?? 0}
             </span>
             <time dateTime={publishedAt || undefined}>{formatRelativeTime(publishedAt)}</time>

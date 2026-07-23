@@ -24,7 +24,9 @@
   color: #111827;
   font-size: 0.95rem;
   box-shadow: 0 1px 2px rgb(15 23 42 / 5%);
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
 }
 
 .input::placeholder {

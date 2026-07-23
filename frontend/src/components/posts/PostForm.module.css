@@ -31,7 +31,10 @@
   border-radius: 12px;
   font: inherit;
   outline: none;
-  transition: background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease;
 }
 
 .textarea {
@@ -135,7 +138,9 @@
   cursor: pointer;
   font: inherit;
   font-weight: 700;
-  transition: background-color 150ms ease, transform 100ms ease;
+  transition:
+    background-color 150ms ease,
+    transform 100ms ease;
 }
 
 .submitButton:hover:not(:disabled) {

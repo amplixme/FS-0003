@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import * as categoryService from "../services/category.service";
+import { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import * as categoryService from '../services/category.service';
 
 const Header = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -13,14 +13,15 @@ const Header = () => {
   const isActive = (path) => location.pathname === path;
 
   const navLinks = [
-    { to: "/", label: "Inicio" },
-    { to: "/categorias", label: "Categorías" },
-    { to: "/crear", label: "Escribir" },
-    ...(user?.role === "ADMIN" ? [{ to: "/admin", label: "Admin" }] : []),
+    { to: '/', label: 'Inicio' },
+    { to: '/categorias', label: 'Categorías' },
+    { to: '/crear', label: 'Escribir' },
+    ...(user?.role === 'ADMIN' ? [{ to: '/admin', label: 'Admin' }] : []),
   ];
 
   useEffect(() => {
-    categoryService.getAll()
+    categoryService
+      .getAll()
       .then((data) => {
         const normalized = data.map((cat) => ({
           label: cat.name,
@@ -41,14 +42,16 @@ const Header = () => {
     <>
       {/* ── DESKTOP HEADER ── */}
       <header className="header">
-        <Link className="logo" to="/">TuProyecto</Link>
+        <Link className="logo" to="/">
+          TuProyecto
+        </Link>
 
         <nav className="desktopNav">
           {navLinks.map(({ to, label }) => (
             <Link
               key={to}
               to={to}
-              className={`desktopNavLink${isActive(to) ? " desktopNavLinkActive" : ""}`}
+              className={`desktopNavLink${isActive(to) ? ' desktopNavLinkActive' : ''}`}
             >
               {label}
             </Link>
@@ -58,7 +61,9 @@ const Header = () => {
         <div className="headerActions">
           {isAuthenticated ? (
             <>
-              <Link to="/login" className="loginLink">Log In</Link>
+              <Link to="/login" className="loginLink">
+                Log In
+              </Link>
               <button className="subscribeBtn">Subscribe</button>
               <button
                 className="avatarBtn"
@@ -68,16 +73,18 @@ const Header = () => {
                 {user?.avatarUrl ? (
                   <img src={user.avatarUrl} alt={user.name} className="avatarImg" />
                 ) : (
-                  <span className="avatarFallback">
-                    {user?.name?.[0]?.toUpperCase() ?? "U"}
-                  </span>
+                  <span className="avatarFallback">{user?.name?.[0]?.toUpperCase() ?? 'U'}</span>
                 )}
               </button>
             </>
           ) : (
             <>
-              <Link to="/login" className="loginLink">Log In</Link>
-              <Link to="/register" className="subscribeBtn">Subscribe</Link>
+              <Link to="/login" className="loginLink">
+                Log In
+              </Link>
+              <Link to="/register" className="subscribeBtn">
+                Subscribe
+              </Link>
             </>
           )}
         </div>
@@ -95,14 +102,13 @@ const Header = () => {
       </header>
 
       {mobileOpen && (
-        <div
-          className="mobileOverlay"
-          onClick={() => setMobileOpen(false)}
-          aria-hidden="true"
-        />
+        <div className="mobileOverlay" onClick={() => setMobileOpen(false)} aria-hidden="true" />
       )}
 
-      <aside className={`mobileSidebar${mobileOpen ? " mobileSidebarOpen" : ""}`} aria-label="Menú de navegación">
+      <aside
+        className={`mobileSidebar${mobileOpen ? ' mobileSidebarOpen' : ''}`}
+        aria-label="Menú de navegación"
+      >
         <div className="sidebarHeader">
           <span className="sidebarHeaderTitle">TuProyecto</span>
           <button
@@ -110,7 +116,15 @@ const Header = () => {
             onClick={() => setMobileOpen(false)}
             aria-label="Cerrar menú"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            >
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
@@ -128,13 +142,13 @@ const Header = () => {
                 <img src={user.avatarUrl} alt={user.name} className="sidebarAvatarImg" />
               ) : (
                 <span className="sidebarAvatarFallback">
-                  {user?.name?.[0]?.toUpperCase() ?? "U"}
+                  {user?.name?.[0]?.toUpperCase() ?? 'U'}
                 </span>
               )}
               <span className="onlineDot" aria-hidden="true" />
             </div>
-            <p className="sidebarName">{user?.name ?? "Invitado"}</p>
-            <p className="sidebarEmail">{user?.email ?? ""}</p>
+            <p className="sidebarName">{user?.name ?? 'Invitado'}</p>
+            <p className="sidebarEmail">{user?.email ?? ''}</p>
           </Link>
         ) : (
           <div className="sidebarProfile">
@@ -143,13 +157,13 @@ const Header = () => {
                 <img src={user.avatarUrl} alt={user.name} className="sidebarAvatarImg" />
               ) : (
                 <span className="sidebarAvatarFallback">
-                  {user?.name?.[0]?.toUpperCase() ?? "U"}
+                  {user?.name?.[0]?.toUpperCase() ?? 'U'}
                 </span>
               )}
               <span className="onlineDot" aria-hidden="true" />
             </div>
-            <p className="sidebarName">{user?.name ?? "Invitado"}</p>
-            <p className="sidebarEmail">{user?.email ?? ""}</p>
+            <p className="sidebarName">{user?.name ?? 'Invitado'}</p>
+            <p className="sidebarEmail">{user?.email ?? ''}</p>
           </div>
         )}
 
@@ -180,14 +194,14 @@ const Header = () => {
             <Link
               key={to}
               to={to}
-              className={`sidebarNavLink${isActive(to) ? " sidebarNavLinkActive" : ""}`}
+              className={`sidebarNavLink${isActive(to) ? ' sidebarNavLinkActive' : ''}`}
               onClick={() => setMobileOpen(false)}
             >
               <span className="sidebarNavIcon" aria-hidden="true">
-                {to === "/" && "🏠"}
-                {to === "/crear" && "✏️"}
-                {to === "/admin" && "🛡️"}
-                {to === "/categorias" && "📂"}
+                {to === '/' && '🏠'}
+                {to === '/crear' && '✏️'}
+                {to === '/admin' && '🛡️'}
+                {to === '/categorias' && '📂'}
               </span>
               {label}
             </Link>
@@ -198,15 +212,14 @@ const Header = () => {
           <div className="sidebarSection">
             <div className="sidebarSectionHeader">
               <span className="sidebarSectionTitle">CATEGORÍAS</span>
-              <span className="sidebarSectionIcon" aria-hidden="true">📊</span>
+              <span className="sidebarSectionIcon" aria-hidden="true">
+                📊
+              </span>
             </div>
             <ul className="sidebarCategories" role="list">
               {categories.map(({ label, slug, count }) => (
                 <li key={slug}>
-                  <button
-                    className="sidebarCategoryLink"
-                    onClick={() => handleCategoryClick(slug)}
-                  >
+                  <button className="sidebarCategoryLink" onClick={() => handleCategoryClick(slug)}>
                     <span>{label}</span>
                     <span className="sidebarCategoryCount">{count}</span>
                   </button>
@@ -220,7 +233,10 @@ const Header = () => {
           {isAuthenticated ? (
             <button
               className="sidebarLogoutBtn"
-              onClick={() => { logout(); setMobileOpen(false); }}
+              onClick={() => {
+                logout();
+                setMobileOpen(false);
+              }}
             >
               <span aria-hidden="true">↪</span>
               Cerrar Sesión
@@ -230,7 +246,11 @@ const Header = () => {
               <Link to="/login" className="sidebarAuthLink" onClick={() => setMobileOpen(false)}>
                 Iniciar sesión
               </Link>
-              <Link to="/register" className="sidebarAuthLinkPrimary" onClick={() => setMobileOpen(false)}>
+              <Link
+                to="/register"
+                className="sidebarAuthLinkPrimary"
+                onClick={() => setMobileOpen(false)}
+              >
                 Registrarse
               </Link>
             </div>

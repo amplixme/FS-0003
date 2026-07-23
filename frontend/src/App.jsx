@@ -1,21 +1,23 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
-import Layout from "./components/Layout";
-import ProtectedRoute from "./components/ProtectedRoute";
-import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
-import ErrorBoundary from "./components/ErrorBoundary";
-import CreatePostPage from "./pages/CreatePostPage/CreatePostPage";
-import EditPostPage from "./pages/EditPostPage/EditPostPage";
-import HomePage from "./pages/HomePage/HomePage";
-import LoginPage from "./pages/LoginPage/LoginPage";
-import RegisterPage from "./pages/RegisterPage/RegisterPage";
-import PostDetailPage from "./pages/PostDetailPage/PostDetailPage";
-import ProfilePage from "./pages/ProfilePage/ProfilePage";
-import EditProfilePage from "./pages/EditProfilePage/EditProfilePage";
-import CategoryManagePage from "./pages/CategoryManagePage/CategoryManagePage";
-import AdminPage from "./pages/AdminPage/AdminPage";
-import NotFound from "./components/NotFound";
-import "./App.css";
+import { lazy, Suspense } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import Layout from './components/Layout';
+import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedAdminRoute from './components/ProtectedAdminRoute';
+import ErrorBoundary from './components/ErrorBoundary';
+import './App.css';
+
+const HomePage = lazy(() => import('./pages/HomePage/HomePage'));
+const LoginPage = lazy(() => import('./pages/LoginPage/LoginPage'));
+const RegisterPage = lazy(() => import('./pages/RegisterPage/RegisterPage'));
+const CreatePostPage = lazy(() => import('./pages/CreatePostPage/CreatePostPage'));
+const EditPostPage = lazy(() => import('./pages/EditPostPage/EditPostPage'));
+const PostDetailPage = lazy(() => import('./pages/PostDetailPage/PostDetailPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage/ProfilePage'));
+const EditProfilePage = lazy(() => import('./pages/EditProfilePage/EditProfilePage'));
+const CategoryManagePage = lazy(() => import('./pages/CategoryManagePage/CategoryManagePage'));
+const AdminPage = lazy(() => import('./pages/AdminPage/AdminPage'));
+const NotFound = lazy(() => import('./components/NotFound'));
 
 function App() {
   return (
@@ -23,27 +25,56 @@ function App() {
       <AuthProvider>
         <ErrorBoundary>
           <Layout>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/crear" element={<ProtectedRoute><CreatePostPage /></ProtectedRoute>} />
-              <Route path="/posts/:id/editar" element={<ProtectedRoute><EditPostPage /></ProtectedRoute>} />
-              <Route path="/perfil/editar" element={<ProtectedRoute><EditProfilePage /></ProtectedRoute>} />
-              <Route path="/categorias" element={<ProtectedRoute><CategoryManagePage /></ProtectedRoute>} />
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedAdminRoute>
-                    <AdminPage />
-                  </ProtectedAdminRoute>
-                }
-              />
-              <Route path="/posts/:id" element={<PostDetailPage />} />
-              <Route path="/perfil/editar" element={<ProtectedRoute><EditProfilePage /></ProtectedRoute>} />
-              <Route path="/perfil/:id" element={<ProfilePage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <Suspense fallback={<p role="status">Cargando página...</p>}>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route
+                  path="/crear"
+                  element={
+                    <ProtectedRoute>
+                      <CreatePostPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/posts/:id/editar"
+                  element={
+                    <ProtectedRoute>
+                      <EditPostPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/perfil/editar"
+                  element={
+                    <ProtectedRoute>
+                      <EditProfilePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/categorias"
+                  element={
+                    <ProtectedRoute>
+                      <CategoryManagePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin"
+                  element={
+                    <ProtectedAdminRoute>
+                      <AdminPage />
+                    </ProtectedAdminRoute>
+                  }
+                />
+                <Route path="/posts/:id" element={<PostDetailPage />} />
+                <Route path="/perfil/:id" element={<ProfilePage />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
           </Layout>
         </ErrorBoundary>
       </AuthProvider>

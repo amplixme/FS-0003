@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-import styles from "./SearchInput.module.css";
+import { useEffect, useRef, useState } from 'react';
+import styles from './SearchInput.module.css';
 
-const SearchInput = ({ value = "", onSearch, debounceMs = 300 }) => {
+const SearchInput = ({ value = '', onSearch, debounceMs = 300 }) => {
   const [query, setQuery] = useState(value);
   const onSearchRef = useRef(onSearch);
 
@@ -21,8 +21,8 @@ const SearchInput = ({ value = "", onSearch, debounceMs = 300 }) => {
   }, [debounceMs, query, value]);
 
   const clearSearch = () => {
-    setQuery("");
-    onSearchRef.current("");
+    setQuery('');
+    onSearchRef.current('');
   };
 
   return (
@@ -30,7 +30,9 @@ const SearchInput = ({ value = "", onSearch, debounceMs = 300 }) => {
       <span className={`material-symbols-outlined ${styles.icon}`} aria-hidden="true">
         search
       </span>
-      <label className="visually-hidden" htmlFor="post-search">Buscar publicaciones</label>
+      <label className="visually-hidden" htmlFor="post-search">
+        Buscar publicaciones
+      </label>
       <input
         id="post-search"
         type="search"

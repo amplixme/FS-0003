@@ -4,12 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useAuth } from '../../context/AuthContext';
-import {
-  create,
-  deleteComment,
-  getByPostId,
-  update,
-} from '../../services/comment.service';
+import { create, deleteComment, getByPostId, update } from '../../services/comment.service';
 import CommentSection from './CommentSection';
 
 vi.mock('../../context/AuthContext', () => ({ useAuth: vi.fn() }));
@@ -75,21 +70,21 @@ describe('CommentSection', () => {
 
   it('crea el comentario, muestra loading, recarga la lista y limpia el textarea', async () => {
     useAuth.mockReturnValue({ isAuthenticated: true });
-    getByPostId
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([
-        {
-          id: 'comment-1',
-          content: 'Comentario nuevo',
-          createdAt: '2026-07-13T10:00:00.000Z',
-          author: { name: 'Ana' },
-        },
-      ]);
+    getByPostId.mockResolvedValueOnce([]).mockResolvedValueOnce([
+      {
+        id: 'comment-1',
+        content: 'Comentario nuevo',
+        createdAt: '2026-07-13T10:00:00.000Z',
+        author: { name: 'Ana' },
+      },
+    ]);
 
     let resolveCreate;
-    create.mockReturnValue(new Promise((resolve) => {
-      resolveCreate = resolve;
-    }));
+    create.mockReturnValue(
+      new Promise((resolve) => {
+        resolveCreate = resolve;
+      }),
+    );
 
     const view = await renderCommentSection();
     const textarea = view.querySelector('textarea');
@@ -161,8 +156,9 @@ describe('CommentSection', () => {
     update.mockResolvedValue({});
 
     const view = await renderCommentSection();
-    const editButton = [...view.querySelectorAll('button')]
-      .find((button) => button.textContent === 'Editar');
+    const editButton = [...view.querySelectorAll('button')].find(
+      (button) => button.textContent === 'Editar',
+    );
 
     act(() => editButton.click());
 
@@ -173,25 +169,27 @@ describe('CommentSection', () => {
     expect(view.textContent).not.toContain('Eliminar');
 
     act(() => changeTextarea(editTextarea, 'Texto descartado'));
-    const cancelButton = [...view.querySelectorAll('button')]
-      .find((button) => button.textContent === 'Cancelar');
+    const cancelButton = [...view.querySelectorAll('button')].find(
+      (button) => button.textContent === 'Cancelar',
+    );
     act(() => cancelButton.click());
 
     expect(view.textContent).toContain('Texto original');
     expect(view.textContent).not.toContain('Texto descartado');
     expect(update).not.toHaveBeenCalled();
 
-    const restoredEditButton = [...view.querySelectorAll('button')]
-      .find((button) => button.textContent === 'Editar');
+    const restoredEditButton = [...view.querySelectorAll('button')].find(
+      (button) => button.textContent === 'Editar',
+    );
     act(() => restoredEditButton.click());
 
     const restoredTextarea = view.querySelector('textarea[aria-label="Editar comentario"]');
     act(() => changeTextarea(restoredTextarea, '  Texto actualizado  '));
 
     await act(async () => {
-      restoredTextarea.closest('form').dispatchEvent(
-        new Event('submit', { bubbles: true, cancelable: true }),
-      );
+      restoredTextarea
+        .closest('form')
+        .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     });
 
     expect(update).toHaveBeenCalledWith('comment-1', { content: 'Texto actualizado' });
@@ -216,8 +214,9 @@ describe('CommentSection', () => {
     deleteComment.mockResolvedValue({});
 
     const view = await renderCommentSection();
-    const deleteButton = [...view.querySelectorAll('button')]
-      .find((button) => button.textContent === 'Eliminar');
+    const deleteButton = [...view.querySelectorAll('button')].find(
+      (button) => button.textContent === 'Eliminar',
+    );
 
     act(() => deleteButton.click());
 
@@ -225,8 +224,9 @@ describe('CommentSection', () => {
     expect(modal).not.toBeNull();
     expect(modal.textContent).toContain('Eliminar comentario');
 
-    const confirmButton = [...modal.querySelectorAll('button')]
-      .find((button) => button.textContent === 'Eliminar');
+    const confirmButton = [...modal.querySelectorAll('button')].find(
+      (button) => button.textContent === 'Eliminar',
+    );
 
     await act(async () => confirmButton.click());
 

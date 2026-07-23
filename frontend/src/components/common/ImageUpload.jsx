@@ -1,5 +1,4 @@
 import { useRef, useState, useCallback, useId } from 'react';
-import api from '../../services/api';
 import styles from './ImageUpload.module.css';
 
 /**
@@ -25,10 +24,10 @@ const ImageUpload = ({
   const inputRef = useRef(null);
   const inputId = useId();
 
-  const [preview, setPreview]     = useState(initialUrl);
+  const [preview, setPreview] = useState(initialUrl);
   const [uploading, setUploading] = useState(false);
-  const [progress, setProgress]   = useState(0);
-  const [error, setError]         = useState(null);
+  const [progress, setProgress] = useState(0);
+  const [error, setError] = useState(null);
   const [isDragOver, setIsDragOver] = useState(false);
 
   // ─── Validación client-side ───────────────────────────────────────────────
@@ -93,11 +92,9 @@ const ImageUpload = ({
           });
 
           xhr.addEventListener('error', () =>
-            reject(new Error('Error de red al subir la imagen.'))
+            reject(new Error('Error de red al subir la imagen.')),
           );
-          xhr.addEventListener('abort', () =>
-            reject(new Error('Subida cancelada.'))
-          );
+          xhr.addEventListener('abort', () => reject(new Error('Subida cancelada.')));
 
           xhr.open('POST', `${import.meta.env.VITE_API_URL}/upload`);
           if (token) xhr.setRequestHeader('Authorization', `Bearer ${token}`);
@@ -112,7 +109,7 @@ const ImageUpload = ({
         setUploading(false);
       }
     },
-    [initialUrl, onUpload]
+    [initialUrl, onUpload],
   );
 
   // ─── Handlers de input / drag & drop ─────────────────────────────────────
@@ -123,8 +120,14 @@ const ImageUpload = ({
     e.target.value = '';
   };
 
-  const handleDragOver  = (e) => { e.preventDefault(); if (!disabled && !uploading) setIsDragOver(true); };
-  const handleDragLeave = (e) => { e.preventDefault(); setIsDragOver(false); };
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    if (!disabled && !uploading) setIsDragOver(true);
+  };
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  };
 
   const handleDrop = (e) => {
     e.preventDefault();
@@ -134,10 +137,15 @@ const ImageUpload = ({
     if (file) uploadFile(file);
   };
 
-  const handleZoneClick = () => { if (!disabled && !uploading) inputRef.current?.click(); };
+  const handleZoneClick = () => {
+    if (!disabled && !uploading) inputRef.current?.click();
+  };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleZoneClick(); }
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleZoneClick();
+    }
   };
 
   const handleClear = (e) => {
@@ -151,15 +159,21 @@ const ImageUpload = ({
   // ─── Clases dinámicas ─────────────────────────────────────────────────────
   const zoneClass = [
     styles.dropZone,
-    isDragOver  && styles.dragOver,
-    uploading   && styles.uploading,
-    disabled    && styles.disabled,
-    preview     && styles.hasPreview,
-  ].filter(Boolean).join(' ');
+    isDragOver && styles.dragOver,
+    uploading && styles.uploading,
+    disabled && styles.disabled,
+    preview && styles.hasPreview,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <div className={styles.wrapper}>
-      {label && <label className={styles.label} htmlFor={inputId}>{label}</label>}
+      {label && (
+        <label className={styles.label} htmlFor={inputId}>
+          {label}
+        </label>
+      )}
 
       <div
         className={zoneClass}
@@ -213,10 +227,7 @@ const ImageUpload = ({
             {uploading && (
               <div className={styles.progressOverlay} aria-hidden="true">
                 <div className={styles.progressBarWrap}>
-                  <div
-                    className={styles.progressBar}
-                    style={{ width: `${progress}%` }}
-                  />
+                  <div className={styles.progressBar} style={{ width: `${progress}%` }} />
                 </div>
                 <span className={styles.progressLabel}>{progress}%</span>
               </div>
@@ -225,10 +236,7 @@ const ImageUpload = ({
         ) : (
           // ── Estado: vacío (placeholder) ──────────────────────────────────
           <div className={styles.placeholder}>
-            <span
-              className={`material-symbols-outlined ${styles.uploadIcon}`}
-              aria-hidden="true"
-            >
+            <span className={`material-symbols-outlined ${styles.uploadIcon}`} aria-hidden="true">
               {isDragOver ? 'file_download' : 'add_photo_alternate'}
             </span>
             <p className={styles.placeholderText}>
@@ -258,7 +266,9 @@ const ImageUpload = ({
       {/* Mensaje de error */}
       {error && (
         <p className={styles.errorMsg} role="alert">
-          <span className="material-symbols-outlined" aria-hidden="true">error</span>
+          <span className="material-symbols-outlined" aria-hidden="true">
+            error
+          </span>
           {error}
         </p>
       )}

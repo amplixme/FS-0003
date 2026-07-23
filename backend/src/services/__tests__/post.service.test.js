@@ -1,11 +1,21 @@
 const proxyquire = require('proxyquire');
 
-const mockPostModel = { findMany: vi.fn(), findUnique: vi.fn(), create: vi.fn(), update: vi.fn(), delete: vi.fn(), count: vi.fn() };
+const mockPostModel = {
+  findMany: vi.fn(),
+  findUnique: vi.fn(),
+  create: vi.fn(),
+  update: vi.fn(),
+  delete: vi.fn(),
+  count: vi.fn(),
+};
 const mockPrisma = { post: mockPostModel };
 
-const { createPost, updatePost, deletePost, getAllPosts, getPostById } = proxyquire('../post.service', {
-  '../utils/prisma': mockPrisma,
-});
+const { createPost, updatePost, deletePost, getAllPosts, getPostById } = proxyquire(
+  '../post.service',
+  {
+    '../utils/prisma': mockPrisma,
+  },
+);
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -14,7 +24,14 @@ beforeEach(() => {
 describe('getAllPosts', () => {
   it('retorna posts paginados con los campos transformados', async () => {
     const posts = [
-      { id: 1, title: 'Post 1', content: 'Content', _count: { comments: 3 }, author: { id: 1, name: 'A', email: 'a@a.com' }, categories: [] },
+      {
+        id: 1,
+        title: 'Post 1',
+        content: 'Content',
+        _count: { comments: 3 },
+        author: { id: 1, name: 'A', email: 'a@a.com' },
+        categories: [],
+      },
     ];
     mockPostModel.findMany.mockResolvedValue(posts);
     mockPostModel.count.mockResolvedValue(1);
@@ -22,7 +39,16 @@ describe('getAllPosts', () => {
     const result = await getAllPosts({ page: 1, limit: 10 });
 
     expect(result).toEqual({
-      data: [{ id: 1, title: 'Post 1', content: 'Content', commentCount: 3, author: { id: 1, name: 'A', email: 'a@a.com' }, categories: [] }],
+      data: [
+        {
+          id: 1,
+          title: 'Post 1',
+          content: 'Content',
+          commentCount: 3,
+          author: { id: 1, name: 'A', email: 'a@a.com' },
+          categories: [],
+        },
+      ],
       total: 1,
       page: 1,
       totalPages: 1,
@@ -69,7 +95,12 @@ describe('getAllPosts', () => {
 
 describe('getPostById', () => {
   it('retorna el post cuando existe', async () => {
-    const post = { id: 1, title: 'Post', author: { id: 1, name: 'A', email: 'a@a.com' }, categories: [] };
+    const post = {
+      id: 1,
+      title: 'Post',
+      author: { id: 1, name: 'A', email: 'a@a.com' },
+      categories: [],
+    };
     mockPostModel.findUnique.mockResolvedValue(post);
 
     const result = await getPostById(1);
@@ -108,7 +139,13 @@ describe('createPost', () => {
     mockPostModel.create.mockResolvedValue(newPost);
 
     const result = await createPost(
-      { title: 'Nuevo Post', content: 'Contenido', published: true, coverImage: 'https://img.com/img.jpg', categoryIds: ['cat-1'] },
+      {
+        title: 'Nuevo Post',
+        content: 'Contenido',
+        published: true,
+        coverImage: 'https://img.com/img.jpg',
+        categoryIds: ['cat-1'],
+      },
       1,
     );
 

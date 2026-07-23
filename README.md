@@ -8,16 +8,16 @@ Aplicación web full-stack con autenticación JWT, roles de usuario y un blog b�
 
 ## Tech Stack
 
-| Capa | Tecnología |
-|------|-----------|
-| Backend | Node.js + Express 5 |
-| Frontend | React 19 + Vite 8 |
-| Base de datos | PostgreSQL 16 |
-| ORM | Prisma 6 |
+| Capa          | Tecnología                  |
+| ------------- | --------------------------- |
+| Backend       | Node.js + Express 5         |
+| Frontend      | React 19 + Vite 8           |
+| Base de datos | PostgreSQL 16               |
+| ORM           | Prisma 6                    |
 | Autenticación | JWT (jsonwebtoken) + bcrypt |
-| Validación | Joi |
-| Cliente HTTP | Axios |
-| Contenedores | Docker |
+| Validación    | Joi                         |
+| Cliente HTTP  | Axios                       |
+| Contenedores  | Docker                      |
 
 ---
 
@@ -105,24 +105,24 @@ Si no usas Docker, necesitas tener PostgreSQL instalado localmente y crear la ba
 
 ### Backend (`backend/`)
 
-| Script | Descripción |
-|--------|-------------|
-| `npm run dev` | Inicia servidor con nodemon (hot reload) |
-| `npm start` | Inicia servidor en producción |
-| `npm run db:push` | Sincroniza schema de Prisma con la BD |
-| `npm run db:migrate` | Crea migración de Prisma |
-| `npm run db:generate` | Genera el cliente de Prisma |
-| `npm run seed` | Carga datos de demo idempotentes |
+| Script                | Descripción                              |
+| --------------------- | ---------------------------------------- |
+| `npm run dev`         | Inicia servidor con nodemon (hot reload) |
+| `npm start`           | Inicia servidor en producción            |
+| `npm run db:push`     | Sincroniza schema de Prisma con la BD    |
+| `npm run db:migrate`  | Crea migración de Prisma                 |
+| `npm run db:generate` | Genera el cliente de Prisma              |
+| `npm run seed`        | Carga datos de demo idempotentes         |
 
 ### Frontend (`frontend/`)
 
-| Script | Descripción |
-|--------|-------------|
-| `npm run dev` | Inicia servidor de desarrollo Vite |
-| `npm run build` | Compila para producción |
-| `npm run preview` | Vista previa del build |
-| `npm run lint` | Ejecuta ESLint |
-| `npm test` | Ejecuta tests con Vitest |
+| Script            | Descripción                        |
+| ----------------- | ---------------------------------- |
+| `npm run dev`     | Inicia servidor de desarrollo Vite |
+| `npm run build`   | Compila para producción            |
+| `npm run preview` | Vista previa del build             |
+| `npm run lint`    | Ejecuta ESLint                     |
+| `npm test`        | Ejecuta tests con Vitest           |
 
 ---
 
@@ -172,6 +172,7 @@ git push -u origin feature/FS0003-XX-descripcion
 ### 3. Crear Pull Request a develop
 
 Desde GitHub, crear PR con:
+
 - Base: `develop` ← Head: `feature/FS0003-XX-descripcion`
 - Título: `feat: descripción breve (FS0003-XX)`
 - Asignar revisores del equipo
@@ -185,6 +186,7 @@ Desde GitHub, crear PR con:
 ### 5. Release a main
 
 Cuando `develop` está estable:
+
 - PR: `develop` → `main`
 - Tag de versión
 
@@ -192,12 +194,12 @@ Cuando `develop` está estable:
 
 ## Convenciones de ramas
 
-| Prefijo | Uso |
-|---------|-----|
-| `feature/` | Nueva funcionalidad |
-| `fix/` | Corrección de bug |
-| `hotfix/` | Fix urgente en producción |
-| `docs/` | Solo documentación |
+| Prefijo     | Uso                                   |
+| ----------- | ------------------------------------- |
+| `feature/`  | Nueva funcionalidad                   |
+| `fix/`      | Corrección de bug                     |
+| `hotfix/`   | Fix urgente en producción             |
+| `docs/`     | Solo documentación                    |
 | `refactor/` | Refactor sin cambio de comportamiento |
 
 ## Convención de commits
@@ -215,27 +217,27 @@ Ej: feat: add JWT auth middleware (FS0003-8)
 
 ### Backend (`backend/.env`)
 
-| Variable | Descripción |
-|----------|-------------|
-| `PORT` | Puerto del servidor Express |
-| `DATABASE_URL` | URL de conexión a PostgreSQL |
-| `JWT_SECRET` | Secreto para firmar tokens JWT |
+| Variable       | Descripción                    |
+| -------------- | ------------------------------ |
+| `PORT`         | Puerto del servidor Express    |
+| `DATABASE_URL` | URL de conexión a PostgreSQL   |
+| `JWT_SECRET`   | Secreto para firmar tokens JWT |
 
 ### Frontend (`frontend/.env`)
 
-| Variable | Descripción |
-|----------|-------------|
+| Variable       | Descripción                |
+| -------------- | -------------------------- |
 | `VITE_API_URL` | URL base de la API backend |
 
 ---
 
 ## Endpoints de la API
 
-| Método | Ruta | Auth | Descripción |
-|--------|------|------|-------------|
-| POST | `/api/auth/register` | No | Registrar usuario |
-| POST | `/api/auth/login` | No | Iniciar sesión |
-| GET | `/api/posts` | No* | Listar posts |
-| POST | `/api/posts` | JWT | Crear post |
+| Método | Ruta                 | Auth | Descripción       |
+| ------ | -------------------- | ---- | ----------------- |
+| POST   | `/api/auth/register` | No   | Registrar usuario |
+| POST   | `/api/auth/login`    | No   | Iniciar sesión    |
+| GET    | `/api/posts`         | No\* | Listar posts      |
+| POST   | `/api/posts`         | JWT  | Crear post        |
 
 \* Endpoints de ejemplo, pueden variar según el avance del proyecto.

@@ -29,7 +29,7 @@ const uploadImage = async (buffer, originalname) => {
         } else {
           resolve(result.secure_url);
         }
-      }
+      },
     );
 
     const readable = Readable.from(buffer);

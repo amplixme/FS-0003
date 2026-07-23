@@ -6,7 +6,9 @@ const CategoryFilter = ({ activeSlug, onChange }) => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    getAll().then(setCategories).catch(() => {});
+    getAll()
+      .then(setCategories)
+      .catch(() => {});
   }, []);
 
   return (

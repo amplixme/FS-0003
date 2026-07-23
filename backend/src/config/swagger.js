@@ -146,7 +146,7 @@ const options = {
               type: 'object',
               properties: {
                 token: { type: 'string' },
-                user: { '$ref': '#/components/schemas/User' },
+                user: { $ref: '#/components/schemas/User' },
               },
             },
           },
@@ -239,7 +239,7 @@ const options = {
           properties: {
             data: {
               type: 'array',
-              items: { '$ref': '#/components/schemas/Post' },
+              items: { $ref: '#/components/schemas/Post' },
             },
             total: { type: 'integer' },
             page: { type: 'integer' },

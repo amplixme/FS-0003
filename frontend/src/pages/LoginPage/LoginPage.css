@@ -149,7 +149,7 @@
 }
 
 .login-error-icon {
-  font-family: "Material Symbols Outlined";
+  font-family: 'Material Symbols Outlined';
   font-size: 20px;
   flex-shrink: 0;
 }
@@ -196,7 +196,7 @@
 .login-input-icon {
   position: absolute;
   left: 1rem;
-  font-family: "Material Symbols Outlined";
+  font-family: 'Material Symbols Outlined';
   font-size: 20px;
   color: var(--md-outline);
   pointer-events: none;
@@ -262,7 +262,9 @@
   cursor: pointer;
   color: var(--md-outline);
   border-radius: 8px;
-  transition: color 0.2s, background 0.2s;
+  transition:
+    color 0.2s,
+    background 0.2s;
 }
 
 .login-visibility-toggle:hover {
@@ -317,7 +319,7 @@
 
 .login-separator::before,
 .login-separator::after {
-  content: "";
+  content: '';
   flex: 1;
   height: 1px;
   background: var(--md-outline-variant);

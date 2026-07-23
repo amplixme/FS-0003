@@ -1,7 +1,13 @@
 const prisma = require('../utils/prisma');
 const AppError = require('../utils/AppError');
 
-const getAllPosts = async ({ categorySlug, page = 1, limit = 10, sort = 'newest', search } = {}) => {
+const getAllPosts = async ({
+  categorySlug,
+  page = 1,
+  limit = 10,
+  sort = 'newest',
+  search,
+} = {}) => {
   const where = {
     published: true,
 
@@ -101,7 +107,9 @@ const createPost = async ({ title, content, published, coverImage, categoryIds }
       coverImage: coverImage || null,
       authorId,
       ...(typeof published === 'boolean' ? { published } : {}),
-      ...(Array.isArray(categoryIds) ? { categories: { connect: categoryIds.map((id) => ({ id })) } } : {}),
+      ...(Array.isArray(categoryIds)
+        ? { categories: { connect: categoryIds.map((id) => ({ id })) } }
+        : {}),
     },
     include: {
       author: {
@@ -141,7 +149,9 @@ const updatePost = async (id, data, user) => {
     where: { id },
     data: {
       ...postData,
-      ...(Array.isArray(categoryIds) ? { categories: { set: categoryIds.map((categoryId) => ({ id: categoryId })) } } : {}),
+      ...(Array.isArray(categoryIds)
+        ? { categories: { set: categoryIds.map((categoryId) => ({ id: categoryId })) } }
+        : {}),
     },
     include: {
       author: {

@@ -1,7 +1,12 @@
-const { createPost, updatePost, deletePost, getAllPosts, getPostById } = require('../services/post.service');
+const {
+  createPost,
+  updatePost,
+  deletePost,
+  getAllPosts,
+  getPostById,
+} = require('../services/post.service');
 const { success } = require('../utils/response');
 const AppError = require('../utils/AppError');
-
 
 const getAll = async (req, res, next) => {
   try {

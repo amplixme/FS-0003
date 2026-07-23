@@ -20,9 +20,10 @@ const EditProfilePage = () => {
 
   const [nameTouched, setNameTouched] = useState(false);
 
-  const nameError = nameTouched && (!name.trim() || name.trim().length < 2)
-    ? 'El nombre debe tener al menos 2 caracteres.'
-    : null;
+  const nameError =
+    nameTouched && (!name.trim() || name.trim().length < 2)
+      ? 'El nombre debe tener al menos 2 caracteres.'
+      : null;
 
   const isValid = name.trim().length >= 2;
 
@@ -65,7 +66,9 @@ const EditProfilePage = () => {
 
         {/* Nombre */}
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="edit-name">Nombre</label>
+          <label className={styles.label} htmlFor="edit-name">
+            Nombre
+          </label>
           <input
             id="edit-name"
             className={`${styles.input}${nameError ? ` ${styles.inputError}` : ''}`}
@@ -78,12 +81,18 @@ const EditProfilePage = () => {
             required
             maxLength={50}
           />
-          {nameError && <p className={styles.errorText} role="alert">{nameError}</p>}
+          {nameError && (
+            <p className={styles.errorText} role="alert">
+              {nameError}
+            </p>
+          )}
         </div>
 
         {/* Bio */}
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="edit-bio">Biografía</label>
+          <label className={styles.label} htmlFor="edit-bio">
+            Biografía
+          </label>
           <textarea
             id="edit-bio"
             className={styles.textarea}
@@ -95,9 +104,7 @@ const EditProfilePage = () => {
             rows={4}
           />
           <div className={styles.charCounter}>
-            <span className={bio.length > MAX_BIO_LENGTH ? styles.charOver : ''}>
-              {bio.length}
-            </span>
+            <span className={bio.length > MAX_BIO_LENGTH ? styles.charOver : ''}>{bio.length}</span>
             /{MAX_BIO_LENGTH}
           </div>
         </div>
@@ -105,7 +112,9 @@ const EditProfilePage = () => {
         {/* Error global */}
         {error && (
           <div className={styles.globalError} role="alert">
-            <span className="material-symbols-outlined" aria-hidden="true">error</span>
+            <span className="material-symbols-outlined" aria-hidden="true">
+              error
+            </span>
             {error}
           </div>
         )}
@@ -120,11 +129,7 @@ const EditProfilePage = () => {
           >
             Cancelar
           </button>
-          <button
-            type="submit"
-            className={styles.submitBtn}
-            disabled={!isValid || saving}
-          >
+          <button type="submit" className={styles.submitBtn} disabled={!isValid || saving}>
             {saving ? 'Guardando…' : 'Guardar cambios'}
           </button>
         </div>

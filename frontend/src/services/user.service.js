@@ -3,13 +3,14 @@ import api from './api';
 const getErrorMessage = (error, fallback) => {
   const validationMessage = error.response?.data?.errors?.map((item) => item.message).join('. ');
 
-  return error.response?.data?.error?.message
-    || validationMessage
-    || error.response?.data?.message
-    || error.message
-    || fallback;
+  return (
+    error.response?.data?.error?.message ||
+    validationMessage ||
+    error.response?.data?.message ||
+    error.message ||
+    fallback
+  );
 };
-
 
 export const getProfile = async (id) => {
   try {
@@ -19,7 +20,6 @@ export const getProfile = async (id) => {
     throw new Error(getErrorMessage(error, 'Error al obtener el perfil'), { cause: error });
   }
 };
-
 
 export const updateProfile = async (data) => {
   try {
