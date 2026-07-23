@@ -8,6 +8,7 @@
     "start": "node src/server.js",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
+    "seed": "prisma generate && node prisma/seed.js",
     "test": "vitest run",
     "db:migrate": "prisma migrate dev"
   },

@@ -112,6 +112,7 @@ Si no usas Docker, necesitas tener PostgreSQL instalado localmente y crear la ba
 | `npm run db:push` | Sincroniza schema de Prisma con la BD |
 | `npm run db:migrate` | Crea migración de Prisma |
 | `npm run db:generate` | Genera el cliente de Prisma |
+| `npm run seed` | Carga datos de demo idempotentes |
 
 ### Frontend (`frontend/`)
 
