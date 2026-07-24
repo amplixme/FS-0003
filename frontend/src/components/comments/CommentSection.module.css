@@ -299,3 +299,55 @@
   color: var(--color-primary, #6366f1);
   font-weight: 600;
 }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .section {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+  }
+
+  .title {
+    font-size: 1.1rem;
+  }
+
+  .commentItem {
+    gap: 0.625rem;
+  }
+
+  .commentAvatar {
+    width: 1.75rem;
+    height: 1.75rem;
+    font-size: 0.75rem;
+  }
+
+  .commentBody {
+    padding: 0.625rem 0.75rem;
+  }
+
+  .commentMeta {
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .commentDate {
+    font-size: 0.72rem;
+  }
+
+  .commentContent {
+    font-size: 0.85rem;
+  }
+
+  .editTextarea {
+    width: 100%;
+  }
+
+  .textarea {
+    min-height: 5rem;
+  }
+
+  .commentActions {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}

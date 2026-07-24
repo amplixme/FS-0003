@@ -208,3 +208,47 @@
   white-space: nowrap;
   border: 0;
 }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .page {
+    padding: 0 0.75rem;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .createRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .row {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.65rem 0.75rem;
+  }
+
+  .name {
+    width: 100%;
+    font-size: 0.9rem;
+  }
+
+  .slug {
+    width: auto;
+    font-size: 0.78rem;
+  }
+
+  .count {
+    width: auto;
+    font-size: 0.75rem;
+  }
+
+  .rowActions {
+    width: 100%;
+    justify-content: flex-end;
+    padding-top: 0.35rem;
+    border-top: 1px solid #f3f4f6;
+  }
+}
