@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import apiClient from '../../services/apiClient';
+import './RegisterPage.css';
 
 const validateForm = ({ name, email, password, confirmPassword }) => {
   const errors = {};
@@ -80,124 +81,76 @@ const RegisterPage = () => {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '40px auto', padding: '20px' }}>
-      <h1>Crear cuenta</h1>
+    <div className="registerPage">
+      <h1 className="title">Crear cuenta</h1>
 
-      {serverError && (
-        <div
-          style={{
-            color: 'red',
-            marginBottom: '16px',
-            padding: '8px',
-            border: '1px solid red',
-            borderRadius: '4px',
-          }}
-        >
-          {serverError}
-        </div>
-      )}
+      {serverError && <div className="serverError">{serverError}</div>}
 
       <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '16px' }}>
-          <label htmlFor="name" style={{ display: 'block', marginBottom: '4px' }}>
-            Nombre
-          </label>
+        <div className="field">
+          <label htmlFor="name" className="label">Nombre</label>
           <input
             id="name"
             name="name"
             type="text"
             value={formData.name}
             onChange={handleChange}
-            style={{
-              width: '100%',
-              padding: '8px',
-              border: errors.name ? '1px solid red' : '1px solid #ccc',
-              borderRadius: '4px',
-            }}
+            className={`input${errors.name ? ' inputError' : ''}`}
           />
-          {errors.name && <small style={{ color: 'red' }}>{errors.name}</small>}
+          {errors.name && <small className="errorText">{errors.name}</small>}
         </div>
 
-        <div style={{ marginBottom: '16px' }}>
-          <label htmlFor="email" style={{ display: 'block', marginBottom: '4px' }}>
-            Email
-          </label>
+        <div className="field">
+          <label htmlFor="email" className="label">Email</label>
           <input
             id="email"
             name="email"
             type="email"
             value={formData.email}
             onChange={handleChange}
-            style={{
-              width: '100%',
-              padding: '8px',
-              border: errors.email ? '1px solid red' : '1px solid #ccc',
-              borderRadius: '4px',
-            }}
+            className={`input${errors.email ? ' inputError' : ''}`}
           />
-          {errors.email && <small style={{ color: 'red' }}>{errors.email}</small>}
+          {errors.email && <small className="errorText">{errors.email}</small>}
         </div>
 
-        <div style={{ marginBottom: '16px' }}>
-          <label htmlFor="password" style={{ display: 'block', marginBottom: '4px' }}>
-            Contraseña
-          </label>
+        <div className="field">
+          <label htmlFor="password" className="label">Contraseña</label>
           <input
             id="password"
             name="password"
             type="password"
             value={formData.password}
             onChange={handleChange}
-            style={{
-              width: '100%',
-              padding: '8px',
-              border: errors.password ? '1px solid red' : '1px solid #ccc',
-              borderRadius: '4px',
-            }}
+            className={`input${errors.password ? ' inputError' : ''}`}
           />
-          {errors.password && <small style={{ color: 'red' }}>{errors.password}</small>}
+          {errors.password && <small className="errorText">{errors.password}</small>}
         </div>
 
-        <div style={{ marginBottom: '16px' }}>
-          <label htmlFor="confirmPassword" style={{ display: 'block', marginBottom: '4px' }}>
-            Confirmar contraseña
-          </label>
+        <div className="field">
+          <label htmlFor="confirmPassword" className="label">Confirmar contraseña</label>
           <input
             id="confirmPassword"
             name="confirmPassword"
             type="password"
             value={formData.confirmPassword}
             onChange={handleChange}
-            style={{
-              width: '100%',
-              padding: '8px',
-              border: errors.confirmPassword ? '1px solid red' : '1px solid #ccc',
-              borderRadius: '4px',
-            }}
+            className={`input${errors.confirmPassword ? ' inputError' : ''}`}
           />
           {errors.confirmPassword && (
-            <small style={{ color: 'red' }}>{errors.confirmPassword}</small>
+            <small className="errorText">{errors.confirmPassword}</small>
           )}
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          style={{
-            width: '100%',
-            padding: '10px',
-            backgroundColor: loading ? '#ccc' : '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: loading ? 'not-allowed' : 'pointer',
-          }}
+          className="submitBtn"
         >
           {loading ? 'Registrando...' : 'Registrarse'}
         </button>
       </form>
 
-      <p style={{ marginTop: '16px', textAlign: 'center' }}>
+      <p className="footer">
         ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
       </p>
     </div>

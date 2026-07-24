@@ -242,16 +242,16 @@ const UsersSection = ({ currentUserId }) => {
           <tbody>
             {users.map((u) => (
               <tr key={u.id}>
-                <td>{u.name}</td>
-                <td>{u.email}</td>
-                <td>
+                <td data-label="Nombre">{u.name}</td>
+                <td data-label="Email">{u.email}</td>
+                <td data-label="Rol">
                   <span className={`adminRoleBadge ${u.role === 'ADMIN' ? 'admin' : 'user'}`}>
                     {u.role}
                   </span>
                 </td>
-                <td>{new Date(u.createdAt).toLocaleDateString('es-PE')}</td>
-                <td>{u.postCount}</td>
-                <td className="adminActions">
+                <td data-label="Registro">{new Date(u.createdAt).toLocaleDateString('es-PE')}</td>
+                <td data-label="Posts">{u.postCount}</td>
+                <td data-label="Acciones" className="adminActions">
                   <button
                     type="button"
                     className="adminBtn adminBtnSm"
@@ -353,11 +353,11 @@ const PostsSection = () => {
           <tbody>
             {posts.map((p) => (
               <tr key={p.id}>
-                <td>{p.title}</td>
-                <td>{p.author?.name}</td>
-                <td>{p.categories?.map((c) => c.name).join(', ') || '—'}</td>
-                <td>{new Date(p.createdAt).toLocaleDateString('es-PE')}</td>
-                <td>
+                <td data-label="Título">{p.title}</td>
+                <td data-label="Autor">{p.author?.name}</td>
+                <td data-label="Categorías">{p.categories?.map((c) => c.name).join(', ') || '—'}</td>
+                <td data-label="Fecha">{new Date(p.createdAt).toLocaleDateString('es-PE')}</td>
+                <td data-label="Acciones">
                   <button
                     type="button"
                     className="adminBtn adminBtnSm adminBtnDanger"
