@@ -1,12 +1,12 @@
 const express = require('express');
-const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
+const corsMiddleware = require('./middlewares/cors.middleware');
 const { errorHandler } = require('./middlewares/error.middleware');
 
 const app = express();
 
-app.use(cors());
+app.use(corsMiddleware);
 app.use(express.json());
 
 // Swagger documentation
