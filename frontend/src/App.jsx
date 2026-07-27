@@ -57,9 +57,9 @@ function App() {
                 <Route
                   path="/categorias"
                   element={
-                    <ProtectedRoute>
+                    <ProtectedAdminRoute>
                       <CategoryManagePage />
-                    </ProtectedRoute>
+                    </ProtectedAdminRoute>
                   }
                 />
                 <Route

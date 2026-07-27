@@ -7,9 +7,12 @@ const getAllPosts = async ({
   limit = 10,
   sort = 'newest',
   search,
+  authorId,
 } = {}) => {
   const where = {
-    published: true,
+    ...(authorId ? {} : { published: true }),
+
+    ...(authorId && { authorId }),
 
     ...(categorySlug && {
       categories: {
