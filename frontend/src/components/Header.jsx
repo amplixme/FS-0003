@@ -60,32 +60,23 @@ const Header = () => {
 
         <div className="headerActions">
           {isAuthenticated ? (
-            <>
-              <Link to="/login" className="loginLink">
-                Log In
-              </Link>
-              <button className="subscribeBtn">Subscribe</button>
-              <button
-                className="avatarBtn"
-                onClick={() => setMobileOpen(true)}
-                aria-label="Abrir menú de usuario"
-              >
-                {user?.avatarUrl ? (
-                  <img src={user.avatarUrl} alt={user.name} className="avatarImg" />
-                ) : (
-                  <span className="avatarFallback">{user?.name?.[0]?.toUpperCase() ?? 'U'}</span>
-                )}
-              </button>
-            </>
+            // Usuario logueado: solo mostrar avatar
+            <button
+              className="avatarBtn"
+              onClick={() => setMobileOpen(true)}
+              aria-label="Abrir menú de usuario"
+            >
+              {user?.avatarUrl ? (
+                <img src={user.avatarUrl} alt={user.name} className="avatarImg" />
+              ) : (
+                <span className="avatarFallback">{user?.name?.[0]?.toUpperCase() ?? 'U'}</span>
+              )}
+            </button>
           ) : (
-            <>
-              <Link to="/login" className="loginLink">
-                Log In
-              </Link>
-              <Link to="/register" className="subscribeBtn">
-                Subscribe
-              </Link>
-            </>
+            // Usuario no logueado: mostrar Login (Subscribe eliminado)
+            <Link to="/login" className="loginLink">
+              Log In
+            </Link>
           )}
         </div>
 
