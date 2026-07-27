@@ -100,26 +100,6 @@
 
 ---
 
-## 8. Documentación de la API *(1 min)*
-
-**Presenta:** Cualquiera
-
-- Abrir `https://fs-0003-backend.onrender.com/api/docs`
-- **Punto clave:** Documentación interactiva con Swagger UI — se pueden probar endpoints directamente
-- Mostrar que cada endpoint tiene: método, ruta, parámetros, body y códigos de error
-
----
-
-## 9. Tests *(30 seg)*
-
-**Presenta:** Cualquiera (opcional, si sobra tiempo)
-
-- Mencionar que el proyecto tiene **46 tests** (18 backend + 28 frontend)
-- **Backend:** Vitest + proxyquire (mocking Prisma)
-- **Frontend:** Vitest + React Testing Library
-
----
-
 ## Resumen técnico — puntos clave para destacar
 
 | Aspecto | Detalle |
