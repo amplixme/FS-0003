@@ -32,13 +32,11 @@ function App() {
         <ErrorBoundary>
           <Suspense fallback={PageLoader}>
             <Routes>
-              {/* Standalone pages — no Layout (navbar/footer) */}
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-
               {/* Pages with Layout (navbar + footer) */}
               <Route element={<Layout />}>
                 <Route path="/" element={<HomePage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
                 <Route
                   path="/crear"
                   element={

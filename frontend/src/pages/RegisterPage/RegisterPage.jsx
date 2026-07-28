@@ -323,7 +323,7 @@ const RegisterPage = () => {
 
         {/* Copyright */}
         <div className="register-copyright">
-          <span>© 2024 TUPROYECTO. EDITORIAL AUTHORITY.</span>
+          <span>© 2026 TUPROYECTO. EDITORIAL AUTHORITY.</span>
         </div>
       </main>
     </div>
