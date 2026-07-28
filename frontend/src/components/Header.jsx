@@ -14,9 +14,13 @@ const Header = () => {
 
   const navLinks = [
     { to: '/', label: 'Inicio' },
-    { to: '/categorias', label: 'Categorías' },
     { to: '/crear', label: 'Escribir' },
-    ...(user?.role === 'ADMIN' ? [{ to: '/admin', label: 'Admin' }] : []),
+    ...(user?.role === 'ADMIN'
+      ? [
+          { to: '/categorias', label: 'Categorías' },
+          { to: '/admin', label: 'Admin' },
+        ]
+      : []),
   ];
 
   useEffect(() => {
