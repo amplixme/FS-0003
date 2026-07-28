@@ -19,17 +19,26 @@ const CategoryManagePage = lazy(() => import('./pages/CategoryManagePage/Categor
 const AdminPage = lazy(() => import('./pages/AdminPage/AdminPage'));
 const NotFound = lazy(() => import('./components/NotFound'));
 
+const PageLoader = (
+  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+    <p role="status">Cargando página...</p>
+  </div>
+);
+
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <ErrorBoundary>
-          <Layout>
-            <Suspense fallback={<p role="status">Cargando página...</p>}>
-              <Routes>
+          <Suspense fallback={PageLoader}>
+            <Routes>
+              {/* Standalone pages — no Layout (navbar/footer) */}
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+
+              {/* Pages with Layout (navbar + footer) */}
+              <Route element={<Layout />}>
                 <Route path="/" element={<HomePage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
                 <Route
                   path="/crear"
                   element={
@@ -73,9 +82,9 @@ function App() {
                 <Route path="/posts/:id" element={<PostDetailPage />} />
                 <Route path="/perfil/:id" element={<ProfilePage />} />
                 <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
-          </Layout>
+              </Route>
+            </Routes>
+          </Suspense>
         </ErrorBoundary>
       </AuthProvider>
     </BrowserRouter>
