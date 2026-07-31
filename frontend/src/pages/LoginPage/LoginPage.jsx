@@ -186,7 +186,7 @@ export default function LoginPage() {
 
         {/* Copyright */}
         <div className="login-copyright">
-          <span>© 2024 TuProyecto</span>
+          <span>© 2026 TuProyecto</span>
           <div className="login-copyright-links">
             <a href="#">Privacidad</a>
             <a href="#">Términos</a>

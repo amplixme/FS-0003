@@ -1,88 +1,458 @@
-.registerPage {
-  max-width: 400px;
-  margin: 40px auto;
-  padding: 20px;
+/* ========================================
+   RegisterPage - Estilos basados en Stitch Design
+   ======================================== */
+
+/* --- Design Tokens (Material Design 3) --- */
+:root {
+  --md-primary: #024ce2;
+  --md-on-primary: #ffffff;
+  --md-on-primary-fixed-variant: #003ab2;
+  --md-surface: #f7f9fb;
+  --md-on-surface: #191c1e;
+  --md-on-surface-variant: #434655;
+  --md-surface-container-lowest: #ffffff;
+  --md-surface-container-low: #f2f4f6;
+  --md-surface-container: #eceef0;
+  --md-surface-container-high: #e6e8ea;
+  --md-outline: #737687;
+  --md-outline-variant: #c3c5d8;
+  --md-error: #ba1a1a;
+  --md-error-container: #ffdad6;
+  --md-on-error: #ffffff;
+  --md-secondary-container: #3fe1fd;
 }
 
-.title {
+/* --- Page Layout --- */
+.register-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--md-surface);
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .register-page {
+    padding: 1.5rem;
+  }
+}
+
+/* --- Container --- */
+.register-container {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* --- Card --- */
+.register-card {
+  background: var(--md-surface-container-lowest);
+  width: 100%;
+  min-height: 100vh;
+  border-radius: 0;
+  overflow: hidden;
+  box-shadow: none;
+  transition: all 0.3s ease;
+}
+
+@media (min-width: 768px) {
+  .register-card {
+    min-height: auto;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(17, 24, 39, 0.05);
+  }
+}
+
+/* --- Accent Bar --- */
+.register-accent-bar {
+  height: 6px;
+  width: 100%;
+  background: linear-gradient(to right, var(--md-primary), var(--md-secondary-container));
+}
+
+/* --- Content --- */
+.register-content {
+  padding: 2.5rem 2rem 2rem;
+}
+
+@media (min-width: 768px) {
+  .register-content {
+    padding: 2.5rem 2.5rem 2rem;
+  }
+}
+
+/* --- Brand --- */
+.register-brand {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .register-brand {
+    text-align: left;
+  }
+}
+
+.register-brand-text {
   font-size: 1.5rem;
-  margin-bottom: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--md-primary);
 }
 
-.field {
-  margin-bottom: 16px;
+/* --- Header --- */
+.register-header {
+  margin-bottom: 2rem;
+  text-align: center;
 }
 
-.label {
-  display: block;
-  margin-bottom: 4px;
-  font-size: 0.9rem;
+@media (min-width: 768px) {
+  .register-header {
+    text-align: left;
+  }
 }
 
-.input {
+.register-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--md-on-surface);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.5rem 0;
+}
+
+.register-subtitle {
+  font-size: 1rem;
+  color: var(--md-on-surface-variant);
+  margin: 0;
+}
+
+/* --- Form --- */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* --- Server Error Banner --- */
+.register-server-error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1rem;
+  background: var(--md-error-container);
+  color: var(--md-error);
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.register-error-icon {
+  font-family: 'Material Symbols Outlined';
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+/* --- Field --- */
+.register-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.register-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--md-on-surface);
+  padding-left: 0.25rem;
+}
+
+/* --- Input Wrapper --- */
+.register-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.register-input-icon {
+  position: absolute;
+  left: 1rem;
+  font-family: 'Material Symbols Outlined';
+  font-size: 20px;
+  color: var(--md-outline);
+  pointer-events: none;
+  transition: color 0.2s;
+  z-index: 1;
+}
+
+.register-input-wrapper:focus-within .register-input-icon {
+  color: var(--md-primary);
+}
+
+.register-input {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-  font-size: 0.9rem;
+  padding: 0.875rem 1rem 0.875rem 2.75rem;
+  background: var(--md-surface-container-low);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--md-on-surface);
+  outline: none;
+  transition: all 0.2s ease;
 }
 
-.inputError {
-  border-color: red;
+.register-input::placeholder {
+  color: var(--md-outline);
 }
 
-.errorText {
-  color: red;
-  font-size: 0.8rem;
+.register-input:focus {
+  background: var(--md-surface-container-lowest);
+  border-color: rgba(2, 76, 226, 0.3);
+  box-shadow: 0 0 0 4px rgba(2, 76, 226, 0.08);
 }
 
-.serverError {
-  color: red;
-  margin-bottom: 16px;
-  padding: 8px;
-  border: 1px solid red;
-  border-radius: 4px;
-  font-size: 0.85rem;
+.register-input-wrapper.has-error .register-input {
+  border-color: var(--md-error);
+  background: var(--md-surface-container-lowest);
 }
 
-.submitBtn {
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 0.95rem;
+.register-input-wrapper.has-error .register-input:focus {
+  box-shadow: 0 0 0 4px rgba(186, 26, 26, 0.08);
+}
+
+.register-input-wrapper.has-error .register-input-icon {
+  color: var(--md-error);
+}
+
+/* --- Field Error --- */
+.register-field-error {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--md-error);
+  padding-left: 0.25rem;
+}
+
+/* --- Password Strength --- */
+.register-strength {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 0.25rem;
+  margin-top: 0.25rem;
+}
+
+.register-strength-bars {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.register-strength-bar {
+  height: 5px;
+  flex: 1;
+  border-radius: 9999px;
+  transition: background 0.3s ease;
+}
+
+.register-strength-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+/* --- Terms Checkbox --- */
+.register-terms {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
   cursor: pointer;
+  margin-top: 0.25rem;
 }
 
-.submitBtn:disabled {
-  background-color: #ccc;
+.register-checkbox-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.register-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--md-outline-variant);
+  border-radius: 8px;
+  background: var(--md-surface-container-lowest);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.register-checkbox:checked {
+  background: var(--md-primary);
+  border-color: var(--md-primary);
+}
+
+.register-checkbox-icon {
+  position: absolute;
+  font-family: 'Material Symbols Outlined';
+  font-size: 16px;
+  color: transparent;
+  pointer-events: none;
+  transition: transform 0.2s ease, color 0.2s ease;
+  transform: scale(0);
+}
+
+.register-checkbox:checked ~ .register-checkbox-icon {
+  color: var(--md-on-primary);
+  transform: scale(1);
+}
+
+.register-terms-text {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--md-on-surface-variant);
+}
+
+.register-terms-link {
+  color: var(--md-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.register-terms-link:hover {
+  text-decoration: underline;
+}
+
+/* --- Submit Button --- */
+.register-submit-btn {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: var(--md-primary);
+  color: var(--md-on-primary);
+  border: none;
+  border-radius: 9999px;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 20px 40px rgba(17, 24, 39, 0.05);
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.register-submit-btn:hover:not(:disabled) {
+  background: var(--md-on-primary-fixed-variant);
+}
+
+.register-submit-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.register-submit-btn:disabled {
+  opacity: 0.7;
   cursor: not-allowed;
 }
 
-.footer {
-  margin-top: 16px;
+/* --- Footer --- */
+.register-footer {
+  margin-top: 2rem;
   text-align: center;
-  font-size: 0.9rem;
 }
 
-@media (max-width: 640px) {
-  .registerPage {
-    margin: 24px auto;
-    padding: 16px;
-  }
+.register-login-text {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--md-on-surface-variant);
+  margin: 0;
+}
 
-  .title {
-    font-size: 1.25rem;
-  }
+.register-login-link {
+  color: var(--md-primary);
+  font-weight: 700;
+  text-decoration: none;
+  margin-left: 0.25rem;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 2px;
+  transition: text-decoration-color 0.2s;
+}
 
-  .field {
-    margin-bottom: 12px;
-  }
+.register-login-link:hover {
+  text-decoration: underline;
+}
 
-  .input {
-    font-size: 16px;
+/* --- Footer Links --- */
+.register-footer-links {
+  margin-top: 2.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 0 1rem;
+}
+
+.register-footer-links a {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--md-on-surface-variant);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.register-footer-links a:hover {
+  color: var(--md-primary);
+}
+
+/* --- Copyright --- */
+.register-copyright {
+  margin-top: 1rem;
+  text-align: center;
+  padding: 0 1rem;
+}
+
+@media (min-width: 768px) {
+  .register-copyright {
+    padding: 0;
   }
+}
+
+.register-copyright span {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--md-outline);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.7;
+}
+
+/* --- Background Gradients --- */
+.register-page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 33%;
+  height: 33%;
+  background: linear-gradient(to bottom right, rgba(2, 76, 226, 0.05), transparent);
+  filter: blur(64px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.register-page::after {
+  content: '';
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 25%;
+  height: 25%;
+  background: linear-gradient(to top left, rgba(0, 104, 119, 0.05), transparent);
+  filter: blur(64px);
+  pointer-events: none;
+  z-index: -1;
 }
