@@ -62,7 +62,17 @@ const PostCard = ({ post, onCategorySelect }) => {
       </div>
 
       <div className={styles.content}>
-        <h2 className={styles.title}>{post.title}</h2>
+        <div className={styles.titleRow}>
+          <h2 className={styles.title}>{post.title}</h2>
+          {post.published === false && (
+            <span className={styles.draftBadge}>
+              <span className="material-symbols-outlined" aria-hidden="true">
+                edit_note
+              </span>
+              Borrador
+            </span>
+          )}
+        </div>
         {visibleCategories.length > 0 && (
           <div className={styles.categories} aria-label="Categorías del post">
             {visibleCategories.map((category, index) => {

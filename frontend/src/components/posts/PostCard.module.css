@@ -85,6 +85,32 @@
   line-height: 1.25;
 }
 
+.titleRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.draftBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid #fde68a;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.draftBadge .material-symbols-outlined {
+  font-size: 14px !important;
+}
+
 .categories {
   position: relative;
   z-index: 2;
