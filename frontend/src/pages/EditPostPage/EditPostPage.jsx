@@ -65,6 +65,7 @@ const EditPostPage = () => {
     const allowedData = {
       title: formData.title,
       content: formData.content,
+      published: formData.published,
       categoryIds: formData.categoryIds,
     };
 
@@ -116,7 +117,7 @@ const EditPostPage = () => {
           content: post.content,
           published: post.published,
           coverImage: post.coverImage || '',
-          categoryIds: post.categoryIds,
+          categories: post.categories,
         }}
         onSubmit={handleSubmit}
         submitLabel="Guardar cambios"

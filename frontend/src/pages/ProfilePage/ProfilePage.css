@@ -250,6 +250,26 @@
   font-size: 18px !important;
 }
 
+.profile-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: var(--md-outline-variant, #c3c5d8);
+  color: var(--md-on-surface, #191c1e);
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.profile-tab--active .profile-tab-count {
+  background: var(--md-primary, #024ce2);
+  color: var(--md-on-primary, #ffffff);
+}
+
 /* ============================================
    Posts Grid
    ============================================ */

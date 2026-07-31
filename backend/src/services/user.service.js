@@ -10,7 +10,11 @@ const getUserPublicProfile = async (id) => {
       bio: true,
       avatarUrl: true,
       _count: {
-        select: { posts: true },
+        select: {
+          posts: {
+            where: { published: true },
+          },
+        },
       },
     },
   });

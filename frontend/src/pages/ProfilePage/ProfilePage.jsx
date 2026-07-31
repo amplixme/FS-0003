@@ -33,6 +33,7 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [notFound, setNotFound] = useState(false);
+  const [activeTab, setActiveTab] = useState('published');
 
   useEffect(() => {
     let cancelled = false;
@@ -71,6 +72,10 @@ export default function ProfilePage() {
   }, [id]);
 
   const isOwnProfile = authUser && profile && authUser.id === profile.id;
+
+  const publishedPosts = posts.filter((post) => post.published !== false);
+  const draftPosts = posts.filter((post) => post.published === false);
+  const visiblePosts = activeTab === 'drafts' ? draftPosts : publishedPosts;
 
   // --- Loading State ---
   if (loading) {
@@ -176,21 +181,50 @@ export default function ProfilePage() {
 
         {/* Tabs */}
         <div className="profile-tabs">
-          <button className="profile-tab profile-tab--active" type="button">
+          <button
+            className={`profile-tab ${activeTab === 'published' ? 'profile-tab--active' : ''}`}
+            type="button"
+            onClick={() => setActiveTab('published')}
+          >
             <span className="material-symbols-outlined profile-tab-icon" aria-hidden="true">
               article
             </span>
             Publicaciones
+            {publishedPosts.length > 0 && (
+              <span className="profile-tab-count">{publishedPosts.length}</span>
+            )}
           </button>
+          {isOwnProfile && (
+            <button
+              className={`profile-tab ${activeTab === 'drafts' ? 'profile-tab--active' : ''}`}
+              type="button"
+              onClick={() => setActiveTab('drafts')}
+            >
+              <span className="material-symbols-outlined profile-tab-icon" aria-hidden="true">
+                edit_note
+              </span>
+              Borradores
+              {draftPosts.length > 0 && (
+                <span className="profile-tab-count">{draftPosts.length}</span>
+              )}
+            </button>
+          )}
         </div>
 
         {/* Posts */}
         <section className="profile-posts-section">
-          {posts.length === 0 ? (
-            <EmptyState icon="inbox" message="Este usuario aún no ha publicado artículos" />
+          {visiblePosts.length === 0 ? (
+            <EmptyState
+              icon={activeTab === 'drafts' ? 'edit_note' : 'inbox'}
+              message={
+                activeTab === 'drafts'
+                  ? 'No tenés borradores guardados'
+                  : 'Este usuario aún no ha publicado artículos'
+              }
+            />
           ) : (
             <div className="profile-posts-grid">
-              {posts.map((post) => (
+              {visiblePosts.map((post) => (
                 <PostCard key={post.id} post={post} onCategorySelect={() => {}} />
               ))}
             </div>

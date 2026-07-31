@@ -9,7 +9,8 @@ const getErrorMessage = (error, fallback) =>
 export const getAll = async () => {
   try {
     const response = await api.get('/categories');
-    return response.data?.data ?? response.data;
+    const data = response.data?.data ?? response.data;
+    return Array.isArray(data) ? data : [];
   } catch (error) {
     throw new Error(getErrorMessage(error, 'Error al obtener categorías'), { cause: error });
   }
