@@ -10,6 +10,10 @@ const SearchInput = ({ value = '', onSearch, debounceMs = 300 }) => {
   }, [onSearch]);
 
   useEffect(() => {
+    setQuery(value);
+  }, [value]);
+
+  useEffect(() => {
     const normalizedQuery = query.trim();
     if (normalizedQuery === value) return undefined;
 

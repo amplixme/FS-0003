@@ -263,7 +263,6 @@
 .sidebarNavLink {
   display: flex;
   align-items: center;
-  gap: 14px;
   padding: 14px 24px;
   font-size: 16px;
   color: #374151;
@@ -285,12 +284,6 @@
   font-weight: 600;
 }
 
-.sidebarNavIcon {
-  font-size: 18px;
-  width: 24px;
-  text-align: center;
-}
-
 /* Sección Categorías */
 .sidebarSection {
   padding: 16px 0 8px;
@@ -298,7 +291,7 @@
 
 .sidebarSectionHeader {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   padding: 0 24px 8px;
 }
@@ -309,11 +302,6 @@
   letter-spacing: 0.08em;
   color: #9ca3af;
   text-transform: uppercase;
-}
-
-.sidebarSectionIcon {
-  font-size: 16px;
-  color: #9ca3af;
 }
 
 .sidebarCategories {
