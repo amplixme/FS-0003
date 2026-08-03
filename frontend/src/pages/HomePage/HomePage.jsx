@@ -131,7 +131,7 @@ const HomePage = () => {
         <p className={styles.description}>
           Explorá las publicaciones más recientes de la comunidad.
         </p>
-        <SearchInput key={searchTerm} value={searchTerm} onSearch={changeSearch} />
+        <SearchInput value={searchTerm} onSearch={changeSearch} />
       </div>
 
       <div className={styles.body}>

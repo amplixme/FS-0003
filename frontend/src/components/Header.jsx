@@ -192,12 +192,6 @@ const Header = () => {
               className={`sidebarNavLink${isActive(to) ? ' sidebarNavLinkActive' : ''}`}
               onClick={() => setMobileOpen(false)}
             >
-              <span className="sidebarNavIcon" aria-hidden="true">
-                {to === '/' && '🏠'}
-                {to === '/crear' && '✏️'}
-                {to === '/admin' && '🛡️'}
-                {to === '/categorias' && '📂'}
-              </span>
               {label}
             </Link>
           ))}
@@ -207,9 +201,6 @@ const Header = () => {
           <div className="sidebarSection">
             <div className="sidebarSectionHeader">
               <span className="sidebarSectionTitle">CATEGORÍAS</span>
-              <span className="sidebarSectionIcon" aria-hidden="true">
-                📊
-              </span>
             </div>
             <ul className="sidebarCategories" role="list">
               {categories.map(({ label, slug, count }) => (
@@ -233,7 +224,6 @@ const Header = () => {
                 setMobileOpen(false);
               }}
             >
-              <span aria-hidden="true">↪</span>
               Cerrar Sesión
             </button>
           ) : (
