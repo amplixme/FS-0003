@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useId, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import adminService from '../../services/admin.service';
+import ConfirmModal from '../../components/common/ConfirmModal';
 import './AdminPage.css';
 
 // ── Modal genérico ──────────────────────────────────────────────
@@ -19,14 +20,11 @@ const Modal = ({ title, onClose, children }) => {
         onClose();
         return;
       }
-
       if (event.key !== 'Tab') return;
-
       const focusableElements = modalRef.current?.querySelectorAll(
         'button:not(:disabled), [href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])',
       );
       if (!focusableElements?.length) return;
-
       const first = focusableElements[0];
       const last = focusableElements[focusableElements.length - 1];
       if (event.shiftKey && document.activeElement === first) {
@@ -152,18 +150,20 @@ const UserForm = ({ initial = {}, onSubmit, loading }) => {
 // ── Sección Usuarios ────────────────────────────────────────────
 const UsersSection = ({ currentUserId }) => {
   const [users, setUsers] = useState([]);
-  const [modal, setModal] = useState(null); // null | 'create' | { type:'edit', user }
+  const [modal, setModal] = useState(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+
+  // ── Estado para ConfirmModal ──
+  const [confirm, setConfirm] = useState(null);
+  // confirm: null | { type: 'delete', user } | { type: 'role', user }
 
   const load = useCallback(async () => {
     const data = await adminService.getUsers();
     setUsers(data);
   }, []);
 
-  useEffect(() => {
-    load();
-  }, [load]);
+  useEffect(() => { load(); }, [load]);
 
   const handleCreate = async (data) => {
     setSaving(true);
@@ -193,9 +193,9 @@ const UsersSection = ({ currentUserId }) => {
     }
   };
 
-  const handleRoleToggle = async (user) => {
-    const newRole = user.role === 'ADMIN' ? 'USER' : 'ADMIN';
-    if (!confirm(`¿Cambiar rol de ${user.name} a ${newRole}?`)) return;
+  const handleRoleToggleConfirm = async () => {
+    const user = confirm.user;
+    setConfirm(null);
     try {
       await adminService.changeUserRole(user.id);
       load();
@@ -204,15 +204,23 @@ const UsersSection = ({ currentUserId }) => {
     }
   };
 
-  const handleDelete = async (user) => {
-    if (!confirm(`¿Eliminar usuario ${user.name}? Se eliminarán sus posts y comentarios.`)) return;
+  const handleDeleteConfirm = async () => {
+    const user = confirm.user;
+    setSaving(true);
     try {
       await adminService.deleteUser(user.id);
+      setConfirm(null);
       load();
     } catch (e) {
       alert(e.message);
+    } finally {
+      setSaving(false);
     }
   };
+
+  const newRole = confirm?.type === 'role'
+    ? (confirm.user.role === 'ADMIN' ? 'USER' : 'ADMIN')
+    : null;
 
   return (
     <section className="adminSection">
@@ -231,12 +239,8 @@ const UsersSection = ({ currentUserId }) => {
         <table className="adminTable">
           <thead>
             <tr>
-              <th>Nombre</th>
-              <th>Email</th>
-              <th>Rol</th>
-              <th>Registro</th>
-              <th>Posts</th>
-              <th>Acciones</th>
+              <th>Nombre</th><th>Email</th><th>Rol</th>
+              <th>Registro</th><th>Posts</th><th>Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -264,14 +268,14 @@ const UsersSection = ({ currentUserId }) => {
                       <button
                         type="button"
                         className="adminBtn adminBtnSm adminBtnWarning"
-                        onClick={() => handleRoleToggle(u)}
+                        onClick={() => setConfirm({ type: 'role', user: u })}
                       >
                         {u.role === 'ADMIN' ? '→ USER' : '→ ADMIN'}
                       </button>
                       <button
                         type="button"
                         className="adminBtn adminBtnSm adminBtnDanger"
-                        onClick={() => handleDelete(u)}
+                        onClick={() => setConfirm({ type: 'delete', user: u })}
                       >
                         Eliminar
                       </button>
@@ -284,31 +288,42 @@ const UsersSection = ({ currentUserId }) => {
         </table>
       </div>
 
+      {/* Modales de edición/creación */}
       {modal === 'create' && (
-        <Modal
-          title="Crear usuario"
-          onClose={() => {
-            setModal(null);
-            setError('');
-          }}
-        >
+        <Modal title="Crear usuario" onClose={() => { setModal(null); setError(''); }}>
           {error && <p className="adminError">{error}</p>}
           <UserForm onSubmit={handleCreate} loading={saving} />
         </Modal>
       )}
-
       {modal?.type === 'edit' && (
-        <Modal
-          title="Editar usuario"
-          onClose={() => {
-            setModal(null);
-            setError('');
-          }}
-        >
+        <Modal title="Editar usuario" onClose={() => { setModal(null); setError(''); }}>
           {error && <p className="adminError">{error}</p>}
           <UserForm initial={modal.user} onSubmit={handleEdit} loading={saving} />
         </Modal>
       )}
+
+      {/* ConfirmModal — eliminar usuario */}
+      <ConfirmModal
+        isOpen={confirm?.type === 'delete'}
+        title="¿Eliminar usuario?"
+        message={`Se eliminará a "${confirm?.user?.name}" junto con todos sus posts y comentarios. Esta acción no se puede deshacer.`}
+        confirmLabel="Sí, eliminar"
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setConfirm(null)}
+        isLoading={saving}
+        danger
+      />
+
+      {/* ConfirmModal — cambiar rol */}
+      <ConfirmModal
+        isOpen={confirm?.type === 'role'}
+        title="¿Cambiar rol?"
+        message={`Se cambiará el rol de "${confirm?.user?.name}" a ${newRole}.`}
+        confirmLabel="Sí, cambiar"
+        onConfirm={handleRoleToggleConfirm}
+        onCancel={() => setConfirm(null)}
+        danger={false}
+      />
     </section>
   );
 };
@@ -316,23 +331,26 @@ const UsersSection = ({ currentUserId }) => {
 // ── Sección Posts ───────────────────────────────────────────────
 const PostsSection = () => {
   const [posts, setPosts] = useState([]);
+  const [deleting, setDeleting] = useState(false);
+  const [confirm, setConfirm] = useState(null); // null | post
 
   const load = useCallback(async () => {
     const data = await adminService.getPosts();
     setPosts(data);
   }, []);
 
-  useEffect(() => {
-    load();
-  }, [load]);
+  useEffect(() => { load(); }, [load]);
 
-  const handleDelete = async (post) => {
-    if (!confirm(`¿Eliminar el post "${post.title}"?`)) return;
+  const handleDeleteConfirm = async () => {
+    setDeleting(true);
     try {
-      await adminService.deletePost(post.id);
+      await adminService.deletePost(confirm.id);
+      setConfirm(null);
       load();
     } catch (e) {
       alert(e.message);
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -343,11 +361,7 @@ const PostsSection = () => {
         <table className="adminTable">
           <thead>
             <tr>
-              <th>Título</th>
-              <th>Autor</th>
-              <th>Categorías</th>
-              <th>Fecha</th>
-              <th></th>
+              <th>Título</th><th>Autor</th><th>Categorías</th><th>Fecha</th><th></th>
             </tr>
           </thead>
           <tbody>
@@ -361,7 +375,7 @@ const PostsSection = () => {
                   <button
                     type="button"
                     className="adminBtn adminBtnSm adminBtnDanger"
-                    onClick={() => handleDelete(p)}
+                    onClick={() => setConfirm(p)}
                   >
                     Eliminar
                   </button>
@@ -371,6 +385,17 @@ const PostsSection = () => {
           </tbody>
         </table>
       </div>
+
+      <ConfirmModal
+        isOpen={!!confirm}
+        title="¿Eliminar post?"
+        message={`Se eliminará el post "${confirm?.title}". Esta acción no se puede deshacer.`}
+        confirmLabel="Sí, eliminar"
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setConfirm(null)}
+        isLoading={deleting}
+        danger
+      />
     </section>
   );
 };
@@ -378,23 +403,26 @@ const PostsSection = () => {
 // ── Sección Comentarios ─────────────────────────────────────────
 const CommentsSection = () => {
   const [comments, setComments] = useState([]);
+  const [deleting, setDeleting] = useState(false);
+  const [confirm, setConfirm] = useState(null); // null | comment
 
   const load = useCallback(async () => {
     const data = await adminService.getComments();
     setComments(data);
   }, []);
 
-  useEffect(() => {
-    load();
-  }, [load]);
+  useEffect(() => { load(); }, [load]);
 
-  const handleDelete = async (c) => {
-    if (!confirm('¿Eliminar este comentario?')) return;
+  const handleDeleteConfirm = async () => {
+    setDeleting(true);
     try {
-      await adminService.deleteComment(c.id);
+      await adminService.deleteComment(confirm.id);
+      setConfirm(null);
       load();
     } catch (e) {
       alert(e.message);
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -416,13 +444,24 @@ const CommentsSection = () => {
             <button
               type="button"
               className="adminBtn adminBtnSm adminBtnDanger"
-              onClick={() => handleDelete(c)}
+              onClick={() => setConfirm(c)}
             >
               Eliminar
             </button>
           </li>
         ))}
       </ul>
+
+      <ConfirmModal
+        isOpen={!!confirm}
+        title="¿Eliminar comentario?"
+        message={`Se eliminará el comentario de "${confirm?.author?.name}" en "${confirm?.post?.title}".`}
+        confirmLabel="Sí, eliminar"
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setConfirm(null)}
+        isLoading={deleting}
+        danger
+      />
     </section>
   );
 };
