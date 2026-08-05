@@ -66,6 +66,7 @@ const EditPostPage = () => {
       title: formData.title,
       content: formData.content,
       published: formData.published,
+      coverImage: formData.coverImage,
       categoryIds: formData.categoryIds,
     };
 
